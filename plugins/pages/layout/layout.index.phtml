@@ -1,0 +1,9 @@
+<?php
+if($page_content['only_members'] && $members->is_user() && file_exists($_SERVER['DOCUMENT_ROOT'] . _SITE_PATH . '/plugins/members/nav_menu.php')) {
+    require_once('plugins/members/nav_menu.php');
+}?>
+<?php if(!App\Router::is_index()){?>
+    <?=(!empty($_seo_settings['breadcrumbs'] && is_object($breadcrumbs)) ? !empty($_seo_settings['display_breadcrumbs']) ? $breadcrumbs->get() : $breadcrumbs->schema() : '')?>
+<?php }?>
+
+<?=$page_content['text']?>

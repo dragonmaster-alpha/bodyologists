@@ -1,0 +1,76 @@
+<?php if(isset($_SESSION['error'])) {?>
+    <div class="alert-error" title="Error">
+        <?=$_SESSION['error']?>
+    </div>
+    <?php
+    unset($_SESSION['error']);
+}
+?>
+<div class="pageheader">
+    <h1 class="head">
+        Backups Summary
+    </h1>
+</div>
+<br clear="all" />
+<div class="summary-bar">
+    <a href="#" class="reload tipS" title="Reload" onclick="window.location.href = window.location.href; return false;">
+        <span class="icon-redo"></span>
+    </a>
+    <a class="tipS" title="Backup Now" href="admin.php?plugin=system&amp;file=backups&amp;op=new">
+        <span class="icon-plus-2"></span>
+    </a>
+</div>
+<div id="contentwrapper" class="contentwrapper">    
+    <table cellpadding="0" cellspacing="0" border="0" class="stdtable">
+        <colgroup>
+            <col />
+            <col style="width: 150px;" />
+            <col style="width: 160px;" />
+            <col style="width: 10px;" />
+        </colgroup>
+        <thead>
+            <tr>
+                <th style="min-width: 165px;">File</th>
+                <th>Size</th>
+                <th class="hidden-phone">Created</th>
+                <th class="hidden-phone"></th>
+            </tr>
+        </thead>
+        <tbody>
+        <?php
+            if(count($items_info)>0)
+            {
+            	foreach($items_info as $item)
+            	{?>
+            	<tr>
+            		<td>
+                        <a href="admin.php?plugin=system&amp;file=backups&amp;op=download&amp;sql=<?=$item['name']?>"><h5><?=$item['name']?></h5></a>
+            		</td>
+            		<td class="hidden-phone">
+            			<?=$helper->file_size($item['size'])?>
+            		</td>
+            		<td class="hidden-phone">
+            			<?=date('M jS Y g:i A', $item['date'])?>
+            		</td>
+
+                    <td>
+                        <div class="navbar">
+                            <ul class="nav pull-right">
+                                <li class="dropdown">
+                                    <a href="#" role="button" data-toggle="dropdown"><span class="icon-menu"></span></a>
+                                    <ul id="actions_<?=$item['id']?>" class="dropdown-menu orders-actions" role="menu">
+                                        <li><a href="admin.php?plugin=system&amp;file=backups&amp;op=download&amp;sql=<?=$item['name']?>"><span class="icon-download-2 left"></span> Download</a></li>
+                                        <li><a href="admin.php?plugin=system&amp;file=backups&amp;op=delete&amp;sql=<?=$item['name']?>" class="deletion" data-main-holder="main-area-for-<?=$item['id']?>"><span class="icon-remove-2 left"></span> Delete</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                    </td>
+            	</tr>
+                <?php
+                }
+            }
+            ?>
+        </tbody>
+    </table>
+</div>

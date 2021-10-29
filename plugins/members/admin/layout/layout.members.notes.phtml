@@ -1,0 +1,38 @@
+<?
+if(isset($_SESSION['error'])) {
+?>
+    <div class="alert-error" title="Error">
+        <?=$_SESSION['error']?>
+    </div>
+<?
+    unset($_SESSION['error']);
+}
+?>
+<div class="photoEdit">
+    <form id="note-sent" action="admin.php?plugin=members&amp;op=save_notes" method="post" class="stdform quickform2">
+        <input type="hidden" value="<?=$item['id']?>" name="id" />
+        <input type="hidden" value="<?=$item['trans']?>" name="trans" />
+        <h3>Notes for <?=$item['full_name']?></h3>
+        <br />
+        <div class="notifyMessage">Notes successfully saved.</div>
+        <div class="widgetcontent userlistwidget nopadding" style="max-height: 300px; overflow: auto;">
+            <ul>
+                <?if(!empty($item['notes'])) {?>
+                <?=$item['notes']?>
+                <?} else {?>
+                <li>
+                    There is no notes added for this clients, you can start adding notes by entering them into the following text area and save changes.
+                </li>
+                <?}?>
+            </ul>
+        </div>
+        <div style="margin-top: 20px;">
+            <textarea name="notes" style="width: 97%; height: 70px;"></textarea>
+        </div>
+        <br clear="all" />
+        <p class="action">
+            <a href="#" class="cancel" style="margin-right: 20px;">Cancel</a>
+            <button class="submit radius2">Submit</button>
+        </p>
+    </form>
+</div>

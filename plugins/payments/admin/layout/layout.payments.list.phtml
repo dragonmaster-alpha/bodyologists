@@ -1,0 +1,50 @@
+<tr id="item_<?=$item['id']?>">
+    <td>
+        <a href="admin.php?plugin=payments&amp;op=edit&amp;id=<?=$item['id']?>" class="popup">
+            <h5><span class="icon-barcode"></span> <?=$item['trans']?></h5>
+        </a>
+        <strong>Paid with</strong>: <?=$item['payment_method']?>
+    </td>
+    <td>
+        <div>
+            <?php if(!empty($item['owner'])) {?>
+            <a href="admin.php?plugin=members&amp;op=edit&amp;id=<?=$item['owner']?>">
+                <span class="icon-user"></span>
+                <?php }?>
+            <strong>    
+                <?=$item['full_name']?> 
+            </strong>
+                <?php if(!empty($item['owner'])) {?>
+            </a>
+        <?php }?>
+        </div>
+        <?php if(!empty($item['email'])) {?>
+        <a href="admin.php?plugin=system&amp;file=messages&amp;op=send_message&amp;email=<?=$item['email']?>&amp;name=<?=urlencode($item['full_name'])?>&amp;subject=<?=urlencode('Contact from ' . $helper->config['contactname'])?>" class="send-message tipS" title="Contact <?=$item['full_name']?>">
+            <?=$item['email']?> <span class="icon-mail-send" style="margin-left: 5px;"></span>
+        </a>
+        <?php }?>
+    </td>
+    <td>
+        <h5>$<?=$item['total']?></h5>
+    </td>
+
+    <td>
+        <?=date('M jS g:iA', strtotime($item['date']))?>
+    </td>
+    <td>
+        <div class="navbar">
+            <ul class="nav pull-right">
+                <li class="dropdown">
+                    <a href="#" role="button" data-toggle="dropdown"><span class="icon-menu"></span></a>
+                    <ul id="actions_<?=$item['id']?>" class="dropdown-menu orders-actions" role="menu">
+                        <li><a href="admin.php?plugin=payments&amp;op=edit&amp;id=<?=$item['id']?>" class="popup"><span class="icon-info left"></span> Information</a></li>
+                        <li><a href="admin.php?plugin=payments&amp;op=print&amp;id=<?=$item['id']?>" class="orders_actions_invoice"><span class="icon-printer-2 left"></span> Print Receipt</a></li>
+                        <li><a href="admin.php?plugin=payments&amp;op=receipt&amp;id=<?=$item['id']?>"><span class="icon-license left"></span> Resend Receipt</a></li>
+                        <li><a href="admin.php?plugin=payments&amp;op=notes&amp;id=<?=$item['id']?>" class="view_notes" data-item-id="<?=$item['id']?>"><span class="icon-notebook left"></span> View Notes (<span id="notes-count-<?=$item['id']?>"><?=$item['count_notes']?></span>)</a></li>
+                        <li><a href="admin.php?plugin=payments&amp;op=delete&amp;id=<?=$item['id']?>" class="deletion" data-main-area="item_<?=$item['id']?>"><span class="icon-remove-2 left"></span> Delete</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </td>
+</tr>

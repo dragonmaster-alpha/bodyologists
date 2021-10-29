@@ -1,0 +1,118 @@
+<style>
+#cboxContent #cboxClose {
+    display: none;
+}
+</style>
+<div class="popup-area">
+    <form action="index.php?plugin=members" method="post" class="validate-form form-horizontal" id="form-area">
+        <input type="hidden" value="messages" name="file" />
+        <input type="hidden" value="send" name="op" />
+        <input type="hidden" value="<?=$item['id']?>" name="parent" />
+        <div style="margin-bottom: 10px;" class="row">
+            <div class="col-md-9">
+                <input type="text" value="<?=(!empty($item['subject'])) ? 'Re: ' . $item['subject'] : ''?>" name="subject" style="width: 97%; border: 0; box-shadow: 0;" placeholder="Subject:" />
+            </div>
+            <div class="col-md-3 text-right">
+                <a href="#" class="cancel tipN" title="<?=_CANCEL?>">
+                    <?=_CANCEL?>
+                </a>
+                <button type="submit" class="btn btn-primary tipN" title="<?=_SEND?>">
+                    <span class="icon-paper-plane"></span>
+                </button>
+            </div>
+        </div>
+        <hr />
+        <div style="margin-bottom: 10px;">
+            <?if(!empty($item['name'])) {?>
+            <?=_REPLY?> <?=_TO?>: <?=$item['name']?>
+            <input type="hidden" value="<?=$item['sent_from']?>" name="sent_to" />
+            <?} else {?>
+            <input type="text" value="" name="sent_to" style="width: 97%; border: 0; box-shadow: 0;" placeholder="To: <?=_EMAIL_ADDRESS?>" />
+            <?}?>
+        </div>
+        <hr />
+        <div class="alert alert-error hide"></div>
+        <div class="alert alert-success hide"></div>
+        <div class="loading-area">
+            <img src="images/loading.gif" alt="" />
+        </div>
+        <div>
+            <textarea name="text" id="message-text" style="width: 97%; border: 0;"></textarea>
+        </div>
+        <?if(!$frm->empty_array($item)) {?>
+        <hr />
+        <div style="max-height: 700px; overflow: auto;">
+            <?if(!$frm->empty_array($item['replies'])) {?>
+                <?foreach ($item['replies'] as $reply) {?>
+                    <div style="margin-bottom: 10px;">
+                        <strong><?=$reply['subject']?></strong>
+                    </div>
+                    <div style="margin-bottom: 5px;">
+                        <small>
+                            <em><?=_FROM?>: <?=$reply['name']?> <?=_ON?> <?=$frm->format_sort_date(strtotime($reply['date']))?></em>
+                        </small>
+                    </div>
+                    <div style="margin-bottom: 10px;">
+                        <small>
+                            <?=nl2br($reply['text'])?>
+                        </small>
+                    </div>
+                <?}?>
+                <hr />
+                <div style="margin-bottom: 10px;">
+                    <strong><?=$item['subject']?></strong>
+                </div>
+            <?}?>
+            <div style="margin-bottom: 5px;">
+                <small>
+                    <em><?=_FROM?>: <?=$item['name']?> <?=_ON?> <?=date(_DATE_LONG_FORMAT, strtotime($item['date']))?></em>
+                </small>
+            </div>
+            <hr />
+            <div>
+                <small>
+                    <?=nl2br($item['text'])?>
+                </small>
+            </div>
+        </div>
+        <?}?>
+    </form>
+</div>
+<script type="text/javascript" src="js/plugins/jquery.autogrow.js"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('form').append('<input type="hidden" name="confirm_field" value="1" />');
+        $('#message-text').focus();
+        $('textarea').autogrow({
+            animate: true,
+            speed: 0
+        });
+        $('#form-area').on('submit', function(){
+            $('.loading-area').show();
+            $('.alert-success, .alert-error').hide();
+            $.fn.colorbox.resize();
+            $.ajax({
+                type: "POST",
+                url: $(this).attr('action'),
+                data: $(this).serialize(),
+                success: function (a) {
+                    if (a.answer == 'done') 
+                    {
+                        $('.alert-success').html(a.message).show();
+                        setTimeout(function(){
+                            $.fn.colorbox.close();
+                            window.location.href = window.location.href;
+                        }, 2000);
+                    } 
+                    else 
+                    {
+                        $('.alert-error').html(a.message).show();
+                    }
+                    $.fn.colorbox.resize();
+                    $('.loading-area').hide();
+                }
+            });
+            return false;
+        });
+    });
+</script>

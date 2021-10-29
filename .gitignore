@@ -1,0 +1,7 @@
+.idea
+uploads/*
+cache/*
+logs.log
+/app/vendors
+sitemap*.xml
+

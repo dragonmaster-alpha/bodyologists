@@ -1,0 +1,53 @@
+<?php if(isset($_SESSION['error'])) {?>
+    <div class="alert-error" title="Error">
+        <?=$_SESSION['error']?>
+    </div>
+    <?php
+    unset($_SESSION['error']);
+}
+?>
+<div class="row-fluid">
+    <div class="span8">
+        <div class="pageheader">
+            <h1 class="head">
+                 Images Slider
+            </h1>
+        </div>
+    </div>
+    <div class="span4">
+        <div class="submit-top">
+            <div style="text-align: right; margin: 10px;">
+                <!--
+                <a class="btn btn-info upload-images tipE" title="Configure Slider" href="admin.php?plugin=pages&amp;addon=slider&amp;op=config">
+                    <span class="icon-cog-3 font20"></span>
+                </a>
+                -->
+                <a class="btn btn-success upload-images tipE" title="Upload Images" href="admin.php?plugin=pages&amp;addon=slider&amp;op=upload">
+                    <span class="icon-upload-4 font20"></span>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+<br clear="all" />
+<div id="contentwrapper" class="contentwrapper">
+    <div class="gallerywrapper">
+        <ul class="imagelist">
+            <?php if(count($items_info)>0) {?>
+                <?php foreach($items_info as $item) {?>
+            <li id="item_<?=$item['id']?>">
+                <div class="img" style="background: url(<?=_SITE_PATH?>/uploads/slider/<?=$item['bid']?>/<?=$item['image']?>) no-repeat center center; background-size: cover;">
+                    <img src="images/blank.gif" alt="<?=$item['title']?>" />
+                 </div>
+                 <span class="hidden-phone">
+                    <a href="admin.php?plugin=pages&amp;addon=slider&amp;op=edit&amp;id=<?=$item['id']?>" class="name ajax"><?=substr($item['image'], 0, 20)?><?=(strlen($item['image'])>20) ? '...' : ''?></a>
+                    <a href="admin.php?plugin=pages&amp;addon=slider&amp;op=edit&amp;id=<?=$item['id']?>" class="edit ajax"></a>
+                    <a href="<?=_SITE_PATH?>/uploads/slider/<?=$item['bid']?>/<?=$item['image']?>" class="view"></a>
+                    <a href="admin.php?plugin=pages&amp;addon=gallery&amp;op=delete_image&amp;id=<?=$item['id']?>" class="delete"></a>
+                 </span>
+            </li>
+                <?php }?>
+            <?php }?>
+        </ul>
+    </div>
+</div>

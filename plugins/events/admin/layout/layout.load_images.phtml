@@ -1,0 +1,15 @@
+<?php if(count($item_images)>0) {?>
+    <?php foreach($item_images as $image) {?>
+    <li id="item_<?=$image['id']?>">
+        <div class="img" style="background: url(<?=_SITE_PATH?>/uploads/events/<?=$image['bid']?>/thumb-<?=$image['image']?>) no-repeat center center;  background-size: cover;">
+            <img src="images/blank.gif" alt="<?=$image['title']?>" />
+         </div>
+         <span>
+            <a href="admin.php?plugin=pages&amp;addon=gallery&amp;op=edit_images&amp;id=<?=$image['id']?>" class="name ajax"><?=substr($image['image'], 0, 20)?><?=(strlen($image['image'])>20) ? '...' : ''?></a>
+            <a href="admin.php?plugin=pages&amp;addon=gallery&amp;op=edit_images&amp;id=<?=$image['id']?>" class="edit ajax"></a>
+            <a href="<?=_SITE_PATH?>/uploads/events/<?=$image['bid']?>/<?=$image['image']?>" class="view"></a>
+            <a href="admin.php?plugin=pages&amp;addon=gallery&amp;op=delete_image&amp;id=<?=$image['id']?>" class="delete"></a>
+         </span>
+    </li>
+    <?php }?>
+<?php }?>

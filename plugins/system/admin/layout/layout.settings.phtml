@@ -1,0 +1,809 @@
+<form action="admin.php?plugin=system&amp;file=settings" method="post" class="stdform">
+    <input type="hidden" value="update" name="op" />
+    <input type="hidden" value="<?=$helper->config['index_plugin']?>" name="index_plugin" />
+    
+    <div class="row-fluid">
+        <div class="span9">
+            <div class="pageheader">
+                <h1 class="head">
+                    General Settings
+                </h1>
+            </div>
+        </div>
+        <div class="span3">
+            <div class="submit-top">
+                <div style="text-align: right; margin-right: 40px;">
+                    <div style="position: relative; display: inline-block;">
+                        <button class="btn btn-success tipN" style="margin-right: 10px;" type="submit" title="Save Changes">
+                            <span class="icon-disk"></span>
+                        </button>
+                        <button class="btn btn-warning tipN" type="reset" title="Undo Changes">
+                            <span class="font20 icon-history"></span> 
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <ul class="hornav">
+        <li class="current">
+            <a href="#default" class="current">General</a>
+        </li>
+        <li>
+            <a href="#contact">Contact</a>
+        </li>
+        <?php if($helper->is_plugin('orders')) {?>
+        <li>
+            <a href="#shipping">Shipping</a>
+        </li>
+        <?php }?>
+        <?php if($helper->is_plugin('orders') || $helper->is_plugin('payments') || $helper->is_addon('members', 'packages')) {?>
+        <li>
+            <a href="#transactions">Transactions</a>
+        </li>
+        <?php }?>
+    </ul>
+    <div id="contentwrapper" class="contentwrapper">
+        <div id="default" class="subcontent">
+            <div class="contenttitle2">
+                <h3>system Information</h3>
+            </div>
+            <p>
+                <label>
+                    Site URL: 
+                </label>
+                <div class="field">
+                    <input type="text" value="<?=(!empty($helper->config['siteurl'])) ? $helper->config['siteurl'] : 'http://' . $helper->site_domain() . '/'?>" name="siteurl" />
+                </div>
+                <small class="desc">
+                    Site URL, this address will be used by default to internal functionalities of the site.
+                </small>
+            </p>
+            <p>
+                <label>
+                    Dev. Email: 
+                </label>
+                <div class="field">
+                    <input type="text" value="<?=(empty($helper->config['adminmail'])) ? 'dev@miamiweb.org' : $helper->config['adminmail']?>" name="adminmail" />
+                </div>
+                <small class="desc">
+                    Developers e-mail address. This is used to report errors automatically to developers.
+                </small>
+            </p>
+            <p>
+                <label>
+                    Force usage of HTTPS: 
+                </label>
+                <div class="field">
+                    <label>
+                        <input type="checkbox" value="1" <?=($helper->config['force_https']) ? ' checked="checked"' : ''?> name="force_https" /> 
+                        Use this option <b>only if an SSL certificate</b> is being installed on the website.
+                    </label>
+                </div>
+                <small class="desc">
+                    Make sure an SSL certificate is present on the website before marking this field otherwise your site will not work!
+                </small>
+            </p>
+            <?php if($helper->is_plugin('orders')) {?>
+                <div class="contenttitle2">
+                    <h3>Taxes Configuration</h3>
+                </div>
+                <p>
+                    <label>
+                        Charge Taxes:   
+                    </label>
+                    <div class="field">
+                        <label>
+                        <input type="checkbox" value="1" name="charge_taxes" onclick="jQuery('div#states_list').slideToggle();" <?=(!empty($helper->config['charge_taxes'])) ? ' checked="checked"' : ''?> />
+                        Yes, we will charge Taxes in our store!
+                        </label>
+                        <div id="states_list" class="row-fluid join" style="display: <?=(!empty($helper->config['charge_taxes'])) ? 'block' : 'none'?>;">
+                            <div class="node">
+                                
+                            </div>
+                            <div class="data">
+                                <?=$helper->get_states('tax_states[]', $helper->config['tax_states'], $selected_country, array('size' => 8, 'multiple' => 'multiple', 'class' => 'uniformselect'))?>
+                            </div>
+                        </div>
+                    </div>
+                </p>
+            <?php }?>
+            <?php if($helper->is_plugin('pages', 'gallery')) {?>
+                <div class="contenttitle2">
+                    <h3>Images Configuration</h3>
+                </div>
+                <p>
+                    <label>
+                        Thumbnails: 
+                    </label>
+                    <div class="field">
+                        <input type="text" value="<?=(int)$helper->config['thumb_width']?>" name="thumb_width" style="width: 70px;" placeholder="Width" /> x <input type="text" value="<?=(int)$helper->config['thumb_height']?>" name="thumb_height" style="width: 70px;" placeholder="Height" />
+                    </div>
+                    <small class="desc">
+                        This value sets the default width and height for all thumbnails on the site (all sizes are set in pixels).
+                    </small>
+                </p>
+                <p>
+                    <label>
+                        Images:
+                    </label>
+                    <div class="field">
+                        <input type="text" value="<?=(int)$helper->config['image_width']?>" name="image_width" style="width: 70px;" placeholder="Width" /> x <input type="text" value="<?=(int)$helper->config['image_height']?>" name="image_height" style="width: 70px;" placeholder="Height" /> 
+                    </div>
+                    <small class="desc">
+                        This values set the default width and height for all images on the site (all sizes are set in pixels).
+                    </small>
+                </p>
+            <?php }?>
+            <?php if($helper->is_addon('pages', 'videos')) {?>
+                <div class="contenttitle2">
+                    <h3>Videos Configuration</h3>
+                </div>
+                <p>
+                    <label>
+                        Videos: 
+                    </label>
+                    <div class="field">
+                        <input type="text" value="<?=(int)$helper->config['video_width']?>" name="video_width" style="width: 70px;" placeholder="Width" /> x <input type="text" value="<?=(int)$helper->config['video_height']?>" name="video_height" style="width: 70px;" placeholder="Height" />  
+                    </div>
+                    <small class="desc">
+                        This values set the default width and height for any uploaded video to the video gallery (all sizes are set in pixels).
+                    </small>
+                </p>
+            <?php }?>
+        </div>
+        <div id="contact" class="subcontent" style="display: none">
+            <div class="contenttitle2">
+                <h3>Contact Information</h3>
+            </div>
+            <p>
+                <label>
+                    Company Name:   
+                </label>
+                <div class="field">
+                    <input type="text" value="<?=$helper->config['contactname']?>" name="contactname" />
+                </div>
+                <small class="desc">
+                    Company name that will be displayed into the site and emails.
+                </small>
+            </p>
+            <p>
+                <label>
+                    Country:   
+                </label>
+                <div class="field">
+                    <?=$helper->get_countries('country', $selected_country, '', array('class' => 'uniformselect select-country', 'data-state' => 'state', 'data-holder' => 'state-area'))?>
+                </div>
+                <small class="desc">
+                    Company based country.
+                </small>
+            </p>
+            <p>
+                <label>
+                    Address:   
+                </label>
+                <div class="field">
+                    <input type="text" value="<?=$helper->config['address']?>" name="address" />
+                </div>
+                <small class="desc">
+                    Company main address.
+                </small>
+            </p>
+            <p>
+                <label>
+                    Suite/Apt:   
+                </label>
+                <div class="field">
+                    <input type="text" value="<?=$helper->config['address2']?>" name="address2" />
+                </div>
+                <small class="desc">
+                    Company address suite or apartment.
+                </small>
+            </p>
+            <p>
+                <label>
+                    City:   
+                </label>
+                <div class="field">
+                    <input type="text" value="<?=$helper->config['city']?>" name="city" />
+                </div>
+                <small class="desc">
+                    Company main City/Town Name.
+                </small>
+            </p>
+            <p>
+                <label>
+                    State:   
+                </label>
+                <div class="field">
+                    <div id="state-area">
+                        <?=$helper->get_states("state", $helper->config['state'], $selected_country, array('class' => 'uniformselect'))?>
+                    </div>
+                </div>
+                <small class="desc">
+                    Company main State/Province.
+                </small>
+            </p>
+            <p>
+                <label>
+                    Zip/Postal Code:    
+                </label>
+                <div class="field">
+                    <input type="text" value="<?=$helper->config['zipcode']?>" name="zipcode" />
+                </div>
+                <small class="desc">
+                    Company main Zip/Postal/Mailing code.
+                </small>
+            </p>
+            <div class="contenttitle2">
+                <h3>Company Phone &amp; Fax</h3>
+            </div>
+            <p>
+                <label>
+                    Telephone No:    
+                </label>
+                <div class="field">
+                    <input type="text" value="<?=$helper->config['phone']?>" name="phone" />
+                </div>
+                <small class="desc">
+                    Company main telephone number.
+                </small>
+            </p>
+            <p>
+                <label>
+                    Fax No:    
+                </label>
+                <div class="field">
+                    <input type="text" value="<?=$helper->config['fax']?>" name="fax" />
+                </div>
+                <small class="desc">
+                    Company main fax mile number.
+                </small>
+            </p>
+            <div class="contenttitle2">
+                <h3>Company Emails</h3>
+            </div>
+            <p>
+                <label>
+                    System Email:    
+                </label>
+                <div class="field">
+                    <input type="text" value="<?=(empty($helper->config['contactemail'])) ? "info@".$helper->site_domain() : $helper->config['contactemail']?>" name="contactemail" />
+                </div>
+                <small class="desc">
+                    Email address that will be used as default for all email coming out of the site (Required).
+                </small>
+            </p>
+            <p>
+                <label>
+                    Sales Email:    
+                </label>
+                <div class="field">
+                    <input type="text" value="<?=$helper->config['salesemail']?>" name="salesemail" />
+                </div>
+                <small class="desc">
+                    Sales department email address (optional).
+                </small>
+            </p>
+            <p>
+                <label>
+                    Support Email:     
+                </label>
+                <div class="field">
+                    <input type="text" value="<?=$helper->config['supportemail']?>" name="supportemail" />
+                </div>
+                <small class="desc">
+                    Support department email address (optional).
+                </small>
+            </p>
+            <p>
+                <label>
+                    Feedback Email:     
+                </label>
+                <div class="field">
+                    <input type="text" value="<?=$helper->config['feedbackemail']?>" name="feedbackemail" />
+                </div>
+                <small class="desc">
+                    Feed back's email address (optional).
+                </small>
+            </p>
+        </div>
+        <?php if($helper->is_plugin('orders')) {?>
+        <div id="shipping" class="subcontent" style="display: none;">
+            <div class="contenttitle2">
+                <h3>Shipping Information</h3>
+            </div>
+            <div>
+                Select the method you want to use on your website to calculate shipping.
+            </div>
+            <p>
+                <label>
+                    Shipping Method:     
+                </label>
+                <div class="field">
+                    <select name="shipping_method" class="uniformselect" onchange="jQuery('.shipping_div').hide(); jQuery('#' + jQuery(this).val() + '_form').slideToggle();">
+                        <option>Select one...</option>
+                        <option value="ups"<?=($helper->config['shipping_method'] == 'ups') ? ' selected="selected"' : ''?>>UPS</option>
+                        <option value="usps"<?=($helper->config['shipping_method'] == 'usps') ? ' selected="selected"' : ''?>>USPS (Regular Mail)</option>
+                        <option value="fedex"<?=($helper->config['shipping_method'] == 'fedex') ? ' selected="selected"' : ''?>>FedEx</option>
+                        <option value="flat"<?=($helper->config['shipping_method'] == 'flat') ? ' selected="selected"' : ''?>>Flat Rate</option>
+                        <option value="per_item"<?=($helper->config['shipping_method'] == 'per_item') ? ' selected="selected"' : ''?>>Per Item</option>
+                        <option value="table_qty"<?=($helper->config['shipping_method'] == 'table_qty') ? ' selected="selected"' : ''?>>Table Rate (Qty)</option>
+                        <option value="table_price"<?=($helper->config['shipping_method'] == 'table_price') ? ' selected="selected"' : ''?>>Table Rate (Price)</option>
+                    </select>
+                </div>
+                <small class="desc">
+                    Once you select your shipping method you will be asked to add that specific method data.<br />Please make sure you have all needed data before saving this settings.
+                </small>
+            </p>
+            <p>
+                <label></label>
+                <div class="field">
+                    <div id="ups_form" class="shipping_div" style="display: <?=($helper->config['shipping_method'] == 'ups') ? 'block' : 'none'?>;">
+                        <div class="row-fluid">
+                            <div class="span3">
+                                UPS Access: <input type="text" value="<?=$helper->config['ups_access']?>" name="ups_access" />
+                            </div>
+                            <div class="span3">
+                                UPS Account: <input type="text" value="<?=$helper->config['ups_account']?>" name="ups_account" />
+                            </div>
+                            <div class="span3">
+                                UPS User: <input type="text" value="<?=$helper->config['ups_user']?>" name="ups_user" />
+                            </div>
+                            <div class="span3">
+                                UPS Password: <input type="text" value="<?=$helper->config['ups_pass']?>" name="ups_pass" />
+                           </div>
+                        </div>
+                        <br clear="all" />
+                        <small class="desc" style="margin-left: 0;">
+                            The shipping cost will be calculated using UPS, the buyer shipping information will be send to UPS system for processing and they will answer with prices based on their calculations.
+                        </small>
+                    </div>
+                    <div id="usps_form" class="shipping_div" style="display: <?=($helper->config['shipping_method'] == 'usps') ? 'block' : 'none'?>;">
+                        <div class="row-fluid">
+                            <div class="span3">
+                                USPS User: <input type="text" value="<?=$helper->config['usps_user']?>" name="usps_user" />
+                            </div>
+                        </div>
+                        <br clear="all" />
+                        <small class="desc" style="margin-left: 0;">
+                            The shipping cost will be calculated using USPS (Regular Mail), the buyer shipping information will be send to USPS system for processing and they will answer with prices based on their calculations.
+                        </small>
+                    </div>
+                    <div id="fedex_form" class="shipping_div" style="display: <?=($helper->config['shipping_method'] == 'fedex') ? 'block' : 'none'?>;">
+                        <div class="row-fluid">
+                            <div class="span3">
+                                FedEx Key: <input type="text" value="<?=$helper->config['fedex_key']?>" name="fedex_key" />
+                            </div>
+                            <div class="span3">
+                                FedEx Password: <input type="text" value="<?=$helper->config['fedex_password']?>" name="fedex_password" />
+                            </div>
+                            <div class="span3">
+                                FedEx Account: <input type="text" value="<?=$helper->config['fedex_account']?>" name="fedex_account" />
+                            </div>
+                            <div class="span3">
+                                FedEx Meter: <input type="text" value="<?=$helper->config['fedex_meter']?>" name="fedex_meter" />
+                            </div>
+                        </div>
+                        <br clear="all" />
+                        <small class="desc" style="margin-left: 0;">
+                            The shipping cost will be calculated using FedEx, the buyer shipping information will be send to FedEx system for processing and they will answer with prices based on their calculations.
+                        </small>
+                    </div>
+                    <div id="flat_form" class="shipping_div" style="display: <?=($helper->config['shipping_method'] == 'flat') ? 'block' : 'none'?>;">
+                        <div class="row-fluid">
+                            <div class="span3">
+                                U.S. Flat Price: 
+                                <div class="input-prepend">
+                                    <span class="add-on">$</span>
+                                    <input type="text" class="price-field"  value="<?=$helper->config['flat_price']?>" name="flat_price" />
+                                </div>
+                            </div>
+                            <div class="span3">
+                                Non U.S. Flat Price: 
+                                <div class="input-prepend">
+                                    <span class="add-on">$</span>
+                                    <input type="text" class="price-field"  value="<?=$helper->config['flat_price_international']?>" name="flat_price_international" />
+                                </div>
+                            </div>
+                        </div>
+                        <br clear="all" />
+                        <small class="desc" style="margin-left: 0;">
+                            The shipping cost entered will be always charged without taking in consideration quantity or prices.
+                        </small>
+                    </div>
+                    <div id="per_item_form" class="shipping_div" style="display: <?=($helper->config['shipping_method'] == 'per_item') ? 'block' : 'none'?>;">
+                        <div class="row-fluid">
+                            <div class="span3">
+                                U.S. Per Item Price: 
+                                <div class="input-prepend">
+                                    <span class="add-on">$</span>
+                                    <input type="text" class="price-field"  value="<?=$helper->config['per_item_price']?>" name="per_item_price" />
+                                </div>
+                            </div>
+                            <div class="span3">
+                                Non U.S. Per Item Price: 
+                                <div class="input-prepend">
+                                    <span class="add-on">$</span>
+                                    <input type="text" class="price-field"  value="<?=$helper->config['per_item_price_international']?>" name="per_item_price_international" />
+                                </div>
+                            </div>
+                        </div>
+                        <br clear="all" />
+                        <small class="desc" style="margin-left: 0;">
+                            The shipping cost entered will be multiplied by the quantity of items in cart.
+                        </small>
+                    </div>
+                    <div id="table_qty_form" class="shipping_div" style="display: <?=($helper->config['shipping_method'] == 'table_qty') ? 'block' : 'none'?>;">
+                        <div class="row-fluid">
+                            <div class="span3">
+                                U.S. Qty Table: 
+                                <div>
+                                    <input type="text" class="span7" value="<?=$helper->config['qty_table']?>" name="qty_table" />
+                                </div>
+                            </div>
+                            <div class="span3">
+                                Non U.S. Qty Table: 
+                                <div>
+                                    <input type="text" class="span7" value="<?=$helper->config['qty_table_international']?>" name="qty_table_international" />
+                                </div>
+                            </div>
+                        </div>
+                        <br clear="all" />
+                        <small class="desc" style="margin-left: 0;">
+                            The shipping cost is based on the total quantity of items in cart.<br />
+                            Example: 25:8.50,50:5.50. Up to 25 charge 8.50, from there to 50 charge 5.50, etc.<br />
+                            (All calculation are based on total price in cart).
+                        </small>
+                    </div>
+                    <div id="table_price_form" class="shipping_div" style="display: <?=($helper->config['shipping_method'] == 'table_price') ? 'block' : 'none'?>;">
+                        <div class="row-fluid">
+                            <div class="span3">
+                                U.S. Price Table: 
+                                <div>
+                                    <input type="text" class="span7" value="<?=$helper->config['price_table']?>" name="price_table" />
+                                </div>
+                            </div>
+                            <div class="span3">
+                                Non U.S. Price Table: 
+                                <div>
+                                    <input type="text" class="span7" value="<?=$helper->config['price_table_international']?>" name="price_table_international" />
+                                </div>
+                            </div>
+                        </div>
+                        <br clear="all" />
+                        <small class="desc" style="margin-left: 0;">
+                            The shipping cost is based on the total cost of items in cart.<br />
+                            Example: 25:8.50,50:5.50. Up to 25 charge 8.50, from there to 50 charge 5.50, etc.<br />
+                            (All calculation are based on total price in cart).
+                        </small>
+                    </div>
+                </div>
+            </p>
+            <div class="contenttitle2">
+                <h3>Shipping Units</h3>
+            </div>
+            <div>
+                Select the units to be used when sending the information out for calculation.
+            </div>
+            <p>
+                <label></label>
+                <div class="field">
+                    <div class="row-fluid">
+                        <div class="span3">
+                            Weight Unit: 
+                            <div>
+                                <select name="weight_unit" class="uniformselect">
+                                    <option value="lb">Lbs</option>
+                                    <option value="oz">Oz</option>
+                                    <option value="gram">Grams</option>
+                                    <option value="kg">Kgs</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="span3">
+                            Size Unit: 
+                            <div>
+                                <select name="size_unit" class="uniformselect">
+                                    <option value="in">Ins</option>
+                                    <option value="cm">Cms</option>
+                                    <option value="feet">Feets</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </p>
+            <!-- <div class="contenttitle2">
+                <h3>Ship Station</h3>
+            </div>
+            <div>
+                Ship Station integration for shipping handling on all orders.
+            </div>
+            <p>
+                <label>
+                    Enable Ship Station Integration:     
+                </label>
+                <div class="field">
+                    <label>
+                        <input type="checkbox" onclick="jQuery('#shipstation_info').slideToggle();" value="1" <?=(!empty($helper->config['use_ship_station'])) ? ' checked="checked"' : ''?> name="use_ship_station" /> Yes, I will like to integrate my website with ship station.
+                    </label>
+                    <div id="shipstation_info" class="join" style="display: <?=(!empty($helper->config['use_ship_station'])) ? 'block' : 'none'?>;">
+                        <div class="node">
+                            <span class="join"></span>
+                        </div>
+                        <div class="data">
+                            
+                            <div class="row">
+                                <div class="span4">
+                                    Ship Station User Name: 
+                                    <input type="text" value="<?=$helper->config['shipstation_user']?>" name="shipstation_user" />
+                                </div>
+                                <div class="span4">
+                                    Ship Station Password: 
+                                    <input type="text" value="<?=$helper->config['shipstation_pwd']?>" name="shipstation_pwd" />
+                                </div>
+                            </div>
+                            <div class="row" style="margin-top: 20px">
+                                <div class="span8">
+                                    <div class="alert alert-danger"><i class="icon-warning"></i> The following information is for you to set your Custom Store in the ShipStation application.</div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="span8">
+                                    URL to Custom XML page: 
+                                    <input type="text" value="http<?=(!empty($helper->config['force_https']) ? 's' : '')?>://<?=$helper->site_domain() . _SITE_PATH?>/orders/shipstation" />
+                                </div>
+                            </div>
+                            <br clear="all" />
+                            <h4>Order Statuses</h4>
+                            <div class="row" style="margin-top: 10px">
+                                <div class="span4">
+                                    Unpaid Status: 
+                                    <input type="text" value="Pending" />
+                                </div>
+                                <div class="span4">
+                                    Paid Status: 
+                                    <input type="text" value="Pending" />
+                                </div>
+                            </div>
+                            <div class="row" style="margin-top: 10px">
+                                <div class="span4">
+                                    Shipped Status: 
+                                    <input type="text" value="Shipped" />
+                                </div>
+                                <div class="span4">
+                                    Completed Status: 
+                                    <input type="text" value="Completed" />
+                                </div>
+                            </div>
+                            <div class="row" style="margin-top: 10px">
+                                <div class="span4">
+                                    Cancelled Status: 
+                                    <input type="text" value="Cancelled" />
+                                </div>
+                                <div class="span4">
+                                    On-Hold Status: 
+                                    <input type="text" value="On Hold" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </p> -->
+            <div class="contenttitle2">
+                <h3>No Shipping to PO Box Addresses</h3>
+            </div>
+            <div>
+                Enable the following box if you do not want to allow users to enter a PO Box as a shipping address. Visitors will be force to use their address instead of a PO Box.
+            </div>
+            <p>
+                <label>
+                    Disable PO Box:     
+                </label>
+                <div class="field">
+                    <label>
+                        <input type="radio" value="0" <?=(empty($helper->config['shipping_pobox'])) ? ' checked="checked"' : ''?> name="shipping_pobox" /> Yes, allow users to enter a PO Box.
+                    </label>
+                    <label>
+                        <input type="radio" value="1" <?=(!empty($helper->config['shipping_pobox'])) ? ' checked="checked"' : ''?> name="shipping_pobox" /> No, we will not ship to PO Boxes addresses.
+                    </label>
+                </div>
+            </p>
+            <div class="contenttitle2">
+                <h3>Shipping Promotions</h3>
+            </div>
+            <div>
+                Enable shipping promotions on orders, this tool can be use for advertising and merchandise calculations based on orders.
+            </div>
+            <p>
+                <label>
+                    Enable Shipping Promotions:     
+                </label>
+                <div class="field">
+                    <label>
+                        <input type="checkbox" onclick="jQuery('#promotions_info').slideToggle();" value="1" <?=(!empty($helper->config['shipping_promotion'])) ? ' checked="checked"' : ''?> name="shipping_promotion" /> Yes, I will like to have a shipping promotion.
+                    </label>
+                    <div id="promotions_info" class="join" style="display: <?=(!empty($helper->config['shipping_promotion'])) ? 'block' : 'none'?>;">
+                        <div class="node">
+                            <span class="join"></span>
+                        </div>
+                        <div class="data">
+                            <div class="span3">
+                                Free shipping on order over: 
+                                <div class="input-prepend">
+                                    <span class="add-on">$</span>
+                                    <input type="text" class="price-field" value="<?=$helper->config['shipping_price_promotion']?>" name="shipping_price_promotion" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </p>
+            <div class="contenttitle2">
+                <h3>Handling Information</h3>
+            </div>
+            <div>
+                Charge handling and warehouse fees in this area, any entered amount will be added to each shipping calculation displayed to the customers.
+            </div>
+            <p>
+                <label>
+                    Charge for Handling:     
+                </label>
+                <div class="field">
+                    <label>
+                        <input type="checkbox" onclick="jQuery('#charge_handling_info').slideToggle();" value="1" <?=(!empty($helper->config['charge_handling'])) ? ' checked="checked"' : ''?> name="charge_handling" /> Yes, I will like to charge handling.
+                    </label>
+                    <div id="charge_handling_info" class="join" style="display: <?=(!empty($helper->config['charge_handling'])) ? 'block' : 'none'?>;">
+                        <div class="node">
+                            <span class="join"></span>
+                        </div>
+                        <div class="data">
+                            <div class="span3">
+                                How much to charge: 
+                                <div class="input-prepend">
+                                    <span class="add-on">$</span>
+                                    <input type="text" class="price-field" value="<?=$helper->config['handling_amount']?>" name="handling_amount" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </p>
+        </div>
+        <?php }?>
+        <?php if($helper->is_plugin('orders') || $helper->is_plugin('payments') || $helper->is_addon('members', 'packages')) {?>
+        <div id="transactions" class="subcontent" style="display: none;">
+            <div class="contenttitle2">
+                <h3>Transactions Information</h3>
+            </div>
+            <p>
+                <label>
+                    We Accept:     
+                </label>
+                <div class="field">
+                    <div class="row-fluid">
+                        <div style="padding-top: 5px;">
+                            Select the credit card types you will be accepting in your site.
+                        </div>
+                        <div class="span2">
+                            <label>
+                                <input type="checkbox" value="1" <?=($helper->config['we_accept_visa'] == 1) ? ' checked="checked"' : ''?> name="we_accept_visa" />
+                                <img src="../images/cc/visa.png" style="position: relative; top: 7px;" />
+                            </label>
+                        </div>
+                        <div class="span2">
+                            <label>
+                                <input type="checkbox" value="1" <?=($helper->config['we_accept_mastercard'] == 1) ? ' checked="checked"' : ''?> name="we_accept_mastercard" />
+                                <img src="../images/cc/mastercard.png" style="position: relative; top: 7px;" />
+                            </label>
+                        </div>
+                        <div class="span2">
+                            <label>
+                                <input type="checkbox" value="1" <?=($helper->config['we_accept_discover'] == 1) ? ' checked="checked"' : ''?> name="we_accept_discover" />
+                                <img src="../images/cc/discover.png" style="position: relative; top: 7px;" />
+                            </label>
+                        </div>
+                        <div class="span2">
+                            <label>
+                                <input type="checkbox" value="1" <?=($helper->config['we_accept_amex'] == 1) ? ' checked="checked"' : ''?> name="we_accept_amex" />
+                                <img src="../images/cc/amex.png" style="position: relative; top: 7px;" />
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <small class="desc">
+                    Please make sure your merchant is configured to handle all the credit card types you need before this option is configured.
+                </small>
+            </p>
+            <p>
+                <label>
+                    Merchant Services:    
+                </label>
+                <div class="field">
+                    <div>
+                        <label>
+                            <input type="radio" onclick="jQuery('.merchants').slideUp(); jQuery('#authorizenet_info').slideToggle();" value="authorizenet"<?=($helper->config['merchant'] == 'authorizenet') ? ' checked="checked"' : ''?> name="merchant" />
+                            Authorize.net
+                        </label>
+                        <div id="authorizenet_info" class="join merchants" style="display: <?=($helper->config['merchant'] == 'authorizenet') ? 'block' : 'none'?>;">
+                            <div class="node">
+                                <span class="join"></span>
+                            </div>
+                            <div class="data">
+                                <div class="span3">
+                                    Transaction ID: <input type="text" value="<?=$helper->config['authorizenet_user']?>" name="authorizenet_user" />
+                                </div>
+                                <div class="span3">
+                                    Transaction Key: <input type="text" value="<?=$helper->config['authorizenet_password']?>" name="authorizenet_password" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <label>
+                            <input type="radio" onclick="jQuery('.merchants').slideUp(); jQuery('#paypalpro_info').slideToggle();" value="paypalpro"<?=($helper->config['merchant'] == 'paypalpro') ? ' checked="checked"' : ''?> name="merchant" />
+                            PayPal PRO
+                        </label>
+                        <div id="paypalpro_info" class="join merchants" style="display: <?=($helper->config['merchant'] == 'paypalpro') ? 'block' : 'none'?>;">
+                            <div class="node">
+                                <span class="join"></span>
+                            </div>
+                            <div class="data">
+                                <div class="span3">
+                                    User: <input type="text" value="<?=$helper->config['paypalpro_user']?>" name="paypalpro_user" />
+                                </div>
+                                <div class="span3">
+                                    Password: <input type="text" value="<?=$helper->config['paypalpro_password']?>" name="paypalpro_password" />
+                                </div>
+                                <div class="span3">
+                                    Signature: <input type="text" value="<?=$helper->config['paypalpro_signature']?>" name="paypalpro_signature" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <label>
+                            <input type="radio" onclick="jQuery('.merchants').slideUp(); jQuery('#stripe_info').slideToggle();" value="stripe"<?=($helper->config['merchant'] == 'stripe') ? ' checked="checked"' : ''?> name="merchant" />
+                            Stripe
+                        </label>
+                        <div id="stripe_info" class="join merchants" style="display: <?=($helper->config['merchant'] == 'stripe') ? 'block' : 'none'?>;">
+                            <div class="node">
+                                <span class="join"></span>
+                            </div>
+                            <div class="data">
+                                <div class="span3">
+                                    Secret Key: <input type="text" value="<?=$helper->config['stripe_key']?>" name="stripe_key" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </p>
+            <p>
+                <label>
+                    PayPal Express:    
+                </label>
+                <div class="field">
+                    <label>
+                        <input type="checkbox" onclick="jQuery('#pp_extra_info').slideToggle();" value="1"<?=($helper->config['accept_pay_pal'] == 1) ? ' checked="checked"' : ''?> name="accept_pay_pal" />
+                        Allow buyers to pay on PalPal using their payPal accounts.
+                    </label>
+                    
+                    <div id="pp_extra_info" class="join" style="display: <?=($helper->config['accept_pay_pal'] == 1) ? 'block' : 'none'?>;">
+                        <div class="node"></div>
+                        <div class="data">
+                            <div class="span3">
+                            PayPal Email: <input type="text" value="<?=$helper->config['pay_pal_email']?>" name="pay_pal_email" placeholder="business@example.com" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <small class="desc">
+                    PayPal Express is the traditional payment method used on PayPal where your visitors are redirected to paypal.com and the order is placed there. Make sure you have an account on PayPal and it is already linked up to your back account before configuring this option.
+                </small>
+            </p>
+        </div>
+        <?php }?>
+    </div>
+</form>

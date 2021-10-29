@@ -1,0 +1,30 @@
+<tr id="item_<?=$item['id']?>">
+	<td>
+        <h5><a href="admin.php?plugin=blog&amp;op=edit&amp;id=<?=$item['item']['id']?>"><?=$item['item']['title']?></a></h5>
+		<strong>Author</strong>: <?=(!empty($item['owner'])) ? '<a href="admin.php?plugin=members&amp;op=edit&amp;id=' . $item['owner'] . '">' . $item['name'] . '</a>' : $item['name']?> 
+        - <a href="admin.php?plugin=system&amp;file=messages&amp;op=send_message&amp;email=<?=$item['email']?>&amp;name=<?=urlencode($item['name'])?>&amp;subject=<?=urlencode('Contact from ' . $frm->config['sitename'])?>" class="send-message">
+            <?=$item['email']?> <span class="icon-mail-send"></span> 
+        </a> - IP: <?=$item['ip']?>
+        <br />
+		<?=$item['plain_text']?>
+	</td>
+	<td class="no_sort hidden-phone">
+        <a href="admin.php?plugin=comments&amp;op=approve&amp;id=<?=$item['id']?>" class="toggle-menu tipS" title="Approve Comment">
+            <?=($item['approved'] == 1) ? '<span class="icon-checkmark-green"></span>' : '<span class="icon-cancel-red"></span>'?> Approved
+        </a><?=date('M jS Y, g:i A', strtotime($item['date']))?>
+	</td>
+	<td class="actions no_sort">
+        <?if(empty($item['spam'])) {?>
+        <a class="tipS run-background" title="Mark as Spam" data-question="Are you sure this is spam?" href="admin.php?plugin=comments&amp;op=spam_manage&amp;id=<?=$item['id']?>">
+            <span class="icon-eye-blocked"></span>
+        </a>
+        <?} else {?>
+        <a class="tipS run-background" title="No Spam" data-question="Are you sure this is NOT spam?" href="admin.php?plugin=comments&amp;op=spam_manage&amp;id=<?=$item['id']?>">
+            <span class="icon-eye"></span>
+        </a>
+        <?}?>
+		<a class="tipS deletion" title="Delete" href="admin.php?plugin=comments&amp;op=delete&amp;id=<?=$item['id']?>">
+            <span class="icon-cancel-4"></span>
+        </a>
+	</td>
+</tr>

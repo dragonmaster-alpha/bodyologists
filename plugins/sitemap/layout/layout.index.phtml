@@ -1,0 +1,36 @@
+<div>
+    <h1><?=_SITE_MAP?></h1>
+	<?
+    foreach($entries as $entry_title => $entry_val) 
+    {?>
+        <div class="clearfix">
+            <?if(count($entry_val) > 1) {
+                $entry_count = 0;
+                ?>
+                <h3><?=$entry_title?></h3>
+                <div class="row">
+                <?
+                foreach($entry_val as $entry_value) 
+                {
+                    $entry_count++;
+                    if(!empty($entry_value['name'])) 
+                    {?>
+                        <div class="col-md-3">
+            				<a href="<?=_SITE_PATH?>/<?=($entry_title != 'pages') ? ($entry_title == 'categories') ? 'products/' . $entry_title : $entry_title : ''?>/<?=$entry_value['url']?>" title="<?=$entry_value['name']?>"><?=$entry_value['name']?></a>
+            			</div>
+                        <?
+                        if($entry_count == 4) 
+                        {
+                            $entry_count = 0;
+                            ?>
+                            </div>
+                            <div class="row">
+                            <?
+                        }
+                    }
+                }?>
+                </div>
+            <?}?>
+        </div>
+	<?}?>
+</div>

@@ -1,0 +1,43 @@
+<html>
+
+<?php
+$status = $args['status'];
+
+$title = "Your professional membership at {$config('sitename')}";
+
+include 'header.email.phtml';
+?>
+
+    <body>
+
+        <?php include 'logo_header.email.phtml'; ?>
+
+        <p>Hello <b><?= $args['name'] ?>.</b></p>
+
+        <p>
+            This email is to let you know that our staff have reviewed your profile and
+            has decided to <b><?= strtoupper($status) ?></b> it to get listed at <b><?= ucwords($config('domain')) ?></b>
+        </p>
+
+        <?php if ($status === 'approve') { ?>
+        <p>
+            Congratulations! <br>
+            You can now log in at <a href="<?= $config('siteurl') ?>members/dashboard" target="_blank"><?= $config('sitename') ?></a>
+            and complete all the services you offer in your "Profile" section.
+        </p>
+        <?php } else { ?>
+            <p>
+                For some reason your profile unfortunately was not approved.
+                One of our staff crew will get in touch wih you soon to give you feedback regarding your registration.
+            </p>
+        <?php } ?>
+
+        <p>Thank you very much for trusting our services.</p>
+
+        <?php
+        include 'social_links.email.phtml';
+
+        include 'disclaimer.email.phtml';
+        ?>
+    </body>
+</html>

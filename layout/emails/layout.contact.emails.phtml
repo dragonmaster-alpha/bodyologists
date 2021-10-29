@@ -1,0 +1,53 @@
+<html>
+	<head>
+		<title><?=$subject?></title>
+		<style type="text/css">
+    		body {
+                font-size: 12px;
+                font-family: "Lucida Grande", "Lucida Sans Unicode", Helvetica, Arial, Verdana, sans-serif;
+            }
+            h1 {
+                color: #000000;
+                font-size: 50px;
+                marign: 0;
+                padding: 0;
+                line-height: 50px;
+                text-transform: uppercase;
+            }
+            div.header { 
+                padding: 10px;
+                margin-bottom: 10px;
+            }
+            div.footer { 
+                padding: 10px;
+                margin-top: 10px;
+            }
+            div.disclaimer {
+                font-size: 11px;
+                margin-top: 10px;
+                padding-top: 10px;
+                border-top: 1px solid #ddd;
+            }
+		</style>
+	</head>
+	<body>
+		<div class="header">
+            <?php if(file_exists($_SERVER['DOCUMENT_ROOT'] . _SITE_PATH . '/images/email-logo-wide.png')) {?>
+				<a href="http://<?=$frm->site_domain() . _SITE_PATH?>">
+                    <img src="http://<?=$frm->site_domain() . _SITE_PATH?>/images/email-logo-wide.png" alt="<?=$frm->config['sitename']?>" />
+                </a>
+            <?php } else {?>
+				<h1><?=$frm->config['sitename']?></h1>
+            <?php }?>
+		</div>
+		<p>Sent on: <?=date('l, M jS Y g:i a')?></p>
+        <?php
+        $removal = ['receiver','subject','thanks','x','y','token','honey', 'location_lat', 'location_lng', 'captcha_code'];
+		foreach($_POST as $key => $val) {
+			if(!in_array($key, $removal)) {?>
+				<p><b><?=ucwords(strtolower(str_replace("_", " ", $key)))?></b>: <?=$val?></p>
+            <?php
+            }
+		}?>
+	</body>
+</html>

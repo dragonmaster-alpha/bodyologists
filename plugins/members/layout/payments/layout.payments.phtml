@@ -1,0 +1,151 @@
+<?require_once($_SERVER["DOCUMENT_ROOT"] . _SITE_PATH . '/plugins/members/nav_menu.php')?>
+<div style="margin-bottom: 20px;">
+    <?if(isset($_REQUEST['expired'])) {?>
+        <div class="alert alert-error">
+            <a class="close" data-dismiss="alert">&times;</a>
+            <?=_MEMBERS_PAYMENT_MEMBERSHIP_EXPIRED?>
+        </div>
+    <?} else {?>
+        <div class="row clearfix">
+            <div class="col-md-12">
+                <?=_MEMBERS_PAYMENT_SELECT_PACKAGE_BLABLA?>
+            </div>
+        </div>
+    <?}?>
+</div>
+<hr />
+<div style="margin: 20px 0;" class="clear">
+    <form action="index.php?plugin=members&amp;file=payments" method="post" class="validate-form form-horizontal">
+        <input type="hidden" value="save" name="op" />
+        <div class="area">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="head black-bg">
+                        <div class="row">
+                            <div class="col-md-12 text-right">
+                                <?=_WE_ACCEPT?>: 
+                                <?if(!empty($frm->config['we_accept_visa'])) {?>
+                                <img src="images/cc/visa.png" alt="Visa" style="height: 24px;" />
+                                <?}?>
+                                <?if(!empty($frm->config['we_accept_mastercard'])) {?>
+                                <img src="images/cc/mastercard.png" alt="Master Card" style="height: 24px;" />
+                                <?}?>
+                                <?if(!empty($frm->config['we_accept_discover'])) {?>
+                                <img src="images/cc/discover.png" alt="Discover" style="height: 24px;" />
+                                <?}?>
+                                <?if(!empty($frm->config['we_accept_amex'])) {?>
+                                <img src="images/cc/amex.png" alt="AMEX" style="height: 24px;" />
+                                <?}?>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-5">
+                                <select name="plan" class="form-control required">
+                                    <?foreach($plans as $plan) {?>
+                                    <option value="<?=$plan['id']?>">$<?=$plan['price']?> - <?=$plan['name']?></option>
+                                    <?}?>
+                                </select>
+                            </div>
+                            <div class="col-md-7">
+                                <input type="number" id="cc_number" maxlength="19" name="cc_number" value="<?=$_SESSION['payment']['cc_number']?>" class="form-control required cc" placeholder="<?=_CARD_NUMBER?>" autocomplete="off" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-md-5 col-sm-5 text-right">
+                                    <p><?=_CARD_EXPDATE?></p>
+                                </div>
+                                <div class="col-md-2 col-sm-2">
+                                    <?=$credit_card->get_cc_exp_month('cc_month', $_SESSION['payment']['cc_month'], array('class' => 'form-control'))?>
+                                </div>
+                                <div class="col-md-2 col-sm-2">
+                                    <?=$credit_card->get_cc_exp_year('cc_year', $_SESSION['payment']['cc_year'], array('class' => 'form-control'))?>
+                                </div>
+                                <div class="col-md-3 col-sm-3">
+                                    <div class="input-group">
+                                        <input type="number" maxlength="4" name="cc_cvv" value="<?=$_SESSION['payment']['cc_cvv']?>" class="form-control required cvc" placeholder="<?=_CARD_CVV?>" autocomplete="off" />
+                                        <span class="input-group-addon">
+                                            <a href="data/validationhelp.html" class="popup">
+                                                <span class="icon-info"></span>
+                                            </a>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr />
+                            <div class="row">
+                                <div class="col-md-6 col-sm-6">
+                                    <input type="text" id="first_name" maxlength="32" value="<?=(!empty($_SESSION['payment']['first_name'])) ? $_SESSION['payment']['first_name'] : $_SESSION['user_info']['first_name']?>" name="first_name" class="form-control required" placeholder="<?=_CARD_HOLDER?> <?=_FIRST_NAME?>" autocomplete="off" />
+                                </div>
+                                <div class="col-md-6 col-sm-6">
+                                    <input type="text" id="last_name" maxlength="32" value="<?=(!empty($_SESSION['payment']['last_name'])) ? $_SESSION['payment']['last_name'] : $_SESSION['user_info']['last_name']?>" name="last_name" class="form-control required" placeholder="<?=_CARD_HOLDER?> <?=_LAST_NAME?>" autocomplete="off" />
+                                </div>
+                            </div>
+                            <div class="divider">
+                                <span class="icon-home"></span> <?=_BILLING_ADDRESS?>
+                            </div>
+                            <div>
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <?=$helper->get_countries('country', $country, '', array('class' => 'country form-control', 'placeholder' => _COUNTRY))?>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-10">
+                                        <input type="text" id="address" name="address" value="<?=$_SESSION['payment']['address']?>" class="required form-control" placeholder="<?=_ADDRESS?>" />
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <input type="text" id="suite" name="suite" value="<?=$_SESSION['payment']['suite']?>" class=" form-control" placeholder="<?=_ADDRESS_APT?>" />
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <input type="text" id="city" name="city" value="<?=$_SESSION['payment']['city']?>" class="required form-control" placeholder="<?=_CITY?>" />
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <?=$helper->get_states('state', $_SESSION['payment']['state'], $country, array('class' => 'state form-control'))?>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <input type="text" id="zipcode" name="zipcode" value="<?=$_SESSION['payment']['zipcode']?>" class=" form-control" placeholder="<?=_ZIP?>" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="foot">
+                        <div class="row">
+                            <div class="col-md-10">
+                                <p>
+                                    <label>
+                                        <input type="checkbox" value="1" <?=(!empty($_SESSION['payment']['agree']) ? 'checked="checked"' : '')?> name="agree" /> <?=_CARD_TRANSACTION_AGREEMENT?>
+                                    </label>
+                                </p>
+                            </div>
+                            <div class="col-md-2 text-right">
+                                <button type="submit" class="btn btn-primary" autocomplete="off">
+                                    <?=_SUBMIT?>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $( document ).on('change', ':input', function() {
+            var input = $(this);
+            var element = input.prop('name');
+            $('#' + element).text(input.val());
+            $.get('index.php?plugin=members&amp;file=payments&amp;op=set&amp;k=' + element +'&v=' + input.val(), function(a){
+                if(a != '' && element == 'cc_number'){
+                    input.removeClass('visa mastercard discover amex cirrus maestro creditcard unknown').addClass(a);
+                }
+            });
+        });
+    });
+</script>

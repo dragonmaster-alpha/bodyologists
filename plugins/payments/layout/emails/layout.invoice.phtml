@@ -1,0 +1,146 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title><?=_RECEIPT?></title>
+        <base href="<?=(!empty($helper->config['force_https'])) ? 'https' : 'http'?>://<?=$helper->site_domain() . _SITE_PATH?>/" />
+        <link type="text/css" rel="stylesheet" href="css/default.css">
+        <link type="text/css" rel="stylesheet" href="css/plugins/bt.css">
+    </head>
+    <body style="font-size: 12px;">
+        <div id="contentwrapper" style="margin: 10px auto; width: 700px;">
+            <table style="width: 100%; margin-bottom: 20px;">
+                <tr>
+                    <td style="text-align: center;">
+                        <?if(file_exists($_SERVER['DOCUMENT_ROOT'] . _SITE_PATH . '/images/email-logo.png')) {?>
+                            <img src="<?=_SITE_PATH?>/images/email-logo.png" alt="<?=$helper->config['sitename']?>" />
+                        <?} else {?>
+                            <h1><?=$helper->config['sitename']?></h1>
+                        <?}?>
+                    </td>
+                </tr>
+            </table>
+            <table style="width: 100%; border-bottom: 1px solid #dddddd;">
+                <tr>
+                    <td style="width: 50%;">
+                        <table style="width: 100%;" cellpadding="0" cellspacing="0" class="table">
+                            <tr>
+                                <td style="width: 33%;">
+                                    Transaction No:
+                                </td>
+                                <td>
+                                    <?=$item['trans']?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="width: 33%;">
+                                    Transaction Date:
+                                </td>
+                                <td>
+                                    <?=date('M jS, Y H:i A', strtotime($item['date']))?>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td style="width: 50%;">
+                        <table style="width: 100%;" cellpadding="0" cellspacing="0" class="table">
+                            <colgroup span="2">
+                                <col style="width: 33%" />
+                                <col />
+                            </colgroup>
+                            <tr>
+                                <td>
+                                    <?=_SUPPORT?> <?=_EMAIL?>:
+                                </td>
+                                <td>
+                                    <?=$helper->config['contactemail']?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <?=_SUPPORT?> <?=_PHONE?>:
+                                </td>
+                                <td>
+                                    <?=$helper->config['phone']?>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+            <table style="width: 100%; margin: 20px 0;">
+                <tr>
+                    <td style="vertical-align: top; width: <?=(!empty($item['ship_address']) ? 33 : 50)?>%;">
+                        <h5><?=_BILLING?></h5>
+                        <strong><?=$item['first_name']?> <?=$item['last_name']?></strong><br />
+                        <?if(!empty($item['address'])) {?>
+                        <?=$item['address']?> <?=$item['address2']?><br />
+                        <?=$item['city']?>, <?=$item['state']?> <?=$item['zipcode']?> <?=($item['country'] != 'US') ? $item['country'] : ''?><br />
+                        <?} else {?>
+                            <?if(!empty($item['zipcode'])) {?>
+                                <strong>Zip Code</strong>: <?=$item['zipcode']?><br />
+                            <?}?>
+                        <?}?>
+                        <?=(!empty($item['phone'])) ? '<strong>' . _PHONE . '</strong>: ' . $item['phone'] . '<br />' : ''?>
+                        <?=(!empty($item['email'])) ? '<strong>' . _EMAIL . '</strong>: ' . $item['email'] : ''?>
+                    </td>
+                    <? if(!empty($item['ship_address'])) {?>
+                    <td style="vertical-align: top; width: <?=(!empty($item['ship_address']) ? 33 : 50)?>%;">
+                        <h5><?=_SHIPPING?></h5>
+                        <strong><?=$item['ship_first_name']?> <?=$item['ship_last_name']?></strong><br />
+                        <?=$item['ship_address']?> <?=$item['ship_suite']?><br />
+                        <?=$item['ship_city']?>, <?=$item['ship_state']?> <?=$item['ship_zipcode']?> <?=($item['ship_country'] != 'US') ? $item['ship_country'] : ''?><br />
+                        
+                    </td>
+                    <?}?>
+                    <td style="vertical-align: top; width: <?=(!empty($item['ship_address']) ? 33 : 50)?>%;">
+                        <h5><?=_PAYMENT_INFO?></h5>
+                        <strong><?=_PAID_WITH?></strong>: <?=$item['payment_method']?><br />
+                        <strong><?=_TOTAL_CHARGED?></strong>: $<?=$helper->number($item['total'])?><br />
+                        <strong><?=_RECEIPT_DATE?></strong>: <?=date('m/d/Y', strtotime($item['date']))?><br />
+                        <strong><?=_BILLED_TO?></strong>: <?=(!empty($item['payment_info']['card_type'])) ? strtoupper($item['payment_info']['card_type']) . ' /' . $item['payment_info']['card_number'] : $item['payment_method']?>
+                    </td>
+                </tr>
+            </table>
+            <?if(!empty($item['items'])) {?>
+            <table style="width: 100%; margin-bottom: 20px; border-bottom: 1px solid #dddddd;">
+                <tbody>
+                    <tr>
+                        <th style="width: 5%; padding: 5px 0; border-top: 1px solid #dddddd;"><?=_QTY?></th>
+                        <th style="width: 10%; padding: 5px 0; border-top: 1px solid #dddddd;"><?=_SKU?></th>
+                        <th style="width: 65%; padding: 5px 0; border-top: 1px solid #dddddd;"><?=_PRODUCT?></th>
+                        <th style="width: 10%; padding: 5px 0; border-top: 1px solid #dddddd; text-align: right;"><?=_PRICE?></th>
+                        <th style="width: 10%; padding: 5px 0; border-top: 1px solid #dddddd; text-align: right;"><?=_TOTAL?></th>
+                    </tr>
+                    <?foreach ($item['items'] as $order_items) {?>
+                    <tr>
+                        <td style="vertical-align: top; padding: 5px 0; border-top: 1px solid #dddddd;"><?=$order_items['qty']?></td>
+                        <td style="vertical-align: top; padding: 5px 0; border-top: 1px solid #dddddd;"><?=(!empty($order_items['sku'])) ? $order_items['sku'] : 'N/A'?></td>
+                        <td style="vertical-align: top; padding: 5px 0; border-top: 1px solid #dddddd;"><?=$order_items['item_info']['title']?> <?=(!empty($order_items['variation_text']) ? '<br /><small>' . $order_items['variation_text'] . '</small>' : '')?></td>
+                        <td style="vertical-align: top;  padding: 5px 0; border-top: 1px solid #dddddd; text-align: right;">$<?=$helper->number($order_items['price'])?></td>
+                        <td style="vertical-align: top;  padding: 5px 0; border-top: 1px solid #dddddd; text-align: right;">$<?=$helper->number($order_items['price'] * $order_items['qty'])?></td>
+                    </tr>
+                    <?}?>
+                </tbody>
+            </table>
+            <table style="width: 100%;">
+                <tr>
+                    <td style="width: 80%; padding: 0;">&nbsp;</td>
+                    <td style="width: 20%; padding: 10px 0 0 0;">
+                        <table cellpadding="0" cellspacing="0" style="width: 100%; padding: 0; margin: 0;">
+                            <tr>
+                                <td style="text-align: right; padding: 10px;"><?=_TOTAL?>:</td>
+                                <td style="text-align: right; padding: 0;">$<?=$helper->number($item['total'])?></td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+            <?}?>
+            <hr />
+            <div class="disclaimer">
+                Sent from <?=$helper->config['sitename']?> on <?=date('l, F jS Y')?> to <?=$item['email']?>
+            </div>
+        </div>
+    </body>
+</html>

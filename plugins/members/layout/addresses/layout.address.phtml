@@ -1,0 +1,68 @@
+<div>
+    <?require_once($_SERVER["DOCUMENT_ROOT"] . _SITE_PATH . '/plugins/members/nav_menu.php')?>
+    <?if(isset($_SESSION['success'])) {?>
+    <div class="alert alert-success">
+        <a class="close" data-dismiss="alert">&times;</a>
+        <?=$_SESSION['success']['message']?>
+        <?unset($_SESSION['success']);?>
+    </div>
+    <?}?>
+
+    <?if(isset($_SESSION['error'])) {?>
+    <div class="alert alert-error">
+        <a class="close" data-dismiss="alert">&times;</a>
+        <?=$_SESSION['error']['message']?>
+        <?unset($_SESSION['error']);?>
+    </div>
+    <?}?>
+
+    <div class="clearfix">
+    <div class="text-right" style="margin-bottom: 20px;">
+        <a href="index.php?plugin=members&amp;file=address&amp;op=add" class="btn btn-primary tipE" title="<?=ucwords(_MEMBERS_ADDRESS_ADD_ADDRESS)?>">
+            <span class="icon-plus"></span>
+        </a>
+    </div>
+    <?if(!$frm->empty_array($addresses)) {?>
+        <table class="table table-bordered table-striped">
+            <colgroup span="3">
+                <col style="width: 40px;" />
+                <col style="width: 300px;" />
+                <col />
+                <col style="width: 110px;" />
+            </colgroup>
+            <tbody>
+                <?foreach($addresses as $address) {?>
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;">
+                        <span class="<?=(!empty($address['add_type'])) ? 'icon-checkbox-partial' : 'icon-checkbox-unchecked'?>"></span>
+                    </td>
+                    <td>
+                        <strong><?=$address['first_name']?> <?=$address['last_name']?></strong>
+                        <br />
+                        <em>
+                            Phone: <?=(!empty($address['phone'])) ? $address['phone'] : $_SESSION['user_info']['phone']?>
+                        </em>
+                    </td>
+                    <td>
+                        <?=$address['address']?> <?=(!empty($address['suite'])) ? ', ' . $address['suite'] : ''?>
+                        <br />
+                        <?=$address['city']?>, <?=$address['state']?> <?=$address['zipcode']?>, <?=$address['country']?>
+                    </td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        <a href="index.php?plugin=members&amp;file=address&amp;op=add&amp;id=<?=$address['id']?>" class="btn btn-success btn-sm tipS" title="<?=_EDIT?>">
+                            <span class="icon-pencil icon-fw"></span>
+                        </a>
+                        <a href="index.php?plugin=members&amp;file=address&amp;op=delete&amp;id=<?=$address['id']?>" class="btn btn-danger btn-sm tipS deletion" title="<?=_DELETE?>">
+                            <span class="icon-remove icon-fw"></span>
+                        </a>
+                    </td>
+                </tr>
+                <?}?>
+            </tbody>
+        </table>
+    <?} else {?>
+        <h1><?=_MEMBERS_ADDRESS_NO_ADDRESS_FOUND?></h1>
+        <p style="padding-bottom: 300px;"><?=_MEMBERS_ADDRESS_NO_ADDRESS_FOUND_TEXT?></p>
+    <?}?>
+    </div>
+</div>

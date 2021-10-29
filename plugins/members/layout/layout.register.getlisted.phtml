@@ -1,0 +1,261 @@
+    <div class="row">
+        <div class="col-lg-6 offset-lg-3">
+            <div class="text-center">
+                <img src="images/name.png" alt="Bodyologists" class="img-fluid register-img"/>
+            </div>
+            <div class="text-center">
+                <img src="images/slogan.png" class="img-fluid register-img" alt="health, Beauty and Fitness Professionals"/>
+            </div>
+			<div class="separator"></div>
+			<h1 class="text-center"><em class="find-bodyologist-title">GET LISTED</em></h1>
+			<div class="separator no-separator-mobile"></div>
+				<p class="get-listed-text">If you are a professional in the <br class="d-none d-lg-block"> Healthcare, Beauty or Fitness industries, <br class="d-none d-lg-block"> we invite you to join us and get listed on our platform.</p>
+				<p class="get-listed-text">Please fill out the information below. <br class="d-none d-lg-block"> After your degree and license get verified, <br class="d-none d-lg-block"> you will be approved to create your listing.</p>
+				<p class="get-listed-text">Professionals holding more than one degree will have a separate listing for each profession.</p>
+				<p class="get-listed-text">Note: Please provide your full name how it appears on your certificate and license.</p>
+			<div class="separator no-separator-mobile"></div>
+        </div>
+        <div class="col"></div>
+    </div>
+</div>
+
+<div class="container-fluid">
+<hr class="hidden-lg hidden-md hidden-md" />
+<form action="index.php?plugin=members" method="post" class="form-horizontal validate-form" enctype="multipart/form-data">
+	<input type="hidden" name="op" value="save"/>
+	<input type="hidden" name="grouped" value="5"/>
+	<input type="hidden" name="intention" value="get_listed"/>
+
+	<div class="row text-center-mobile">
+		<div class="col-lg-6">
+            <h4 ><?=_MEMBERS_REGISTRATION_PERSONAL_DETAILS?></h4>
+            <?php if(!empty($members_settings['ask_birthday']) || !empty($members_settings['ask_gender'])) {?>
+            <div class="form-row">
+                <?php if(!empty($members_settings['ask_birthday'])) {?>
+				<div class="col-md-6 form-group">
+					<input data-provide="datepicker" data-date-start-view="2" class="datepick form-control form-control-lg placeholder-uppercase" value="<?=(!empty($_SESSION['register']['birthday'])) ? date('m/d/Y', strtotime($_SESSION['register']['birthday'])) : ''?>" name="birthday" placeholder="<?=_DATE_OF_BIRTH?>" />
+				</div>
+                <?php }?>
+                <?php if(!empty($members_settings['ask_gender'])) {?>
+				<div class="col-md-6 form-group">
+					<select name="gender" id="gender" class="required form-control form-control-lg placeholder-uppercase">
+						<option><?=_GENDER?></option>
+						<option value="female">Female</option>
+						<option value="male"<?=($_SESSION['register']['gender'] == 'male') ? ' selected="selected"' : ''?>>Male</option>
+					</select>
+				</div>
+                <?php }?>
+			</div>
+            <?php }?>
+			<div class="form-row">
+				<div class="col-md-6 form-group">
+					<input type="text" id="first_name" name="first_name" value="<?php echo App\Helper::encode($_SESSION['register']['first_name']); ?>" class="required form-control form-control-lg placeholder-uppercase" placeholder="<?=_FIRST_NAME?>" />
+				</div>
+				<div class="col-md-6 form-group">
+					<input type="text" id="last_name" name="last_name" value="<?php echo App\Helper::encode($_SESSION['register']['last_name']); ?>" class="required form-control form-control-lg placeholder-uppercase" placeholder="<?=_LAST_NAME?>" />
+				</div>
+			</div>
+
+			<div class="form-row">
+                <?php if(!empty($members_settings['ask_phone'])) {?>
+			
+				<div class="col-md-<?=(!empty($members_settings['ask_fax']) ? '6' : '12')?> form-group">
+					<input type="tel" id="phone" name="phone" value="<?php echo App\Helper::encode($_SESSION['register']['phone']); ?>" class="required form-control form-control-lg placeholder-uppercase" placeholder="Mobile <?=_PHONE?> Number" />
+				</div>
+                <?php }?>
+                <?php if(!empty($members_settings['ask_fax'])) {?>
+				<div class="col-md-6 form-group">
+					<input type="tel" id="fax" name="fax" value="<?php echo App\Helper::encode($_SESSION['register']['fax']); ?>" class="form-control form-control-lg" placeholder="<?=_FAX?>" />
+				</div>
+                <?php }?>
+            </div>
+
+            <h4 >Professional Information</h4>
+            <input type="hidden" name="professional" value="1" />
+            <div class="form-row">
+				<div class="col-md-6 form-group">
+                <?php
+                    echo \App\Html::renderCategoriesDropdown('category', $_SESSION['user_info']['category'], 'form-control form-control-lg placeholder-uppercase required')
+                ?>
+				</div>
+
+
+                <script type="text/javascript">
+                    var selDiv = "";
+
+                    document.addEventListener("DOMContentLoaded", init, false);
+
+                    function init() {
+                        document.querySelector('#files').addEventListener('change', handleFileSelect, false);
+                        selDiv = document.querySelector("#selectedFiles");
+                    }
+
+                    function handleFileSelect(e) {
+
+                        if(!e.target.files) return;
+
+                        selDiv.innerHTML = "";
+
+                        var files = e.target.files;
+                        for(var i=0; i<files.length; i++) {
+                            var f = files[i];
+
+                            selDiv.innerHTML += f.name + "<br/>";
+                        }
+                    }
+                </script>
+
+				<div class="col-md-6 form-group">
+					<input type="text" value="" name="license" class="form-control form-control-lg placeholder-uppercase" placeholder="Your License / Certification Number" />
+				</div>
+			</div>
+
+            <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+            <div class="form-row">
+                <div class="col-lg-5 form-group">
+                    <style>
+                    </style>
+                    <input type="file" id="files" name="files[]" multiple
+                           style="visibility: hidden; width: 100%;" class="my-upload">
+                    <label for="files"
+                           class="btn btn-large btn-primary"
+                           style="margin-top: -55px;
+                                text-transform: capitalize;
+                                padding: 12px;
+                                border-radius: 12px;
+                                border: grey solid 2px;"
+
+                    >
+                    <span class="fa fa-upload">  </span>
+                    Upload your academic records</label>
+
+                </div>
+                <div class="col-lg-7 form-group">
+                    <div id="selectedFiles"></div>
+                </div>
+            </div>
+            <div class="form-row">
+				<div class="col-md-6 form-group">
+					<input type="text" id="company" name="company" value="<?php echo App\Helper::encode($_SESSION['register']['company']); ?>" class="form-control form-control-lg placeholder-uppercase" placeholder="<?=_COMPANY?>" />
+				</div>
+				<div class="col-md-6 form-group">
+					<input type="text" value="" name="website" class="form-control form-control-lg placeholder-uppercase" placeholder="Professional Website" />
+				</div>
+			</div>
+            <?php if(!empty($members_settings['ask_address'])) {?>
+			<hr />
+			<div>
+				<div class="form-row">
+					<div class="col-md-12 form-group">
+						<?=$helper->get_countries('country', $country, '', array('class' => 'country form-control form-control-lg placeholder-uppercase', 'placeholder' => _COUNTRY))?>
+					</div>
+				</div>
+				<div class="form-row">
+					<div class="col-md-9 form-group">
+						<input type="text" id="address" name="address" value="<?php echo App\Helper::encode($_SESSION['register']['address']);?>" class="required form-control form-control-lg placeholder-uppercase" placeholder="<?=_ADDRESS?>" />
+					</div>
+					<div class="col-md-3 form-group">
+						<input type="text" id="suite" name="suite" value="<?php echo App\Helper::encode($_SESSION['register']['suite']);?>" class=" form-control form-control-lg placeholder-uppercase" placeholder="<?=_ADDRESS_APT?>" />
+					</div>
+				</div>
+				<div class="form-row">
+					<div class="col-md-5 form-group">
+						<input type="text" id="city" name="city" value="<?php echo App\Helper::encode($_SESSION['register']['city']);?>" class="required form-control form-control-lg placeholder-uppercase" placeholder="<?=_CITY?>" />
+					</div>
+					<div class="col-md-4 form-group">
+						<?=$helper->get_states('state', $_SESSION['register']['state'], $country, array('class' => 'state form-control form-control-lg placeholder-uppercase'))?>
+					</div>
+					<div class="col-md-3 form-group">
+						<input type="text" id="zipcode" name="zipcode" value="<?php echo App\Helper::encode($_SESSION['register']['zipcode']); ?>" class=" form-control form-control-lg placeholder-uppercase required" placeholder="<?=_ZIP?>" maxlength="5" />
+					</div>
+				</div>
+			</div>
+            <?php }?>
+		</div>
+		<div class="col-md-1 hidden-xs d-none d-lg-block"></div>
+		<hr class="hidden-lg hidden-md hidden-md" />
+		<div class="col-lg-5">
+			<h4 ><?=_MEMBERS_REGISTRATION_LOGIN_DETAILS?></h4>
+            <div class="form-row">
+		    	<div class="col form-group">
+		      		<input type="email" id="email" name="email" value="<?php echo App\Helper::encode($_SESSION['register']['email']); ?>" class="required email form-control form-control-lg placeholder-uppercase" placeholder="<?=_EMAIL?>" />
+                    <span style="margin-top: 5px;" id="email_notes"></span>
+		    	</div>
+			</div>
+			<div class="form-row">
+		    	<div class="col-lg-6 col-12 form-group">
+		      		<input type="password" id="password" name="passwd" value="<?php echo App\Helper::encode($_SESSION['register']['passwd']); ?>" class="required form-control form-control-lg placeholder-uppercase password" placeholder="<?=_PASSWORD?>" data-toggle="password" />
+                    <p id="passwdStrength"></p>
+		    	</div>
+		    	<div class="col-lg-6 col-12 form-group">
+		      		<input type="password" id="passwd2" name="passwd2" value="<?php echo App\Helper::encode($_SESSION['register']['passwd2']); ?>" class="required form-control form-control-lg placeholder-uppercase password" placeholder="<?=_PASSWORD_CONFIRM?>" data-toggle="password" />
+		      		<span class="help-block"><small>(<?=_PASSWORD_EXPLANATION?>)</small></span>
+		    	</div>
+			</div>
+			<hr />
+			<div class="form-row">
+				<div class="col-12 form-group">
+
+                    <?php if(!empty($members_settings['ask_newsletters'])) {?>
+	                    <label>
+	                        <input type="checkbox" value="1" id="newsletters" name="newsletters" <?=(!empty($_SESSION['register']['newsletters'])) ? 'checked="checked"' : ''?> /> <?=_MEMBERS_NEWSLETTERS_SUSCRIBE?>
+	                    </label>
+                    <?php }?>
+
+                    <?php if(!empty($members_settings['ask_agree'])) {?>
+	                    <label>
+	                        <input type="checkbox" value="1" id="agree" name="agree" <?=(!empty($_SESSION['register']['agree'])) ? 'checked="checked"' : ''?> class="required" /> <?=_MEMBERS_REGISTRATION_I_AGREE?>
+	                    </label>
+                    <?php }?>
+
+				</div>
+			</div>
+		</div>
+	</div>
+	<hr />
+	<div class="row">
+		<div class="col-md-6 col-lg-3  form-group">
+            <?php if(!empty($members_settings['captcha_on_registration'])) {?>
+			<p><?=_CAPTCHA_VALIDATION_NEXT?></p>
+            <?php }?>
+		</div>
+		<div class="col-md-6 col-lg-3  form-group">
+            <?php if(!empty($members_settings['captcha_on_registration'])) {?>
+			<?=$helper->display_catpcha()?>
+            <?php }?>
+		</div>
+		<div class="col-lg-12 col-xl-6 form-group get-listed-register-btn">
+			<button class="btn btn-lg btn-primary" type="submit">
+				<span class="icon-key-3 left"></span>
+				<?=_REGISTER_NOW?>
+			</button>
+		</div>
+	</div>
+</form>
+</div>
+<script type="text/javascript">
+    jQuery(function($){
+        $("#email").on('change', function(){
+        	$.ajax({
+                url: 'members/check_email/?email=' + $(this).val(),
+                type: "get",
+                dataType: "json",
+                success: function (a) {
+                    if (a.answer == 'error') 
+                    {
+                        console.log(a.message);
+                    } 
+                    else
+                    {
+                        if(a.message != '') {
+		                    $('#email_notes').html('<span class="label label-warning">' + a.message + '</span>');
+		                    $(this).val('').focus();
+		                } else {
+		                    $('#email_notes').html('');
+		                }
+                    }
+                }
+            });
+        });
+    });
+</script>

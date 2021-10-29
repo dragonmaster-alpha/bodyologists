@@ -1,0 +1,76 @@
+<?php
+
+use App\ObjectType;
+
+?>
+<div class="row col-12">
+    <div class="col-3">
+        Filter by period:
+    </div>
+    <div class="col-9">
+        <select onchange="window.location.href='members/stats?period='+this.value">
+           <option value="today" <?= $label === 'today' ? 'selected' : '' ?>>Today</option>
+           <option value="yesterday" <?= $label === 'yesterday' ? 'selected' : '' ?>>Yesterday</option>
+           <option value="last_week" <?= $label === 'last_week' ? 'selected' : '' ?>>Last Week</option>
+           <option value="last_month" <?= $label === 'last_month' ? 'selected' : '' ?>>Last Month</option>
+           <option value="last_3_months" <?= $label === 'last_3_months' ? 'selected' : '' ?>>Last 3 Months</option>
+           <option value="last_6_months" <?= $label === 'last_6_months' ? 'selected' : '' ?>>Last 6 Months</option>
+           <option value="last_year" <?= $label === 'last_year' ? 'selected' : '' ?>>Last Year</option>
+        </select>
+    </div>
+</div>
+<div class="separator sm"></div>
+<div class="row">
+    <div class="col-12">
+        <canvas id="chartjs-1" class="chartjs" width="770" height="385"
+                style="display: block; width: 770px; height: 385px;"></canvas>
+    </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.js"></script>
+<script>
+    new Chart(document.getElementById("chartjs-1"), {
+        "type": "bar",
+        "data": {
+            "labels": ["Profile", "Deals", "Events", "Articles"],
+            "datasets": [{
+                "label": "Statistics for <?= $since ?>",
+                "data": <?= json_encode(array_values($pageViews)) ?>,
+                "fill": false,
+                "backgroundColor": ["rgba(255, 99, 132, 0.2)", "rgba(255, 159, 64, 0.2)", "rgba(255, 205, 86, 0.2)", "rgba(75, 192, 192, 0.2)"/*, "rgba(54, 162, 235, 0.2)", "rgba(153, 102, 255, 0.2)", "rgba(201, 203, 207, 0.2)"*/],
+                "borderColor": ["rgb(255, 99, 132)", "rgb(255, 159, 64)", "rgb(255, 205, 86)", "rgb(75, 192, 192)"/*, "rgb(54, 162, 235)", "rgb(153, 102, 255)", "rgb(201, 203, 207)"*/],
+                "borderWidth": 1
+            }]
+        },
+        "options": {"scales": {"yAxes": [{"ticks": {"beginAtZero": true}}]}}
+    });</script>
+<hr/>
+<div class="separator sm"></div>
+<div class="row col-12">
+    <div class="col-6 border-secondary">
+        <h5>All your content</h5>
+        Profile: <?= $pageViews[ObjectType::PROFILE] ?> views<br>
+        Deals: <?= $pageViews[ObjectType::DEAL] ?> views<br>
+        Events: <?= $pageViews[ObjectType::EVENT] ?> views<br>
+        Articles: <?= $pageViews[ObjectType::ARTICLE] ?> views<br>
+    </div>
+    <div class="col-6">
+        <h5>Profile reaching</h5>
+        Direct: <?= $profileSource['direct'] ?> <br>
+        Search: <?= $profileSource['search'] ?> <br>
+        Referred: <?= $profileSource['external'] ?> <br>
+        Total: <?= $profileSource['total'] ?> <br>
+    </div>
+
+</div>
+<hr>
+<div class="row col-12 small">
+    <b>Help:</b> <br>
+    <ul>
+        <li><b>Direct</b>: Means people typed or your url copy/pasted a link in the browser and got to your profile.</li>
+        <li><b>Search</b>: The visitor got to your prifle either as a search result or you appeared in the featured professionals.</li>
+        <li><b>External</b>: The visitor found you surfing another website and clicked a link that lead him/her to your prfile.</li>
+    </ul>
+    <div class="separator sm">
+        <b>Note:</b> Your own visits will <b>not</b> count against these statistics.
+    </div>
+</div>

@@ -1,0 +1,103 @@
+<?if(isset($_SESSION['error'])) {?>
+    <div class="alert-error" title="Error">
+        <?=$_SESSION['error']?>
+    </div>
+<?
+    unset($_SESSION['error']);
+}
+?>
+<div class="pageheader">
+    <h1 class="head">
+        Inbox
+    </h1>
+</div>
+<br clear="all" />
+<div class="summary-bar">
+    <a href="#" class="reload tipS" title="Reload" onclick="window.location.href = window.location.href; return false;">
+        <span class="icon-redo"></span>
+    </a>
+    <a class="tipS colorbox-inline" title="New Message" href="#new_message">
+        <span class="icon-plus-2"></span>
+    </a>
+</div>
+<div id="contentwrapper" class="contentwrapper">    
+    <table cellpadding="0" cellspacing="0" border="0" class="stdtable">
+        <colgroup>
+            <col style="width: 200px;" />
+            <col />
+            <col style="width: 150px;" />
+            <col />
+        </colgroup>
+        <thead>
+            <tr>
+                <?if(isset($_REQUEST['type'])) {?>
+                    <th>To</th>
+                <?} else {?>
+                    <th>From</th>
+                <?}?>
+                <th>Subject</th>
+                <th>Last Update</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?
+            if(count($items_info)>0)
+            {
+            	foreach($items_info as $item)
+            	{?>
+            	<tr <?=(!empty($item['CNT']) ? ' style="font-weight: bold;"' : '')?>>
+            		<td>
+                            <?=$item['sender']['name']?>
+            		</td>
+            		<td>
+                        <?if(!empty($item['CNT'])) {?>
+                        <div class="number-counter">
+                            <span><?=$item['CNT']?></span>
+                        </div>
+                        <?}?>
+            			<a href="admin.php?plugin=system&amp;file=messages&amp;op=edit&amp;id=<?=$item['id']?>"><?=$item['subject']?></a>
+            		</td>
+            		<td class="date">
+            			<?=(!empty($item['updated'])) ? $frm->format_sort_date($item['updated']) : $frm->format_sort_date($item['date'])?>
+            		</td>
+            	</tr>
+            	<?}
+            }?>
+        </tbody>
+    </table>
+</div>
+<div style="display: none">
+    <div id="new_message">
+        <form id="editphoto" action="admin.php" method="post" class="stdform quickform2 validate-form">
+            <input type="hidden" value="system" name="plugin" />
+            <input type="hidden" value="messages" name="file" />
+            <input type="hidden" value="update" name="op" />
+            <input type="hidden" value="0" name="parent" />
+            <input type="hidden" value="<?=$administrator->admin_info['email']?>" name="sent_from" />
+            <input type="hidden" value="1" name="readed" />
+            <input type="hidden" value="<?=time()?>" name="date" />
+            <h3>New Message</h3>
+            <br />
+            <div id="response"></div>
+            <div class="notifyMessage">Sent</div>
+            <br clear="all" />
+            <div style="margin: 5px 0;">
+                <input type="text" value="" name="subject" class="required" style="width: 600px !important;" placeholder="Enter your message subject..." />
+            </div>
+            <div style="margin: 5px 0;">
+                <select data-placeholder="Choose the recipient..." class="chzn-select {required:true}" style="width: 610px;" name="sent_to">
+                    <?foreach($available_authors as $authors) {?>
+                    <option value="<?=$authors['email']?>"><?=$authors['name']?></option>
+                    <?}?>
+                </select>
+            </div>
+            <div style="margin: 5px 0;">
+                <textarea  class="required" name="text" style="width: 600px; height: 200px;" placeholder="Enter your message..."></textarea>
+            </div>
+            <p class="action">
+                <button class="submit radius2">Send</button> &nbsp;
+                <button class="cancel radius2">Close</button>
+            </p>
+        </form>
+    </div>
+</div>

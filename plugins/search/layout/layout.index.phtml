@@ -1,0 +1,333 @@
+<?php
+use App\Helper;
+use App\Html;
+
+$advanced_fields = [
+    'specialty',
+    'price_range_enabled',
+    'conditions',
+    'distance_enabled',
+    'health_insurance',
+    'gender',
+    'now_available',
+    'external_visits',
+    'promoting_deals',
+    'language',
+    'insurance',
+    'reset'
+];
+// Grab filter by Query or Category
+$search = trim(html_entity_decode(urldecode(!empty($_GET['category']) ? $_GET['category'] : $_GET['q'])));
+
+// Grab if using any advanced search fields
+$is_advanced_search = (!empty(array_intersect(array_keys(array_filter($_GET)), $advanced_fields)));
+
+// Final global state (used to show featured or results)
+$is_searching = count(array_filter([$search, $is_advanced_search, $_GET['location'], $_GET['keyword']])) > 0;
+
+?>
+<div class="separator "></div>
+<h1 class="text-center"><em class="find-bodyologist-title">Find a Bodyologist</em></h1>
+<div class="separator no-separator-mobile"></div>
+<div class="separator no-separator-mobile"></div>
+<form action="search" method="get" id="main-search-form">
+    <div class="row">
+        <div class="col-md-4 px-5 layout-form-input">
+        <?php
+            echo Html::renderCategoriesDropdown('q', $search, 'form-control form-control-lg select-field-text-category upper')
+        ?>
+        </div>
+        <div class="col-md-4 px-5 layout-form-input">
+            <input type="text" value="<?php echo Helper::encode($_GET['location'] ?? '' ); ?>" name="location" class="form-control form-control-lg input-field-text upper" placeholder="City, Zip or State" />
+        </div>
+        <div class="col-md-4 px-5 form-submit-btn-container">
+            <button class="btn btn-danger btn-lg form-submit-btn" type="submit">
+                Search
+            </button>
+        </div>
+    </div>
+
+<!-- ====================================== -->
+<!--      A D V A N C E D   S E A R C H     -->
+<!-- ====================================== -->
+    <div class="row">
+    	<div class="col-md-6 offset-md-3 col-lg-4 offset-lg-4 mt-4 text-center">
+    		<button
+                class="btn btn-success mb-4 p-3"
+                style="width: 80%; margin: 0 auto; font-size: 1.25rem;"
+                data-toggle="collapse"
+                data-target="#advanced_search"
+                aria-expanded=<?=$is_advanced_search ? 'true':'false'?> >
+    			Advanced Filters <i class="icon-angle-down float-right"></i>
+    		</button>
+    	</div>
+    </div>
+    <div class="row">
+        <div class="col-1"></div>
+        <div class="col-10 px-5 layout-form-filters-container">
+
+<!--  SPECIALTIES && PRICE RANGE  -->
+
+            <div class="<?=$is_advanced_search ? 'collapse show':'collapse'?> bg-light py-3 mx-4 rounded" id="advanced_search">
+            	<div class="row mb-3">
+            		<div class="col-md-1"></div>
+            		<div class="col-md-5 layout-form-filter-divider">
+                        <?php
+                        echo Html::renderDropdown(
+                            'specialty',
+                            Helper::getSpecialtiesList(),
+                            $_GET['specialty'] ?? '',
+                            'state form-control form-control-lg',
+                            false,
+                            'SPECIALTY');
+                        ?>
+                    </div>
+            		<div class="col-md-5">
+                        <div class="input-group-lg">
+                            <button class="form-control form-control-lg text-left" type="button" id="dropPriceRange" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                PRICE RANGE
+                            </button>
+                            <div class="dropdown-menu p-3" aria-labelledby="dropPriceRange" style="width: 90%">
+                                <label class="checkbox-inline" style="padding-left: 5px; width: 90%;">
+                                    ENABLE PRICE FILTERING
+                                </label>
+                                <input name="price_range_enabled" class="form-control checkbox-inline"
+                                       type="checkbox"
+                                       style="width: auto; box-shadow: none; float: left; margin-top: 5px;"
+                                        <?= isset($_REQUEST['price_range_enabled']) ? 'checked' : '' ?>
+                                >
+                                <input type="text" name="price_range" class="js-range-slider" value="">
+                            </div>
+                        </div>
+                        
+                    </div>
+            	</div>
+
+<!--  CONDITIONS && DISTANCE  -->
+
+            	<div class="row mb-3">
+            		<div class="col-md-1"></div>
+
+            		<div class="col-md-5 layout-form-filter-divider">
+                        <?php
+                        echo Html::renderDropdown(
+                            'conditions',
+                            Helper::getConditionsList(),
+                            $_GET['conditions'] ?? '',
+                            'state form-control form-control-lg',
+                            false,
+                            'CONDITION');
+                        ?>
+                    </div>
+
+            		<div class="col-md-5">
+                        <div>
+                            <button class="form-control form-control-lg text-left" type="button" id="dropDistance" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                DISTANCE
+                            </button>
+                            <div class="dropdown-menu p-3" aria-labelledby="dropDistance" style="width: 90%">
+                                <label class="checkbox-inline range-filters-label" style="padding-left: 5px; width: 90%;">
+                                    ENABLE DISTANCE FILTERING
+                                </label>
+                                <input name="distance_enabled" class="form-control checkbox-inline"
+                                       type="checkbox"
+                                       style="width: auto; box-shadow: none; float: left; margin-top: 5px;"
+                                       <?= isset($_REQUEST['distance_enabled']) ? 'checked' : '' ?>
+                                >
+                                <input type="text" class="js-distance-slider" name="distance" value="" />
+                            </div>
+                        </div>                         
+                    </div>
+            	</div>
+
+<!--  INSURANCE && LANGUAGE  -->
+
+            	<div class="row mb-3">
+            		<div class="col-md-1"></div>
+
+            		<div class="col-md-5 layout-form-filter-divider">
+                        <?php
+                        echo Html::renderDropdown(
+                            'insurance',
+                            Helper::getInsurancesList(),
+                            $_GET['insurance'] ?? '',
+                            'state form-control form-control-lg',
+                            false,
+                            'HEALTH INSURANCE');
+                        ?>
+                    </div>
+            		<div class="col-md-5">
+                        <?php
+                        echo Html::renderDropdown(
+                            'language',
+                            Helper::getLanguagesList(),
+                            $_GET['language'] ?? '',
+                            'state form-control form-control-lg',
+                            false,
+                            'LANGUAGE');
+                        ?>
+                    </div>
+            	</div>
+
+<!--  GENDER / KEYWORD  &&  AVAILABLE NOW / EXTERNAL VISITS  -->
+
+            	<div class="row mb-3">
+            		<div class="col-md-1"></div>
+            		<div class="col-md-5">
+                        <?php
+                        echo Html::renderDropdown(
+                            'gender',
+                            Helper::getGendersList(),
+                            $_GET['gender'] ?? '',
+                            'state form-control form-control-lg mb-3',
+                            false,
+                            'GENDER');
+                        ?>
+                        <input type="text" name="keyword"
+                               value="<?php echo Helper::encode($_GET['keyword'] ?? ''); ?>"
+                               placeholder="TYPE KEYWORD"
+                               class="form-control form-control-lg">
+
+                    </div>
+            		<div class="col-md-5">
+                        <label for="Available">
+                            NOW AVAILABLE
+                            <input type="checkbox" name="now_available" value="yes" id="Available"
+                                <?= isset($_REQUEST['now_available']) ? 'checked' : '' ?>>
+                        </label>
+        	    		<label for="Onsite">
+                            ON-SITE OR HOME VISITS
+        	    			<input type="checkbox" name="external_visits" value="yes" id="Onsite"
+                                <?= isset($_REQUEST['external_visits']) ? 'checked' : '' ?>>
+        				</label>
+        			</div>
+            	</div>
+                <div class="row mb-3">
+                    <div class="col-md-1"></div>
+                    <div class="col-md-5">
+                        <button type="button" class="btn btn-danger btn-lg advanced-form-reset-button">
+                            Reset
+                            </button>
+                        </div>
+                    <div class="col-md-5"></div>
+                </div>
+                <div class="row mb-3">
+            		<div class="col-md-1"></div>
+            		<div class="col-md-5">
+                    </div>
+            		<div class="col-md-5">
+        			</div>
+            	</div>
+            </div>
+        </div>
+    </div>    
+</form>
+
+<div class="separator md"></div>
+<div class="separator "></div>
+	<?php if($is_searching) { ?>
+
+        <?php
+        if(!is_array($items_info)){ ?>
+            <h2 role="heading" class="text-center">Sorry, We couldn't find any matches to your search.</h2>
+        <?php
+        }else{ ?>
+            <div class="dropdown mb-4">
+                <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <?=_SORT_BY?> <?=$sort_type?>
+                </button>
+                <?php
+                $hasQuery = false;
+                $queryString = '';
+                if(!empty($_SERVER['QUERY_STRING'])) {
+                    if(strpos($_SERVER['QUERY_STRING'], 'q=') !== false) {
+                        $hasQuery = true;
+                        if(strpos($_SERVER['QUERY_STRING'], 'sb=') !== false){
+                            $queryString = 'search?' . substr($_SERVER['QUERY_STRING'], 0, strpos($_SERVER['QUERY_STRING'], "sb="));
+                        } else {
+                            $queryString = 'search?' . $_SERVER['QUERY_STRING'] . '&';
+                        }
+                    } else {
+                        $hasQuery = false;
+                    }
+                }
+                ?>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <a class="dropdown-item" href="<?=($hasQuery ? $queryString : 'search?')?>sb=d"><?=_SORT_BY?> <?=_DEFAULT?></a>
+                    <a class="dropdown-item" href="<?=($hasQuery ? $queryString : 'search?')?>sb=new"><?=_SORT_BY?> <?=_NEWEST?></a>
+                    <a class="dropdown-item" href="<?=($hasQuery ? $queryString : 'search?')?>sb=best"><?=_SORT_BY?> <?=_POPULAR?></a>
+                    <a class="dropdown-item" href="<?=($hasQuery ? $queryString : 'search?')?>sb=down"><?=_SORT_BY?> <?=_PRICE_LOW_TO_HIGH?></a>
+                    <a class="dropdown-item" href="<?=($hasQuery ? $queryString : 'search?')?>sb=up"><?=_SORT_BY?> <?=_PRICE_HIGH_TO_LOW?></a>
+                    <a class="dropdown-item" href="<?=($hasQuery ? $queryString : 'search?')?>sb=az"><?=_SORT_BY?> <?=_TITLE_A_TO_Z?></a>
+                    <a class="dropdown-item" href="<?=($hasQuery ? $queryString : 'search?')?>sb=za"><?=_SORT_BY?> <?=_TITLE_Z_TO_A?></a>
+                    <!--<a class="dropdown-item" href="<?/*=($hasQuery ? $queryString : 'search?')*/?>sb=distance"><?/*=_SORT_BY*/?> Distance</a>-->
+                </div>
+            </div>
+    		<?php foreach($items_info as $item)
+    		{
+    			include($_SERVER['DOCUMENT_ROOT'] . _SITE_PATH . '/plugins/members/layout/layout.members.list.phtml');
+    		}?>
+    	    <div class="pagination">
+    	        <ul>
+    	            <?=$paginator?>
+    	        </ul>
+    	    </div>
+        <?php }?>
+
+    <?php } else {?>
+        <div class="row">
+            <div class="col-12 d-none d-md-block">
+                <h2 class="feature_health"><img src="images/health.png" class="col-2 d-inline-block" alt=""> Featured Health Professionals</h2>
+            </div>
+            <div class="d-block d-md-none featured-health-mobile"><img src="images/health.png" class="col-md-2 d-inline-block" alt="">Featured Health Professionals</div>
+        </div>
+        <div class="separator sm"></div>
+        <div class="row mb-4">
+            <div class="col-12">
+                <?php include($_SERVER['DOCUMENT_ROOT'] . '/layout/menus/menu.members.healthcare.list.phtml');?>
+            </div>
+        </div>
+        <div class="separator"></div>
+        <div class="row">
+            <div class="col-12 d-none d-md-block">
+                <h2 class="feature_beauty"><img src="images/beauty.png" class="col-md-2 d-inline-block" alt=""> Featured Beauty Professionals</h2>
+            </div>
+            <div class="d-block d-md-none featured-beauty-mobile"><img src="images/beauty.png" class="col-md-2 d-inline-block" alt="">Featured Beauty Professionals</div>
+        </div>
+        <div class="separator sm"></div>
+        <div class="row mb-4">
+            <div class="col-12">
+                <?php include($_SERVER['DOCUMENT_ROOT'] . '/layout/menus/menu.members.beauty.list.phtml');?>
+            </div>
+        </div>
+        <div class="separator"></div>
+        <div class="row">
+            <div class="col-12 d-none d-md-block">
+                <h2 class="feature_fitness"><img src="images/fitness.png" class="col-md-2 d-inline-block" alt=""> Featured Fitness Professionals</h2>
+            </div>
+            <div class="d-block d-md-none featured-fitness-mobile"><img src="images/fitness.png" class="col-md-2 d-inline-block" alt="">Featured Fitness Professionals</div>
+        </div>
+        <div class="separator sm"></div>
+        <div class="row mb-4">
+            <div class="col-12">
+                <?php include($_SERVER['DOCUMENT_ROOT'] . _SITE_PATH . '/layout/menus/menu.members.fitness.list.phtml');?>
+            </div>
+        </div>
+        <div class="separator"></div>
+    <?php }?>
+</div>
+<style>
+    .slick-slide{
+        margin: 0 5px;
+    }
+</style>
+<script>
+    $(document).ready(function(){
+        $(".advanced-form-reset-button").click(function (e) {
+            var q = $('#main-search-form').find('select[name="q"]').val();
+            var location = $('input[name = location]').val();
+
+            window.location.href = "search?q=" + q +"&location=" + location + "&reset=1";
+        });
+    });
+</script>

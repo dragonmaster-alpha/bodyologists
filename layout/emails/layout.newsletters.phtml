@@ -1,0 +1,63 @@
+<html>
+    <head>
+    	<title><?=$data['subject']?></title>
+    	<style type="text/css">
+            body {
+                font-size: 12px;
+                font-family: "Lucida Grande", "Lucida Sans Unicode", Helvetica, Arial, Verdana, sans-serif;
+            }
+            h1 {
+                color: #000000;
+                font-size: 50px;
+                marign: 0;
+                padding: 0;
+                line-height: 50px;
+                text-transform: uppercase;
+            }
+            div.header { 
+                padding: 10px;
+                margin-bottom: 10px;
+            }
+            div.footer { 
+                padding: 10px;
+                margin-top: 10px;
+            }
+            div.disclaimer {
+                font-size: 11px;
+                margin-top: 10px;
+                padding-top: 10px;
+                border-top: 1px solid #ddd;
+            }
+    		.tableFoot {
+    			height: 20px;
+    			background: #E1E1E1;
+    			padding-left: 10px;
+    			border: 1px solid #C0C0C0;
+    		}
+            td {
+                font: 11px Verdana, Arial, Helvetica, sans-serif;
+                color: #000;
+            }
+    	</style>
+    </head>
+    <body>
+        <div class="header">
+            <?if(file_exists($_SERVER['DOCUMENT_ROOT'] . _SITE_PATH . '/images/email-logo.png')) {?>
+                <img src="http://www.<?=$this->site_domain() . _SITE_PATH?>/images/email-logo.png" alt="<?=$this->config['sitename']?>" />
+            <?} else {?>
+                <h1><?=$this->config['sitename']?></h1>
+            <?}?>
+        </div>
+    	<div>
+            <?=$data['body']?>
+        </div>
+        <div class="disclaimer">
+            <p>This email has been generated automatically from <?=$this->config['sitename']?>. PLEASE DO NOT RESPOND TO THIS EMAIL. Need Help, <a href="http://www.<?=$this->site_domain() . _SITE_PATH?>/contact-us.html">click here</a> to contact our Support Services team.</p>
+            <p><strong><?=$this->config['sitename']?> Feedback</strong></p>
+            <p>Let us know what you think about our services on the <?=$this->config['sitename']?> website by <a href="http://www.<?=$this->site_domain() . _SITE_PATH?>/contact-us.html">clicking here</a>.</p>
+            <p>Copyright <?=date('Y')?> <?=$this->config['sitename']?>. All rights reserved </p>
+            <p>We respect your right to privacy - <a href="http://www.<?=$this->site_domain() . _SITE_PATH?>/terms.html">view our terms and conditions</a>.</p>
+            Sent from <?=$this->config['sitename']?> on <?=date('l, F jS')?> to <?=$receiver_email?>
+        </div>
+    </body>
+    </html>

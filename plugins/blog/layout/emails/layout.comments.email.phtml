@@ -1,0 +1,59 @@
+<html>
+	<head>
+		<title>New comment submitted on <?=$frm->config['sitename']?> blog</title>
+		<style type="text/css">
+			body {
+                font-size: 12px;
+                font-family: "Lucida Grande", "Lucida Sans Unicode", Helvetica, Arial, Verdana, sans-serif;
+            }
+            h1 {
+                color: #000000;
+                font-size: 50px;
+            }
+            hr {
+                margin: 20px 0;
+                border: 0;
+                border-top: 1px solid #eeeeee;
+                border-bottom: 1px solid #ffffff;
+            }
+            div.header { 
+                padding: 20px;
+                margin-bottom: 40px;
+            }
+            div.footer { 
+                padding: 20px;
+                margin-top: 40px;
+            }
+            div.disclaimer {
+                font-size: 11px;
+                margin-top: 20px;
+                padding-top: 10px;
+                border-top: 1px solid #ddd;
+            }
+		</style>
+	</head>
+	<body>
+		<div class="header">
+            <?php if(file_exists($_SERVER['DOCUMENT_ROOT'] . _SITE_PATH . '/images/email-logo.png')) {?>
+            <a href="http://<?=$frm->site_domain() . _SITE_PATH?>">
+                <img src="http://<?=$frm->site_domain() . _SITE_PATH?>/images/email-logo.png" alt="<?=$frm->config['sitename']?>" />
+            </a>
+            <?php } else {?>
+                <h1><?=$frm->config['sitename']?></h1>
+            <?php }?>
+        </div>
+        <p><b>Sent on: </b><?=date('l, M jS Y g:i a')?></b></p>
+        <div>
+			<p>A new comment has being submitted for the post '<a href="http://<?=$frm->site_domain() . _SITE_PATH?>/<?=$item_info['url']?>"><?=$item_info['title']?></a>', please review it as soon as possible.</p>
+            Information about the author:<br />
+            Author: <?=$_SESSION['comments']['name']?><br />
+            Author IP Address: <?=$_SERVER["REMOTE_ADDR"]?><br />
+            Email: <?=$_SESSION['comments']['email']?><br />
+            Date: <?=date('m/d/Y H:i')?>
+            <hr />
+            <?=$_SESSION['comments']['text']?><br />
+            <hr />
+            <p>To manage this comment please log in into your back-end administration and browse to the blog area.</p>
+        </div>
+	</body>
+</html>

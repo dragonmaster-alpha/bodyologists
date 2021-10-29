@@ -1,0 +1,52 @@
+<?php
+
+/**
+ * @author
+ * Web Design Enterprise
+ * Website: www.webdesignenterprise.com
+ * E-mail: info@webdesignenterprise.com
+ *
+ * @copyright
+ * This work is licensed under the Creative Commons Attribution-Noncommercial-No Derivative Works 3.0 United States License.
+ * To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/3.0/legalcode
+ *
+ * Be aware, violating this license agreement could result in the prosecution and punishment of the infractor.
+ *
+ * @copyright 2002- date('Y') Web Design Enterprise Corp. All rights reserved.
+ */
+
+use App\Helper;
+
+if (stristr($_SERVER['PHP_SELF'], basename(__FILE__))) 
+{
+    Header("Location: " . _SITE_PATH . "/");
+    exit();
+}
+
+global $members;
+
+$healthcare_prof = $members->list_featured('fitness', 8);
+?>
+<div id="sliderfitness">
+    <div class="multiple-items">
+        <?php
+        foreach ($healthcare_prof as $health) {?>
+            <div class="slick-slide-mobile">
+                <a href="<?=$health['url']?>" style="text-decoration: none">
+                    <div class="memberlist" style="background-image: url(<?=(!empty($health['avatar']) ? _SITE_PATH . '/uploads/avatar/' . md5((string) $health['id']) . '/' . $health['avatar'] : _SITE_PATH . '/uploads/thumb-silhouette.jpg')?>)">
+                    </div>
+                    <p class="text-center">
+                        <?=$health['first_name']?> <?=$health['last_name']?>
+                        <?php
+                        $categories = Helper::getCategoriesList();
+                        $label = $categories[$health['main_category']][ucfirst($health['category'])];
+                        ?>
+                        <small class="d-block"><?=ucwords($label)?></small>
+                        <small class="d-block"><?=$health['city']?> </small>
+                    </p>
+                </a>
+            </div>   
+        <?php }
+        ?>
+    </div>
+</div>

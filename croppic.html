@@ -1,0 +1,53 @@
+<html>
+<head>
+
+    <script src=" https://code.jquery.com/jquery-2.1.3.min.js"></script>
+    <script src="/croppic/croppic.js"></script>
+    <style>
+        #cropContainerModal {
+            width: 200px;
+            height: 150px;
+            position: relative; /* or fixed or absolute */
+        }
+    </style>
+
+</head>
+<body>
+    <link rel="stylesheet" href="/croppic/croppic.css">
+    <div id="cropContainerModal"></div>
+    <script>
+        var croppicContainerModalOptions = {
+            uploadUrl: 'uploads.php?op=beforeCropping',
+            cropUrl: 'uploads.php?op=crop',
+            modal: true,
+            imgEyecandyOpacity: 0.4,
+            loaderHtml: '<div class="loader bubblingG"><span id="bubblingG_1"></span><span id="bubblingG_2"></span><span id="bubblingG_3"></span></div> ',
+            onBeforeImgUpload: function () {
+                console.log('onBeforeImgUpload')
+            },
+            onAfterImgUpload: function () {
+                console.log('onAfterImgUpload')
+            },
+            onImgDrag: function () {
+                console.log('onImgDrag')
+            },
+            onImgZoom: function () {
+                console.log('onImgZoom')
+            },
+            onBeforeImgCrop: function () {
+                console.log('onBeforeImgCrop')
+            },
+            onAfterImgCrop: function () {
+                console.log('onAfterImgCrop')
+            },
+            onReset: function () {
+                console.log('onReset')
+            },
+            onError: function (errormessage) {
+                console.log('onError:' + errormessage)
+            }
+        }
+        var cropContainerModal = new Croppic('cropContainerModal', croppicContainerModalOptions);
+    </script>
+</body>
+</html>

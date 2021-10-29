@@ -1,0 +1,66 @@
+<?=(!empty($_seo_settings['breadcrumbs'] && is_object($breadcrumbs)) ? !empty($_seo_settings['display_breadcrumbs']) ? $breadcrumbs->get() : $breadcrumbs->schema() : '')?>
+
+<div class="separator no-separator-mobile"></div>
+<h1 role="heading" class="text-center" style="font-size: 9rem !important; font-weight: 300; text-transform: uppercase;"><em class="find-events-title">BLOG</em></h1>
+<div class="separator lg no-separator-mobile"></div>
+
+<div class="row">
+    <div class=" col-12 d-lg-none d-block">
+        <?php include($_SERVER['DOCUMENT_ROOT'] . _SITE_PATH . '/layout/menus/menu.blog.categories.php') ?>
+
+        <form action="blog" method="post">
+            <input type="hidden" name="op" value="search">
+            <input type="text" class="form-control form-control-lg mb-2 mt-4 input-field-text upper" name="q" placeholder="Type Keyword" style="height: 70px; font-size: 20px; background-color: transparent;">
+            <div class=" form-submit-btn-container">
+                <button class="btn btn-danger btn-lg form-submit-btn unset blog-btn" type="submit">
+                    SEARCH
+                </button></div>
+            <div class="separator "></div>
+        </form>
+
+    </div>
+
+    <div class="separator "></div>
+</div>
+
+<div class="row">
+    <div class="col-lg-8 ">
+        <?php if(count($items_info)>0) {
+            foreach($items_info as $item) {
+                include($_SERVER['DOCUMENT_ROOT'] . _SITE_PATH . '/plugins/blog/layout/layout.articles.list.phtml');
+            }
+        } else {?>
+            <p><?=_NO_ARTICLES_TO_DISPLAY?></p>
+        <?php
+        }
+        if($blog_settings['display_paginator'] && $havePagination) {?>
+            <ul class="pagination justify-content-end">
+                <?=$paginator?>
+            </ul>
+        <?php }?>
+    </div>
+    <div class="col-lg-4 d-lg-block d-none pl-md-5">
+        <div class="separator "></div>
+        <form action="blog" method="post">
+            <input type="hidden" name="op" value="search">
+            <input type="text" class="form-control form-control-lg mb-2 mt-4 upper" name="q" placeholder="Type Keyword" style="height: 70px; font-size: 20px; background-color: transparent;">
+            <button class="btn btn-danger btn-lg d-block" type="submit" style="width: 100%; height: 60px; font-size: 20px; background-color: #f4b8a9; margin-top: 30px"> Search </button>
+        </form>
+        <?php include($_SERVER['DOCUMENT_ROOT'] . _SITE_PATH . '/layout/menus/menu.blog.categories.php') ?>
+        <div class="separator lg"></div>
+        <div class="bg-light p-3">
+            <h3 role="heading">Tags</h3>
+            <div class="row">
+                <?php include($_SERVER['DOCUMENT_ROOT'] . _SITE_PATH . '/layout/menus/menu.blog.tags.php') ?>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4 d-lg-none d-block">
+        <div class="bg-light p-3">
+            <h3 role="heading">Tags</h3>
+            <div class="row">
+                <?php include($_SERVER['DOCUMENT_ROOT'] . _SITE_PATH . '/layout/menus/menu.blog.tags.php') ?>
+            </div>
+        </div>
+    </div>
+</div>

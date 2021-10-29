@@ -1,0 +1,824 @@
+<?php
+
+use App\Helper;
+use App\Html;
+
+$category_style = ucwords($item['main_category']);
+
+function timeOrClosed(string $day, array $data, bool $ampm = true): string
+{
+    $day_open = $data[$day . '_open'];
+    $day_close = $data[$day . '_close'];
+
+    if ($day_open === 'Closed' || $day_close === 'Closed') {
+        return 'Closed';
+    }
+
+    $open = ($ampm) ? Html::formatAMPM($day_open) : $day_open;
+    $close = ($ampm) ? Html::formatAMPM($day_close) : $day_close;
+
+
+    return "{$open} to  {$close}";
+}
+
+?>
+<?= (!empty(
+    $_seo_settings['breadcrumbs'] && is_object(
+        $breadcrumbs
+    )
+) ? !empty($_seo_settings['display_breadcrumbs']) ? $breadcrumbs->get() : $breadcrumbs->schema() : '') ?>
+</div>
+
+<section class="header <?= $category_style ?>">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <div id="img-holder" class="avatar avatar-big"
+                     style="background-image: url(<?= (!empty($item['avatar'])) ? _SITE_PATH . '/uploads/avatar/' . md5(
+                             (string)$item['id']
+                         ) . '/' . $item['avatar'] : 'images/no-image-60x60.jpg' ?>); box-shadow: 0 0 20px rgba(0,0,0,0.5"></div>
+            </div>
+            <div class="col-md-8 member-main-info">
+                <div class="separator no-separator-mobile"></div>
+                <h1><em class="member-name"><?= $item['full_name'] ?></em></h1>
+                <h4 class="text-uppercase">
+                    <?php
+                    $categories = Helper::getCategoriesList();
+                    $label = $categories[$item['main_category']][ucfirst($item['category'])];
+                    echo ucwords($label);
+                    ?>
+                </h4>
+                <?= (!empty($item['extra']['license']) ? 'Lic: ' . $item['extra']['license'] : '') ?>
+                <div class="separator xs"></div>
+                <div class="separator sm"></div>
+                <i class="icon-map-marker"></i> <strong><?= $item['city'] ?>, <?= $item['state'] ?></strong>
+            </div>
+        </div>
+    </div>
+
+    <!-- <div id="share-buttons" class="float-right pr-3"></div> -->
+
+    <a href="index.php?plugin=members&amp;file=wishlist&amp;op=addprofessional&amp;id=<?= $item['id'] ?>"
+       title="<?= _ADD_TO_WISH_LIST ?>">
+        <i class="icon-heart-o float-right pr-1"></i>
+    </a>
+</section>
+<section class="memberprofile">
+    <div class="container">
+        <div class="separator no-separator-mobile"></div>
+        <!-- ABOUT -->
+        <div class="text-center ">
+            <h3>
+                <i class="icon-user font-<?= $category_style ?>" style="width: 75px"></i>
+                <span class="ml-1 text-<?= $category_style ?>"> About Me </span>
+            </h3>
+        </div>
+        <div class="separator xs no-separator-mobile"></div>
+        <div class="row">
+            <div class="col-md-10 offset-md-1">
+                <p class="profile-about-me">
+                    <?= $item['extra']['about_me'] ?>
+                </p>
+            </div>
+        </div>
+        <div class="separator "></div>
+        <!-- EDUCATION  -->
+        <?php
+        if (!empty($item['extra']['education'])) {
+            ?>
+            <div class="text-center">
+                <h3>
+                    <i class="icon-mortar-board font-<?= $category_style ?>"></i>
+                    <span class="text-<?= $category_style ?>"> Education </span>
+                </h3>
+            </div>
+            <div class="separator no-separator-mobile"></div>
+            <div class="row text-center-mobile" style="position: relative;">
+                <i class="icon-check d-block d-lg-none" style="position: absolute; top: 6px; left: 10%;"></i>
+                <div class="col-lg-3 offset-2 offset-md-1">
+                    <i class="icon-check d-none d-lg-inline-block"></i> <?= $item['extra']['education']['certification'] ?>
+                </div>
+                <div class="col-lg-2">
+                    <?= $item['extra']['education']['year'] ?>
+                </div>
+                <div class="col-lg-3">
+                    <?= $item['extra']['education']['school'] ?>
+                </div>
+                <div class="col-lg-3 text-capitalize">
+                    <?= $item['extra']['education']['city'] ?>
+                </div>
+            </div>
+        <?php } ?>
+        <!-- Expertise  -->
+
+        <div class="separator"></div>
+
+        <?php if (!empty($item['extra']['training'])) { ?>
+            <div class="text-center">
+                <h3>
+                    <i class="icon-mortar-board font-<?= $category_style ?>"></i>
+                    <span class="text-<?= $category_style ?>"> Expertise </span>
+                </h3>
+            </div>
+            <div class="separator no-separator-mobile"></div>
+            <?php foreach ($item['extra']['training']['certification'] as $key => $value) {
+                if (!empty($value)) { ?>
+                    <div class="row text-center-mobile" style="position: relative;">
+                        <i class="icon-check d-block d-lg-none" style="position: absolute; top: 6px; left: 10%;"></i>
+                        <div class="col-lg-3 offset-2 offset-md-1">
+                            <i class="icon-check d-none d-lg-inline-block"></i> <?= $item['extra']['training']['certification'][$key] ?>
+                        </div>
+                        <div class="col-lg-2">
+                            <?= $item['extra']['training']['year'][$key] ?>
+                        </div>
+                        <div class="col-lg-3">
+                            <?= $item['extra']['training']['school'][$key] ?>
+                        </div>
+                        <div class="col-lg-3 text-capitalize">
+                            <?= $item['extra']['training']['city'][$key] ?>
+                        </div>
+                    </div>
+                    <?php
+                }
+            } ?>
+
+        <?php } ?>
+
+        <div class="separator"></div>
+        <div class="row">
+            <div class="col-sm-6 text-center">
+                <h3><span class="text-<?= $category_style ?>">Years in Practice</span></h3>
+                <div class="separator no-separator-mobile"></div>
+                <?= (int)(date('Y') - $item['extra']['practicing_from']) ?> Years
+                <div class="separator-mobile"></div>
+            </div>
+
+            <div class="col-sm-6 text-center">
+                <h3><span class="text-<?= $category_style ?>">Languages</span></h3>
+                <div class="separator no-separator-mobile"></div>
+                <?= $item['languages'] ?>
+                <div class="separator"></div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-6 text-center">
+            <?php if (!empty($item['extra']['service'])) { ?>
+                <h3><span class="text-<?= $category_style ?>">Service &amp; Fees</span></h3>
+                <div class="separator no-separator-mobile"></div>
+                <?php
+                if (!empty($item['extra']['service'])) {
+                    foreach ($item['extra']['service']['name'] as $key => $value) {
+                        if (!empty($value)) { ?>
+                            <div class="row">
+                                <div class="col-8 text-left">
+                                    <?= $item['extra']['service']['name'][$key] ?>
+                                </div>
+                                <div class="col-4 text-left">
+                                    $<?= $item['extra']['service']['fees'][$key] ?>
+                                </div>
+                            </div>
+                            <?php
+                        }
+                    }
+                }
+            } ?>
+                <div class="separator "></div>
+            </div>
+
+            <div class="col-sm-6 text-center">
+        <?php if (!empty($item['extra']['mon_open'])) { ?>
+            <h3><span class=" text-center text-<?= $category_style ?>">Business Hours</span></h3>
+            <div class="separator no-separator-mobile"></div>
+            <div class="row">
+                <div class="col-md-4 col-4 text-right">
+                    Monday:
+                </div>
+                <div class="col-md-8 col-8 text-left">
+                    <?= timeOrClosed('mon', $item['extra']); ?>
+                </div>
+            </div>
+            <div class="separator xs"></div>
+            <div class="row">
+                <div class="col-md-4 col-4 text-right">
+                    Tuesday:
+                </div>
+                <div class="col-md-8 col-8 text-left">
+                    <?= timeOrClosed('tue', $item['extra']); ?>
+                </div>
+            </div>
+            <div class="separator xs"></div>
+            <div class="row">
+                <div class="col-md-4 col-4 text-right">
+                    Wednesday:
+                </div>
+                <div class="col-md-8 col-8 text-left">
+                    <?= timeOrClosed('wed', $item['extra']); ?>
+                </div>
+            </div>
+            <div class="separator xs"></div>
+            <div class="row">
+                <div class="col-md-4 col-4 text-right">
+                    Thursday:
+                </div>
+                <div class="col-md-8 col-8 text-left">
+                    <?= timeOrClosed('thu', $item['extra']); ?>
+                </div>
+            </div>
+            <div class="separator xs"></div>
+            <div class="row">
+                <div class="col-md-4 col-4 text-right">
+                    Friday:
+                </div>
+                <div class="col-md-8 col-8 text-left">
+                    <?= timeOrClosed('fri', $item['extra']); ?>
+                </div>
+            </div>
+            <div class="separator xs"></div>
+            <div class="row">
+                <div class="col-md-4 col-4 text-right">
+                    Saturday:
+                </div>
+                <div class="col-md-8 col-8 text-left">
+                    <?= timeOrClosed('sat', $item['extra']); ?>
+                </div>
+            </div>
+            <div class="separator xs"></div>
+            <div class="row">
+                <div class="col-md-4 col-4 text-right">
+                    Sunday:
+                </div>
+                <div class="col-md-8 col-8 text-left">
+                    <?= timeOrClosed('sun', $item['extra']); ?>
+                </div>
+            </div>
+        <?php } ?>
+        </div>
+        </div>
+    </div>
+
+    <div class="separator "></div>
+
+    <div class="separator "></div>
+    <section class="memberprofile bordered ">
+        <div class="container">
+            <?php
+            $booking_url = $item['extra']['booking_url'] ?? null;
+            $insurances = (!empty($item['insurance'])) ? $item['insurance'] : null;
+            $payments = (!empty($item['extra']['accepted_payments'])) ? implode(', ', $item['extra']['accepted_payments']) : null;
+            $split = 0;
+            $split += $booking_url ? 1 : 0;
+            $split += $insurances ? 1 : 0;
+            $split += $payments ? 1 : 0;
+
+            $cols = ($split > 0) ? (12 / $split) : 12;
+            ?>
+
+            <?php
+            if ($booking_url || $payments || $insurances) {
+            ?>
+            <!-- BOOK NOW -->
+            <div class="row ">
+                <div class="col-md-10 offset-md-1 dottedbox-<?= $category_style ?>">
+                    <div class="row">
+                    <?php
+                    if ($booking_url) {
+                    ?>
+                        <div class="col-md-<?=$cols?> text-center">
+                            <a href="<?= $booking_url ?>" id="contact" target="_blank">
+                                <img src="images/book-now.jpg" alt="Book Now" role="img"/>
+                            </a>
+                            <div class="separator"></div>
+                        </div>
+                    <?php
+                        }
+                    ?>
+
+                    <?php
+                    if ($item['insurance']) {
+                    ?>
+                        <div class="col-md-<?=$cols?> text-center">
+                            <span class="font-<?= $category_style ?>"
+                                  style="color: #333">ACCEPTED INSURANCES:</span> <br>
+                            <?= $item['insurance'] ?>
+                        </div>
+                    <?php
+                    }
+                    ?>
+                    <?php
+                    if (!empty($item['extra']['accepted_payments'])) {
+                    ?>
+                    <div class="col-md-<?=$cols?> text-center pt-2">
+                        <img src="images/accepted-icon.jpg" alt="Accepted Payment Methods" role="img"/> <span
+                                class="font-<?= $category_style ?>"
+                                style="color: #333">
+                            ACCEPTED PAYMENT METHODS:</span> <br>
+                            <?= implode(', ', $item['extra']['accepted_payments']) ?>
+                        </div>
+                    </div>
+                    <?php
+                    }
+                    ?>
+                </div>
+            </div>
+            <?php
+            }
+            ?>
+            <!-- LOCATION -->
+            <div class="separator "></div>
+                <div class="col-12 text-center">
+                    <div class="separator"></div>
+                    <h3 class="text-center"><span class=" text-center text-<?= $category_style ?>">Location of Service
+                    </h3>
+                    <div class="separator xs"></div>
+                    <?php if (!empty($item['extra']['location']['clients_location'])) { ?>
+                        <p class="text-center-mobile">I travel to my client's location</p>
+                        <?php if (!empty($item['extra']['location']['clients_location_text'])) { ?>
+                            <p class="text-center-mobile">I'm available for the following
+                                areas: <?= $item['extra']['location']['clients_location_text'] ?></p>
+                        <?php } ?>
+                    <?php } ?>
+
+
+                    <?php if (!empty($item['extra']['location']['virtual'])) { ?>
+                        <p class="text-center-mobile">I do Virtual / Phone Consultation</p>
+                    <?php } ?>
+                    <?php if (!empty($item['extra']['location']['my_location'])) { ?>
+                        <p class="text-center-mobile">Address: <?= $addresses['city'] ?>, <?= $addresses['state'] ?> <?= $addresses['zipcode'] ?></p>
+                    <?php } ?>
+                </div>
+
+        </div>
+    </section>
+    <div class="separator "></div>
+    <hr>
+    <section class="memberprofile border-<?= $category_style ?>">
+        <div class="container">
+            <div class="row">
+
+                <!-- BIG PICTURE  -->
+                <div class="col-lg-6 text-center" >
+                    <div class="row">
+                        <div class="col-12 text-center">
+                            <div id="img-holder" class="avatar avatar-lg d-inline-block mx-auto avatar-profile-bottom"
+                                 style="background-image: url(<?= (!empty($item['avatar'])) ? _SITE_PATH . '/uploads/avatar/' . md5(
+                                         (string)$item['id']
+                                     ) . '/' . $item['avatar'] : 'images/no-image-60x60.jpg' ?>); box-shadow: 0 0 20px rgba(0,0,0,0.5); float: none"></div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <h3 class="text-center">
+                                <?= $item['full_name'] ?>
+                            </h3>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <h4 class="text-center">
+                                <?php
+                                $categories = Helper::getCategoriesList();
+                                $label = $categories[$item['main_category']][ucfirst($item['category'])];
+                                echo ucwords($label);
+                                ?>
+                            </h4>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 d-block d-lg-none" style="justify-content: space-around; text-align: center">
+                    <div style="padding: 10px 10px;">
+                        <button type="button" id="book_now" class="btn btn-danger btn-lg p-3"
+                                onclick="window.location.href='<?= $booking_url ?>'">
+                            <span class="text-center">BOOK NOW</span>
+                        </button>
+                    </div>
+                    <div class="separator"></div>
+                </div>
+
+                <!--== CONTACT DETAILS BOX  ==-->
+                <div class="col-lg-6 d-flex justify-content-center">
+                    <div class="contact-details">
+                        <div>
+                            <h3><strong>Contact Details</strong></h3>
+                        </div>
+                        <!-- ADDRESS -->
+                        <div>
+                            <a href="https://maps.google.com/?daddr=<?= urlencode(
+                                $addresses['address'] . ' ' . $addresses['city'] . ', ' . $addresses['state'] . ' ' . $addresses['zipcode']
+                            ) ?>" target="_blank">
+                                <span class="font-<?= $category_style ?> icon-2x"><i
+                                            class="icon-map-marker"></i></span> <?= $addresses['city'] ?>
+                                , <?= $addresses['state'] ?> <?= $addresses['zipcode'] ?>
+                            </a>
+                        </div>
+                        <!-- PHONE -->
+                        <div>
+                            <a href="tel:<?= $item['phone'] ?>">
+                                <span class="font-<?= $category_style ?> icon-2x"><i
+                                            class="icon-phone"></i></span> <?= $item['phone'] ?>
+                            </a>
+                        </div>
+                        <!-- EMAIL -->
+                        <div>
+                            <a href="mailto:<?= $item['email'] ?>" class="contact-details-item">
+                                <span class="font-<?= $category_style ?> icon-2x"><i
+                                            class="icon-at"></i></span> <?= $item['email'] ?>
+                            </a>
+                        </div>
+                        <!-- WEBSITE -->
+                        <?php if (!empty($item['website'])) { ?>
+                            <div class="contact-details-item">
+                                <a href="<?= $item['website'] ?>" target="_blank">
+                                    <?php
+                                    # Find if user didn't provide scheme
+                                    $url = $item['website'] ?? null;
+                                    if (empty($url)) {
+                                        $url = 'N/A';
+                                    } elseif (!parse_url($url)['host']) {
+                                        $url = 'https://' . $url;
+                                    }
+                                    ?>
+                                    <span class="font-<?= $category_style ?> icon-2x"> <i class="icon-globe"></i></span>
+                                    <a href="<?= $url ?>" target="_blank">
+                                        <?= $item['website'] ?? null ?>
+                                    </a>
+
+                                </a>
+                            </div>
+                        <?php } ?>
+                        <!-- FEES FROM -->
+                        <?php if (!empty($item['extra']['service']['fees'])) { ?>
+                            <div>
+                                <span class="font-<?= $category_style ?> icon-2x"><i class="icon-dollar"></i></span>
+                                Prices starting from $<?= min(array_filter($item['extra']['service']['fees'])) ?>
+                            </div>
+                        <?php } ?>
+                        <div class="separator sm"></div>
+                    </div>
+                </div>
+            </div>
+                <!--== /CONTACT DETAILS BOX  ==-->
+
+            <div class="separator "></div>
+
+            <div class="row" style="justify-content: space-around">
+            <?php
+                if (!empty($booking_url)) {
+            ?>
+                <div class="d-none d-lg-block" style="padding: 10px 10px;">
+                    <a type="button" id="book_now" class="btn btn-danger btn-lg p-3" target="_blank"
+                            href="<?= $booking_url ?>">
+                        <span class="text-center">BOOK NOW</span>
+                    </a>
+                </div>
+            <?php
+                }
+            ?>
+                <div style="padding: 10px 10px;">
+                    <button type="button" id="contact" class="btn btn-danger btn-lg p-3">
+                        <span class="text-center">Send a Message</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="separator "></div>
+            <div class="separator "></div>
+
+            <div class="row" style="justify-content: space-evenly">
+                <?php
+                $social_options = ['facebook','twitter','instagram','youtube','skype','linkin'];
+                $social = [];
+                foreach ($social_options as $option) {
+                    if (!empty($item['extra'][$option])) {
+                        $social[$option] = $item['extra'][$option];
+                    }
+                }
+                if (!empty(array_filter($social))) {
+                ?>
+                <div style="padding: 10px 10px;">
+                    <div class="text-center">
+                        <h4 role="heading">Social</h4>
+                        <?php if ($social['facebook']) { ?>
+                            <a style="text-decoration: none" target="_blank" href="<?= $social['facebook'] ?>">
+                                <span class="font-<?= $category_style ?> icon-2x"><i
+                                            class="icon-facebook-square"></i></span>
+                            </a>
+                        <?php } ?>
+                        <?php if ($social['twitter']) { ?>
+                            <a style="text-decoration: none" target="_blank" href="<?= $social['twitter'] ?>">
+                                <span class="font-<?= $category_style ?> icon-2x"><i
+                                            class="icon-twitter-square"></i></span>
+                            </a>
+                        <?php } ?>
+                        <?php if ($social['instagram']) { ?>
+                            <a style="text-decoration: none" target="_blank" href="<?= $social['instagram'] ?>">
+                                <span class="font-<?= $category_style ?> icon-2x"><i class="icon-instagram"></i></span>
+                            </a>
+                        <?php } ?>
+                        <?php if ($social['youtube']) { ?>
+                            <a style="text-decoration: none" target="_blank" href="<?= $social['youtube'] ?>">
+                                <span class="font-<?= $category_style ?> icon-2x"><i
+                                            class="icon-youtube-square"></i></span>
+                            </a>
+                        <?php } ?>
+                        <?php if ($social['skype']) { ?>
+                            <a style="text-decoration: none" target="_blank" href="<?= $social['skype'] ?>">
+                                <span class="font-<?= $category_style ?> icon-2x"><i class="icon-skype"></i></span>
+                            </a>
+                        <?php } ?>
+                        <?php if ($social['linkin']) { ?>
+                            <a style="text-decoration: none" target="_blank" href="<?= $social['linkin'] ?>">
+                                <span class="font-<?= $category_style ?> icon-2x"><i
+                                            class="icon-linkedin-square"></i></span>
+                            </a>
+                        <?php } ?>
+                    </div>
+                </div>
+                <?php } ?>
+
+                <!-- REVIEWS -->
+                <?php if(!empty(array_filter($item['extra']['reviews']))) { ?>
+                <div style="padding: 10px 10px;">
+                    <div class="text-center">
+                        <h4 role="heading">Reviews</h4>
+                        <?php
+                        foreach ($item['extra']['reviews'] as $provider => $url) {
+                            # Find if user didn't provide scheme
+                            if (empty($url)) {
+                                continue;
+                            }
+
+                            if (!parse_url($url)['host']) {
+                                $url = 'https://' . $url;
+                            }
+                            ?>
+                                <a style="text-decoration: none" id="<?= ucwords($provider) ?>-reviews" title="<?= ucwords($provider) ?> Reviews"
+                                   href='<?= $url ?>' target="_blank">
+                                    <span class="fa fa-<?= strtolower($provider) ?> font-<?= $category_style ?>" style="font-size: xx-large !important;"></span>
+                                </a>
+                            <!-- <script type="text/javascript">$(' #< ?=ucwords($provider)?>-reviews').colorbox({width: 640, height: 390});</script> -->
+                            <?php
+                        }
+                        ?>
+                    </div>
+                    <?php } ?>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+
+            <!--  FAQS & POLICIES  -->
+            <?php
+            if (shouldRenderFaqs($item)) {
+                renderSectionHeader();
+                renderFaqs($item);
+            }
+            ?>
+        </div>
+        <div class="container">
+
+            <!--  FAQS & POLICIES  -->
+            <?php
+            if (shouldRenderFaqs($item)) {
+                renderPolicies($item);
+                renderSectionFooter();
+            }
+            ?>
+            <div class="separator x2"></div>
+        </div>
+
+        <div class="separator no-separator-mobile"></div>
+        <div class="row" style="margin: 0">
+            <div class="col-lg-12 text-center">
+                <a href="index.php?plugin=members&amp;file=wishlist&amp;op=addprofessional&amp;id=<?= $item['id'] ?>"
+                   title="<?= _ADD_TO_WISH_LIST ?>" style="text-decoration: none;"><?= _ADD_TO_WISH_LIST ?>
+                    <i class="icon-heart-o"></i>
+                </a>
+            </div>
+            <div class="col-lg-12 text-center">
+                <a onClick="window.history.back();" class="btn btn-primary d-inline-block mx-auto">Back to Results</a>
+            </div>
+        </div>
+        </div>
+        </div>
+    </section>
+
+    <div class="hidden">
+        <div id="form">
+            <h4>Contact <?= $item['display_name'] ?></h4>
+            <small>
+                <?= $item['category'] ?> from <?= $item['city'] ?> <?= $item['state'] ?>
+            </small>
+            <hr/>
+            <form action="members/contact?id=<?= $item['id'] ?>" method="post">
+                <div class="form-group row">
+                    <div class="col">
+                        <label for="name">Name <span class="text-primary">*</span></label>
+                        <input type="text" name="name" class="form-control required name">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-6">
+                        <label for="name">Email: <span class="text-primary">*</span></label>
+                        <input type="email" name="email" class="form-control required">
+                    </div>
+                    <div class="col-5">
+                        <label for="name">Phone: <span class="text-primary">*</span></label>
+                        <input type="tel" name="phone" class="form-control required">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Message: <span class="text-primary">*</span></label>
+                    <textarea class="form-control required" name="message" rows="5"></textarea>
+                </div>
+                <div class="col-lg-12 form-group member-contact" style="padding: 0;">
+                    <?php if(!empty($members_settings['captcha_on_registration'])) {?>
+                        <?=$helper->display_catpcha("CAPTCHA *", "contact-page-input")?>
+                    <?php }?>
+                </div>
+                <button type="submit" class="btn btn-success btn-lg float-md-right">SUBMIT</button>
+            </form>
+            <div class="separator"></div>
+        </div>
+    </div>
+    <div class="separator x2"></div>
+
+    <script type="text/javascript">
+
+        $(function () {
+            $("button#contact").on('click', function () {
+                $.colorbox({
+                    inline: true,
+                    href: '#form'
+                });
+                return false;
+            });
+        });
+
+        function rudr_favorite(a) {
+            pageTitle = document.title;
+            pageURL = document.location;
+            try {
+                // Internet Explorer solution
+                eval("window.external.AddFa-vorite(pageURL, pageTitle)".replace(/-/g, ''));
+            } catch (e) {
+                try {
+                    // Mozilla Firefox solution
+                    window.sidebar.addPanel(pageTitle, pageURL, "");
+                } catch (e) {
+                    // Opera solution
+                    if (typeof (opera) == "object") {
+                        a.rel = "sidebar";
+                        a.title = pageTitle;
+                        a.url = pageURL;
+                        return true;
+                    } else {
+                        // The rest browsers (i.e Chrome, Safari)
+                        alert('Press ' + (navigator.userAgent.toLowerCase().indexOf('mac') != -1 ? 'Cmd' : 'Ctrl') + '+D to bookmark this page.');
+                    }
+                }
+            }
+            return false;
+        }
+    </script>
+
+    <?php
+    /**
+     * @param array $item
+     * @return bool
+     */
+    function shouldRenderFaqs(array $item): bool
+    {
+        return (
+        !empty(
+            $item['extra']['policies'] ||
+            count($item['extra']['faq']['question']) > 0
+        )
+        );
+    }
+
+    /**
+     * Render the opening of the FAQs & Policies section
+     */
+    function renderSectionHeader(): void
+    {
+/*        echo <<<HEADER
+    <div class="row">
+        <div class="col-12">
+            <div class="separator"></div>
+            <h3 class="text-center find-deals-title">
+                FAQs & Policies
+            </h3>
+            <div class="separator xs"></div>
+HEADER;*/
+    }
+
+    /**
+     * @param array $item
+     */
+    function renderFaqs(array $item): void
+    {
+        if (!empty($item['extra']['faq']['answer'])) {
+            echo
+            <<<DIV
+            <div class="separator sm"></div>
+                <div class="accordion text-center" id="faq-area">
+                    <i>FAQs</i> <br>
+DIV;
+
+            $counter = 0;
+            foreach ($item['extra']['faq']['answer'] as $key => $value) {
+                $counter++;
+                if (!empty($value)) {
+                    $question = $item['extra']['faq']['question'][$key];
+                    $answer = $item['extra']['faq']['answer'][$key];
+                    echo
+                    <<<FAQ
+                    <div class="card border-0 background-none">
+                    <div class="card-header border-0 background-none" id="faq-$counter">
+                        <h5 class="mb-0 text-center">
+                            <button class="btn btn-link text-center" type="button" data-toggle="collapse"
+                                    data-target="#collapse-$counter" aria-expanded="true"
+                                    aria-controls="collapse-$counter" style="white-space: normal">
+                                <strong>
+                                    $question
+                                    &nbsp; <i class="icon-angle-down"></i>
+                                </strong>
+                            </button>
+                        </h5>
+                    </div>
+        
+                    <div id="collapse-$counter" class="collapse"
+                         aria-labelledby="faq-$counter" data-parent="#faq-area">
+                        <div class="card-body text-left pt-0">
+                            $answer
+                        </div>
+                    </div>
+FAQ;
+                } // if (!empty($value))
+            } //foreach ($item['extra']['faq']['answer'] ...
+            echo
+            <<<DIV
+                </div>
+            </div>
+        </div>
+DIV;
+        } // if (!empty($item['extra']['faq']['answer'])) ...
+    }
+
+    /**
+     * @param $item
+     */
+    function renderPolicies($item): void
+    {
+        if (!empty($item['extra']['policies'])) {
+            $policies = $item['extra']['policies'];
+            echo
+            <<<RULES
+        <div class="separator"></div>
+        <div class="col-12 text-center" style="padding: 0;">
+            <i class="text-center">POLICIES</i>
+            <div class="text-left pt-0" style="padding: 0 1.25rem;">
+                $policies
+            </div>
+        </div>
+RULES;
+        }
+    }
+
+    /**
+     * Render the closing of the FAQs & Policies section
+     */
+    function renderSectionFooter(): void
+    {
+        echo
+        <<<FOOTER
+        </div>
+    </div>
+FOOTER;
+    }
+
+    ?>
+
+    <style>
+        .fa-bbb {
+            width: 30px;
+            height: 30px;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            margin-bottom: -5px;
+        }
+        .fa-bbb.font-Health {
+            background-image: url("/images/bbb_icon_health.png");
+        }
+        .fa-bbb.font-Beauty {
+            background-image: url("/images/bbb_icon_beauty.png");
+        }
+        .fa-bbb.font-Fitness {
+            background-image: url("/images/bbb_icon_fitness.png");
+        }
+    </style>

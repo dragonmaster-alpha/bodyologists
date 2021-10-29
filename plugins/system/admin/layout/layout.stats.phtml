@@ -1,0 +1,223 @@
+<script type="text/javascript" src="js/plugins/jquery.flot.min.js"></script>
+<script type="text/javascript" src="js/plugins/jquery.flot.resize.min.js"></script>
+<script type="text/javascript" src="js/plugins/jquery.flot.pie.js"></script>
+<script type="text/javascript">
+<!--
+	jQuery(document).ready(function(){
+	   
+        var visits = <?=str_replace(array('{', '}', '"', ':'), array('[', ']', '', ','), $visits_per_day)?>;
+        var views = <?=str_replace(array('{', '}', '"', ':'), array('[', ']', '', ','), $views_per_day)?>;
+        var ticks = <?=str_replace(array('{', '}', ':'), array('[', ']', ','), $ticks_per_day)?>;
+        var pie_data = [
+		    {label: "Returning Visitors", data: <?=$frm->int($all_visits)?>, color: "#005CDE" },
+		    { label: "New Visitors", data: <?=$frm->int($unique_visits)?>, color: "#50B432" }   
+		];
+		var pie_options = {
+		    series: {
+		        pie: {
+		            show: true
+		        }
+		    },
+		    grid: {
+		        hoverable: true
+		    }
+		};
+
+		var plot = jQuery.plot(jQuery("#chartplace"),
+        [{
+        	data: visits, label: "Visits", color: "#069"
+        },{ 
+            data: views, label: "Page Views", color: "#FF6600"
+        }],{
+            series: {
+               lines: {show: true, fill: true, fillColor: {colors:[{opacity: 0.05}, {opacity: 0.15 }]}},points: {show: true}
+            },
+            legend: {position: 'nw'},
+            grid: {hoverable: true, clickable: true, borderColor: '#ccc', borderWidth: 1, labelMargin: 10},
+            xaxis: {
+                ticks: ticks,
+                tickDecimals: 0
+            }
+        });
+		
+		// Pie
+		jQuery.plot(jQuery("#flot-placeholder"), pie_data, pie_options);
+		});
+-->
+</script>
+
+<div id="contentwrapper" class="contentwrapper">
+	<div id="updates" class="subcontent">
+        <div class="contenttitle2 nomargintop">
+            <h3>Site Statistics</h3>
+        </div><!--contenttitle-->
+        <div class="overviewhead">
+            <form action="admin.php" method="post" style="display: inline;">
+                From: &nbsp;
+                <input type="text" value="<?=$_SESSION['stats']['start']?>" style="width: 80px;" data-date-format="yyyy-mm-dd" name="start_date" id="datepickfrom" /> 
+                &nbsp; &nbsp; To: &nbsp;
+                <input type="text" value="<?=$_SESSION['stats']['end']?>" style="width: 80px;" data-date-format="yyyy-mm-dd" name="end_date" id="datepickto" />
+                &nbsp; &nbsp; 
+                <input type="submit" style="position: relative; top: 1px;" class="submit radius2" value="GO" />
+            </form>
+            <form action="admin.php" method="post" style="display: inline;">
+            	<div class="overviewselect">
+                    <select onchange="this.form.submit();" name="date-range" class="uniformselect">
+                        <option <?=($selected_date == 'thisweek') ? ' selected="selected"' : ''?> value="<?=date('Y-m-d')?>|<?=date('Y-m-d', strtotime('1 week ago'))?>|thisweek">This Week</option>
+                        <option <?=($selected_date == 'lastweek') ? ' selected="selected"' : ''?> value="<?=date('Y-m-d', strtotime('1 week ago'))?>|<?=date('Y-m-d', strtotime('2 weeks ago'))?>|lastweek">Last Week</option>
+                        <option <?=($selected_date == 'thismonth') ? ' selected="selected"' : ''?> value="<?=date('Y-m-d')?>|<?=date('Y-m-d', strtotime('1 month ago'))?>|thismonth">This Past Month</option>
+                        <option <?=($selected_date == 'lastmonth') ? ' selected="selected"' : ''?> value="<?=date('Y-m-d', strtotime('1 month ago'))?>|<?=date('Y-m-d', strtotime('2 months ago'))?>|lastmonth">Last Past Month</option>
+                    </select>
+                </div><!--floatright-->
+            </form>
+        </div><!--overviewhead-->
+        <br clear="all" />
+        <div id="chartplace" style="width: 96%; height:300px;"></div>
+        <br clear="all" />  
+        <div class=" row-fluid">
+        	<div class="span8" style="margin-top: 40px;">
+		        <ul class="toplist row-fluid">
+		        	<li class="span6">
+		            	<div>
+		                	<span class="three_fourth">
+		                    	<span class="left">
+		                    		<span class="title">
+		                                Visits
+		                            </span>
+		                            <span class="desc">Total Visits For This Period</span>
+		                    	</span>
+		                    </span>
+		                    <span class="one_fourth last">
+		                    	<span class="right">
+		                        	<span class="h3">
+		                                <?=$all_visits?>
+		                            </span>
+		                        </span>
+		                    </span>
+		                    <br clear="all" />
+		                </div>
+		            </li>
+		        	<li class="span6">
+		            	<div>
+		                	<span class="three_fourth">
+		                    	<span class="left">
+		                    		<span class="title">
+		                                Pageviews
+		                            </span>
+		                            <span class="desc">Total Page Views</span>
+		                    	</span>
+		                    </span>
+		                    <span class="one_fourth last">
+		                    	<span class="right">
+		                        	<span class="h3">
+		                                <?=$page_views?>
+		                            </span>
+		                        </span>
+		                    </span>
+		                    <br clear="all" />
+		                </div>
+		            </li>
+		        </ul>
+		        <ul class="toplist row-fluid">
+		            <li class="span6">
+		            	<div>
+		                	<span class="three_fourth">
+		                    	<span class="left">
+		                    		<span class="title">
+		                                Unique Visits
+		                            </span>
+		                            <span class="desc">Total Unique Visitors</span>
+		                    	</span>
+		                    </span>
+		                    <span class="one_fourth last">
+		                    	<span class="right">
+		                        	<span class="h3">
+		                                <?=$unique_visits?>
+		                            </span>
+		                        </span>
+		                    </span>
+		                    <br clear="all" />
+		                </div>
+		            </li>
+		            <li class="span6">
+		            	<div>
+		                	<span class="three_fourth">
+		                    	<span class="left">
+		                    		<span class="title">
+		                                Pages / Visits
+		                            </span>
+		                            <span class="desc">Average Page Depth</span>
+		                    	</span>
+		                    </span>
+		                    <span class="one_fourth last">
+		                    	<span class="right">
+		                        	<span class="h3">
+		                                <?=$pages_vs_visits?>
+		                            </span>
+		                        </span>
+		                    </span>
+		                    <br clear="all" />
+		                </div>
+		            </li>
+		        </ul>
+		    </div>
+			<div class="span4">
+            	<div id="flot-placeholder" style="width: 300px; height: 200px;"></div>
+            </div>
+        </div>
+		<br clear="all" />
+		<table class="table stats-area">
+			<tr>
+				<td style="text-align: left;">
+					<h5>Traffic Sources</h5>
+				</td>
+				<td>
+					<h5>Demographics</h5>
+				</td>
+				<td>
+					<h5>System</h5>
+				</td>
+				<td>
+					<h5>Mobile</h5>
+				</td>
+			</tr>
+			<tr>
+				<td style="text-align: left;">
+					<a href="admin.php?plugin=system&amp;file=stats&amp;op=get_sources">
+						Landing Pages
+					</a><br />
+					<a href="admin.php?plugin=system&amp;file=stats&amp;op=get_referrers">
+						Referrers
+					</a><br />
+					<a href="admin.php?plugin=system&amp;file=stats&amp;op=get_searchs">
+						Search Inquires
+					</a>
+					<br />
+					<a href="admin.php?plugin=system&amp;file=stats&amp;op=get_sn">
+						Social Networks
+					</a>
+				</td>
+				<td>
+					<a href="admin.php?plugin=system&amp;file=stats&amp;op=get_countries">
+						Country
+					</a>
+				</td>
+				<td>
+					<a href="admin.php?plugin=system&amp;file=stats&amp;op=get_browsers">
+						Browser
+					</a><br />
+					<a href="admin.php?plugin=system&amp;file=stats&amp;op=get_os">
+						Operating System
+					</a>
+				</td>
+				<td>
+					<a href="admin.php?plugin=system&amp;file=stats&amp;op=get_mobile">
+						Operating System
+					</a>
+				</td>
+			</tr>
+		</table>  
+		<br clear="all" />
+		<div id="stats-info"></div>
+    </div>
+</div>

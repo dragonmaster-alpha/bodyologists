@@ -1,0 +1,64 @@
+<?php if(isset($_SESSION['error'])) {?>
+    <div class="alert-error" title="Error">
+        <?=$_SESSION['error']?>
+    </div>
+    <?php
+    unset($_SESSION['error']);
+}
+?>
+
+<div class="pageheader">
+    <h1 class="head">
+        <?=$meta['title']?>
+    </h1>
+</div>
+<br clear="all" />
+<div class="summary-bar">
+    <a href="#" class="reload tipS" title="Reload" onclick="window.location.href = window.location.href; return false;">
+        <span class="icon-redo"></span>
+    </a>
+    <?php if($_REQUEST['op'] == 'spam') {?>
+    <a href="admin.php?plugin=blog&amp;addon=comments" class="tipS" title="Blog Comments">
+        <span class="icon-eye"></span>
+    </a>
+    <?php } else {?>
+    <a href="admin.php?plugin=blog&amp;addon=comments&amp;op=spam" class="tipS" title="Spam Comments">
+        <span class="icon-eye-blocked"></span>
+    </a>
+    <?php }?>
+</div>
+<div class="search-area">
+    <form action="#">
+        <input type="text" id="search-area" data-url="index.php?plugin=comments" value="" name="q" placeholder="Search..." />
+    </form>
+</div>
+<div id="contentwrapper" class="contentwrapper">    
+    <table cellpadding="0" cellspacing="0" border="0" class="stdtable">
+        <colgroup>
+            <col />
+            <col style="width: 160px;" />
+            <col  />
+        </colgroup>
+        <thead>
+            <tr>
+                <th>Comment</th>
+                <th class="hidden-phone">Information</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        <?php
+            if(count($items_info)>0)
+            {
+                foreach($items_info as $item)
+                {
+                    include($_SERVER['DOCUMENT_ROOT'] . _SITE_PATH . '/plugins/blog/addons/comments/admin/layout/layout.comments.list.phtml');
+                }
+            }
+            ?>
+        </tbody>
+    </table>
+</div>
+<div id="ajax-load-more-content" class="well hide" data-url="admin.php?plugin=blog&amp;addon=comments&amp;op=more&amp;spam=<?=($_REQUEST['op'] == 'spam' ? 1 : 0)?>">
+    <img src="images/loaders/loader6.gif" alt="Loading" />
+</div>

@@ -1,0 +1,308 @@
+<html>
+    <head>
+    	<title>Transaction successfully approved</title>
+    	<style type="text/css">
+            body {
+                font-size: 12px;
+                font-family: "Lucida Grande", "Lucida Sans Unicode", Helvetica, Arial, Verdana, sans-serif;
+            }
+            h1 {
+                color: #000000;
+                font-size: 50px;
+                marign: 0;
+                padding: 0;
+                line-height: 50px;
+                text-transform: uppercase;
+            }
+            div.header { 
+                padding: 10px;
+                margin-bottom: 10px;
+            }
+            div.footer { 
+                padding: 10px;
+                margin-top: 10px;
+            }
+            div.disclaimer {
+                font-size: 11px;
+                margin-top: 10px;
+                padding-top: 10px;
+                border-top: 1px solid #ddd;
+            }
+    		.tableFoot {
+    			height: 20px;
+    			background: #E1E1E1;
+    			padding-left: 10px;
+    			border: 1px solid #C0C0C0;
+    		}
+            td {
+                font: 11px Verdana, Arial, Helvetica, sans-serif;
+                color: #000;
+            }
+    	</style>
+    </head>
+    <body>
+        <div class="header">
+            <?if(file_exists($_SERVER['DOCUMENT_ROOT'] . _SITE_PATH . '/images/email-logo.png')) {?>
+            <a href="http://<?=$frm->site_domain() . _SITE_PATH?>">
+                <img src="http://<?=$frm->site_domain() . _SITE_PATH?>/images/email-logo.png" alt="<?=$frm->config['sitename']?>" />
+            </a>
+            <?} else {?>
+                <h1><?=$frm->config['sitename']?></h1>
+            <?}?>
+        </div>
+    	<table align="center" width="700">
+    		<tr>
+    			<td>
+                    <b><?=_RESEND_RECEIPT?></b>
+                </td>
+                <td align="right">
+                    <img src="http://<?=$frm->site_domain() . _SITE_PATH?>/uploads/payments/<?=md5((string) $item['trans'])?>/<?=$item['trans']?>.png" alt="<?=$item['trans']?>" />
+                </td>
+    		</tr>
+    		<tr>
+    			<td colspan="2" class="tableFoot">
+                    <b><?=_ORDER_INFORMATION?></b>
+                </td>
+    		</tr>
+    		<tr>
+    			<td valign="top" width="30%" align="right">
+                    <b><?=_ORDER_DATE?>:</b> 
+                </td>
+    			<td valign="top">
+                <?if(!empty($item['date'])) {?>
+                    <?=date('M jS Y g:i A', strtotime($item['date']));?>
+                <?}?>
+                </td>
+    		</tr>
+    		<tr>
+    			<td valign="top" width="30%" align="right">
+                    <b><?=_CONTACT?>:</b> 
+                </td>
+    			<td valign="top">
+                    <?=$item['first_name']?> <?=$item['last_name']?>
+                </td>
+    		</tr>
+    		<tr>
+    			<td valign="top" width="30%" align="right">
+                    <b><?=_PHONE_NUMBER?>:</b> 
+                </td>
+    			<td valign="top">
+                    <?=$item['phone']?>
+                </td>
+    		</tr>
+    		<tr>
+    			<td colspan="2" class="tableFoot">
+                    <b><?=_TRANSACTION?></b>
+                </td>
+    		</tr>
+            <tr>
+    			<td valign="top" width="30%" align="right">
+                    <b><?=_TRANSACTION_NUMBER?>:</b> 
+                </td>
+    			<td valign="top">
+                    <?=$item['trans']?>
+                </td>
+    		</tr>
+            <?if(!empty($item['cc_number'])) {?>
+    		<tr>
+    			<td valign="top" width="30%" align="right">
+                    <b><?=_PAID_WITH?>:</b> 
+                </td>
+    			<td valign="top">
+                    <?=$item['payment_method']?>
+                </td>
+    		</tr>
+            <?}?>
+    		<tr>
+    			<td valign="top" width="30%" align="right">
+                    <b><?=_TOTAL_CHARGED?>:</b> 
+                </td>
+    			<td valign="top">
+                    $<?=$item['total']?>
+                </td>
+    		</tr>
+    		<tr>
+    			<td colspan="2" class="tableFoot">
+                    <b><?=_BILLING_INFO?></b>
+                </td>
+    		</tr>
+    		<tr>
+    			<td valign="top" width="30%" align="right">
+                    <b><?=_NAME?>:</b> 
+                </td>
+    			<td valign="top">
+                    <?=$item['first_name']?> <?=$item['last_name']?>
+                </td>
+    		</tr>
+    		<tr>
+    			<td valign="top" width="30%" align="right">
+                    <b><?=_ADDRESS?>:</b> 
+                </td>
+    			<td valign="top">
+                    <?=$item['address']?><?=(!empty($item['address2'])) ? ', ' . $item['address2'] : ''?><br />
+                    <?=$item['city']?>, <?=$item['state']?> <?=$item['zip']?><br />
+                    <?=$item['country']?>
+                </td>
+    		</tr>
+            <?if(!empty($item['billing_phone'])) {?>
+    		<tr>
+    			<td valign="top" width="30%" align="right">
+                    <b><?=_PHONE_NUMBER?>:</b> 
+                </td>
+    			<td valign="top">
+                    <?=$item['phone']?>
+                </td>
+    		</tr>
+            <?}?>
+            <?if(!empty($item['email'])) {?>
+    		<tr>
+    			<td valign="top" width="30%" align="right">
+                    <b><?=_EMAIL?>:</b> 
+                </td>
+    			<td valign="top">
+                    <?=$item['email']?>
+                </td>
+    		</tr>
+            <?}?>
+    		<? if(!empty($item['ship_address'])) {?>
+    			<tr>
+    				<td colspan="2" class="tableFoot">
+                        <b><?=_SHIPPING_INFORMATION?></b>
+                    </td>
+    			</tr>
+    			<tr>
+    				<td valign="top" width="30%" align="right">
+                        <b><?=_NAME?>:</b> 
+                    </td>
+    				<td valign="top">
+                        <?=$item['ship_first_name']?> <?=$item['ship_last_name']?>
+                    </td>
+    			</tr>
+    			<tr>
+    				<td valign="top" width="30%" align="right">
+                        <b><?=_ADDRESS?>:</b> 
+                    </td>
+    				<td valign="top">
+                        <?=$item['ship_address']?><?=(!empty($item['ship_address2'])) ? ', ' . $item['ship_address2'] : ''?><br />
+                        <?=$item['ship_city']?>, <?=$item['ship_state']?> <?=$item['ship_zip']?><br />
+                        <?=$item['ship_country']?>
+                    </td>
+    			</tr>
+    			<? if(!empty($item['ship_phone'])) {?>
+    			<tr>
+    				<td valign="top" width="30%" align="right">
+                        <b><?=_PHONE_NUMBER?>:</b> 
+                    </td>
+    				<td valign="top">
+                        <?=$item['ship_phone']?>
+                    </td>
+    			</tr>
+    			<?}?>
+    			<? if(!empty($item['ship_email'])) {?>
+    			<tr>
+    				<td valign="top" width="30%" align="right">
+                        <b><?=_EMAIL?>:</b> 
+                    </td>
+    				<td valign="top">
+                        <?=$item['ship_email']?>
+                    </td>
+    			</tr>
+    			<?}?>
+    		<?}?>
+    		<?if(count($item['items'])>0) {?>
+    		<tr>
+    			<td valign="top" colspan="2" style="padding-top: 20px;">
+    				<table width="100%">
+    					<tr>
+    						<td width="5%" style="border-bottom: 1px solid #C0C0C0;">
+                                &nbsp;
+                            </td>
+    						<td style="border-bottom: 1px solid #C0C0C0;">
+                                <b><?=_ITEM?></b>
+                            </td>
+    						<td width="10%" style="border-bottom: 1px solid #C0C0C0;" align="right">
+                                <b><?=_PRICE?></b>
+                            </td>
+    						<td width="10%" style="border-bottom: 1px solid #C0C0C0;" align="right">
+                                <b><?=_QUANTITY?></b>
+                            </td>
+    						<td width="15%" style="border-bottom: 1px solid #C0C0C0;" align="right">
+                                <b><?=_TOTAL?></b>
+                            </td>
+    					</tr>
+    					<?foreach($item['items'] as $item) {?>
+    					<tr>
+    						<td style="border-bottom: 1px solid #C0C0C0;">
+                            <?if(!empty($item['image'])) {?>
+                                <img src="http://<?=$_SERVER["HTTP_HOST"]?>/<?=$item['image']?>" />
+                            <?}?>
+                            </td>
+    						<td style="border-bottom: 1px solid #C0C0C0;">
+                                <?=$item['number']?>: <?=$item['title']?>
+                            </td>
+    						<td style="border-bottom: 1px solid #C0C0C0;" align="right">
+                                $<?=number_format($item['price'], 2, '.', ',')?>
+                            </td>
+    						<td style="border-bottom: 1px solid #C0C0C0;" align="right">
+                                <?=intval($item['qty'])?>
+                            </td>
+    						<td style="border-bottom: 1px solid #C0C0C0;" align="right">
+                                $<?=number_format($item['price']*$item['qty'], 2, '.', ',')?>
+                            </td>
+    					</tr>
+    					<?}?>
+    					<?if(!empty($item['saved_amount'])) {?>
+    					<tr>
+    						<td align="right" colspan="4">
+                                <b><?=_DISCOUNTS?>:</b>
+                            </td>
+                            <td align="right"> 
+                                $<?=$item['saved_amount']?>
+                            </td>
+    					</tr>
+    					<?}?>
+                        <?if(!empty($item['sub_total'])) {?>
+    					<tr>
+    						<td align="right" colspan="4">
+                                <b><?=_SUBTOTAL?>:</b>
+                            </td>
+                            <td align="right"> 
+                                $<?=$item['sub_total']?>
+                            </td>
+    					</tr>
+                        <?}?>
+                        <?if(!empty($item['shipping_cost'])) {?>
+    					<tr>
+    						<td align="right" colspan="4">
+                                <b><?=_SHIPPING_HANDLING?>:</b>
+                            </td>
+                            <td align="right"> 
+                                $<?=$item['shipping_cost']?>
+                            </td>
+    					</tr>
+                        <?}?>
+                        <?if(!empty($item['taxes'])) {?>
+    					<tr>
+    						<td align="right" colspan="4">
+                                <b><?=_TAX?>:</b>
+                            </td>
+                            <td align="right"> 
+                                $<?=$item['taxes']?>
+                            </td>
+    					</tr>
+                        <?}?>
+    					<tr>
+    						<td align="right" colspan="4" style="padding-top: 10px;">
+                                <b><?=_TOTAL?>:</b>
+                            </td>
+                            <td style="padding-top: 10px; border-top: 1px solid #C0C0C0;" align="right"> 
+                                $<?=$item['total']?>
+                            </td>
+    					</tr>
+    				</table>
+    			</td>
+    		</tr>
+    		<?}?>
+    	</table>
+    </body>
+</html>

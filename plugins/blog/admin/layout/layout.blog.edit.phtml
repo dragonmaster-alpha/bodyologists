@@ -1,0 +1,318 @@
+<?php if(isset($_SESSION['error'])) {?>
+    <div class="alert-error" title="Error">
+        <?=$_SESSION['error']?>
+    </div>
+    <?php
+    unset($_SESSION['error']);
+}
+?>
+<form action="admin.php?plugin=blog" method="post" class="stdform">
+    <input type="hidden" value="save" name="op" />
+    <input type="hidden" value="0" id="save_and" name="save_and" />
+    <input type="hidden" value="<?=$item['id']?>" name="id" />
+    <input type="hidden" value="0" name="alive" />
+    <div class="row-fluid">
+        <div class="span9">
+            <div class="pageheader">
+                <h1 class="head">
+                    Blog Management
+                </h1>
+            </div>
+        </div>
+        <div class="span3">
+            <div class="submit-top">
+                <div style="text-align: right; margin-right: 40px;">
+                    <div style="position: relative; display: inline-block;">
+                        <div class="navbar">
+                            <ul class="nav pull-right">
+                                <li class="dropdown">
+                                    <button class="btn btn-success tipS" type="button" style="padding: 5px 10px 6px 10px;" data-toggle="dropdown" title="Save Changes" >
+                                        <span class="btn-icon icon-disk"></span>
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu orders-actions" role="menu">
+                                        <li><a href="javascript:jQuery('.stdform').submit();"><span class="icon-disk"></span> Save</a></li>
+                                        <li><a href="javascript:jQuery('.stdform').submit();" onclick="jQuery('#save_and').val(1);"><span class="icon-file"></span> Save &amp; New</a></li>
+                                        <li><a href="javascript:jQuery('.stdform').submit();" onclick="jQuery('#save_and').val(2);"><span class="icon-pencil-3"></span> Save &amp; Edit</a></li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <button class="btn btn-warning tipS" type="reset" style="padding: 6px 10px; margin-left: 5px;" title="Undo Changes">
+                                        <span class="font20 icon-history"></span> 
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <ul class="hornav">
+        <li class="current">
+            <a href="#default" class="current">Article</a>
+        </li>
+        <li>
+            <a href="#comments" <?=(empty($available_comments)) ? ' style="display: none"' : ''?>>Comments</a>
+        </li>
+        <li>
+            <a href="#images">Images</a>
+        </li>
+    </ul>
+    <div id="contentwrapper" class="contentwrapper">
+        <div id="default" class="subcontent">
+            <p>
+                <label>
+                    Title: 
+                </label>
+                <div class="field">
+                    <label>
+                        <input type="text" <?=(empty($item['url'])) ? 'id="title-area" data-mirror="entrance" data-image="page-title"' : ''?> value="<?=$item['title']?>" name="title" />
+                    </label>
+                </div>
+            </p>
+            <hr />
+            <p>
+                <label>
+                    Author: 
+                </label>
+                <div class="field">
+                    <div class="row-fluid">
+                        <div class="span3">
+                            <select class="uniformselect combo" style="width: 350px;" name="poster">
+                                <?php foreach($available_posters as $poster) {?>
+                                <option value="<?=$poster['id']?>" <?=($poster['id'] == $item['poster']) ? ' selected="selected"' : '' ?>><?=$poster['last_name'].', '.$poster['first_name']?></option>
+                                <?php } ?>
+                            </select>
+                        </div>
+                        <input type="hidden" value="english" name="lang" />
+                        <div class="span5">
+                            <span class="title">Date:</span> 
+                            <input type="text" value="<?=(!empty($item['date']) ? date('m/d/Y', strtotime($item['date'])) : date('m/d/Y'))?>" name="date" class="datepick hasDatepicker" />
+                            <input type="text" value="<?=date('g:i A', strtotime($item['date']))?>" data-default-time="<?=date('g:i A', strtotime($item['date']))?>" name="time" class="timepick hasTimepicker" />
+                        </div>
+                    </div>
+                </div>
+            </p>
+            <hr />
+            <p>
+                <label>
+                    Configuration: 
+                </label>
+                <div class="field">
+                    <div class="row-fluid">
+                        <div class="span4">
+                            <label>
+                                <input type="checkbox" value="1" name="active"<?php if($item['active'] == 1) echo ' checked="checked"'; ?> /> Visible and accessible to all visitors.
+                            </label>
+                        </div>
+                        <div class="span3">
+                            <label>
+                                <input type="checkbox" value="1" name="featured"<?php if($item['featured'] == 1) echo ' checked="checked"'; ?> /> Mask as featured.
+                            </label>
+                        </div>
+                        <div class="span5">
+                            <label>
+                                <input type="checkbox" value="1" name="allow_comments"<?php if($item['allow_comments'] == 1) echo ' checked="checked"'; ?> /> Allow visitors to leave comments.
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </p>
+            <hr />
+            <p>
+                <div>
+                    <label>
+                        Category:
+                    </label>
+                        <input type="radio" name="category" id="cat_health" value="Health" <?=!in_array($item['category'], ['Beauty','Fitness']) ? 'checked="checked"':''?>>Health</input>
+                        <input type="radio" name="category" id="cat_beauty" value="Beauty" <?=$item['category'] == 'Beauty' ? 'checked="checked"':''?>>Beauty</input>
+                        <input type="radio" name="category" id="cat_fitness" value="Fitness" <?=$item['category'] == 'Fitness' ? 'checked="checked"':''?>>Fitness</input>
+                </div>
+                <small class="desc">
+                    
+                </small>
+            </p>
+            <hr />
+            <div>
+                <textarea name="text" class="mce"><?=htmlentities($item['text'])?></textarea>
+            </div>
+            <hr />
+            <h4>Search Engine Listing Preview:</h4>
+            <div class="row-fluid" style="margin-top: 10px;">
+                <div class="span10">
+                    <div class="google-title"><?=$item['meta_title']?></div>
+                    <div>http<?=(!empty($helper->config['force_https'])) ? 's' : ''?>://<?=$helper->site_domain() . _SITE_PATH?>/blog/<span class="google-url"><?=str_replace('blog/', '', $item['url'])?></span></div>
+                    <div class="google-text"><?=$item['meta_description']?></div>
+                </div>
+                <div class="span2 text-right">
+                    <a href="#" onclick="jQuery('#seo-options').slideDown(); jQuery('body').animate({scrollTop:jQuery('div#seo-options').offset().top},200); return false;">
+                        Edit SEO
+                    </a>
+                </div>
+            </div>
+            <div id="seo-options" style="display: none;">
+                <hr />
+                <p>
+                    <label>
+                        Page Title: 
+                    </label>
+                    <div class="field">
+                        <label>
+                            <input type="text" id="page-title-area" maxlength="<?=$_seo_settings['title_length']?>" value="<?=$item['meta_title']?>" name="meta_title" data-mirror="entrance" data-image="google-title" class="required" />
+                        </label>
+                    </div>
+                </p>
+                <p>
+                    <label>
+                        URL: 
+                    </label>
+                    <div class="field">
+                        <div class="fake-input">
+                            <span><?=(!empty($frm->config['force_https'])) ? 'https' : 'http'?>://<?=$frm->site_domain() . _SITE_PATH?>/blog/</span>
+                            <input type="text" <?=(empty($item['url'])) ? 'id="url-area"' : ''?> value="<?=str_replace('blog/', '', $item['url'])?>" maxlength="55" name="url" data-mirror="entrance" data-image="google-url" placeholder="<?=str_replace('blog/', '', $item['url'])?>" /> 
+                        </div>
+                        <span class="help-block" id="url-check-area"></span>
+                    </div>
+                </p>
+                <p>
+                    <label>
+                        Meta Description: 
+                    </label>
+                    <div class="field">
+                        <textarea maxlength="<?=$_seo_settings['description_length']?>" id="meta_description" name="meta_description" data-mirror="entrance" data-image="google-text"><?=$item['meta_description']?></textarea>
+                    </div>
+                </p>
+            </div>
+            <hr />
+            <!-- <p>
+                <label>
+                    Focus Keyword:
+                </label>
+                <div class="field">
+                    <input type="text" id="seo_keyword" value="<?=$item['extras']['key']?>" name="extras[key]" placeholder="Enter keywork to check SEO" />
+                </div>
+                <small class="desc">
+                    Pick the main keyword or key phrase that this page is about.
+                </small>
+            </p>
+            <div id="seo-tools">
+
+            </div> -->
+        </div>
+        <div id="comments" class="subcontent" style="display: none;">
+            <?php if(!empty($available_comments)) {?>
+            <div class="widgetcontent userlistwidget nopadding">
+            	<ul>
+                    <?php foreach($available_comments as $comment) {?>
+	                <li>
+	                	<?=$comment['text']?>
+	                	<div style="margin-top: 20px;">
+                            <?php if(empty($comment['approved'])) {?>
+	                        <a href="admin.php?plugin=blog&amp;op=comments_approve&amp;id=<?=$comment['id']?>" class="need-confirm tipS btn btn-success" style="padding: 0 0 0 5px; margin: 0; font-size: 11px;" title="Approve" data-desc="Are you sure you want to approve this comment?">
+                                <span class="btn-icon icon-cog-3 "></span>
+	                        </a>
+                            <?php }?>
+	                        <a href="admin.php?plugin=blog&amp;op=comments_delete&amp;id=<?=$comment['id']?>" class="deletion tipS" title="Delete">
+                                <button class="btn btn-small" type="button" style="padding: 1px 0 1px 5px; font-size: 10px;" >
+                                    <span class="btn-icon icon-remove-2"></span>
+                                </button>
+	                        </a>
+                            <span style="padding-left: 10px;">
+    	                		By: <?=$comment['name']?> <?=$frm->format_sort_date($comment['date'])?>
+    	                		 - Email: 
+    	                		<a href="admin.php?plugin=system&amp;file=messages&amp;op=send_message&amp;email=<?=$comment['email']?>&amp;name=<?=urlencode($comment['name'])?>&amp;subject=<?=urlencode('About your comments on ' . $frm->config['sitename'])?>" class="send-message">
+                                    <?=$comment['email']?>
+                                </a>
+    	                		 - IP: <?=$comment['ip']?>
+                            	<?=(!empty($comment['votes']) ? ' - Votes: ' . $comment['votes'] : '')?>
+                            </span>
+                        </div>
+	                </li>
+                    <?php }?>
+                </ul>
+			</div>
+            <?php }?>
+        </div>
+        <div id="images" class="subcontent" style="display: none;">
+            <div class="row-fluid">
+                <div class="span3">
+                    <div class="avatar-img" style="float: left; background-image: url(images/no-image-60x60.jpg)"> 
+                        <img src="images/blank.gif" alt="Upload Images" />
+                        <input type="file" name="Filedata" id="upload_field" multiple="multiple" accept="image/*" />
+                    </div>
+                </div>
+                <div class="span9">
+                    <div id="progress_report">
+                        <div id="progress_report_name"></div>
+                        <div id="progress_report_status" style="font-style: italic;"></div>
+                        <div id="progress_report_bar_container" style="width: 90%; height: 5px;">
+                            <div id="progress_report_bar" style="background-color: blue; width: 0; height: 100%;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br clear="all" />
+            <div class="gallerywrapper">
+                <ul class="imagelist" id="img-holder">
+                    <?php if(count($item_images)>0) {?>
+                        <?php foreach($item_images as $image) {?>
+                    <li id="item_<?=$image['id']?>">
+                        <div class="img" style="background: url(<?=_SITE_PATH?>/uploads/blog/<?=$image['bid']?>/thumb-<?=$image['image']?>) no-repeat center center;  background-size: cover;">
+                            <img src="images/blank.gif" alt="<?=$image['title']?>" />
+                         </div>
+                         <span>
+                            <a href="admin.php?plugin=pages&amp;addon=gallery&amp;op=edit_images&amp;id=<?=$image['id']?>" class="name ajax"><?=substr($image['image'], 0, 20)?><?=(strlen($image['image'])>20) ? '...' : ''?></a>
+                            <a href="admin.php?plugin=pages&amp;addon=gallery&amp;op=edit_images&amp;id=<?=$image['id']?>" class="edit ajax"></a>
+                            <a href="<?=_SITE_PATH?>/uploads/blog/<?=$image['bid']?>/<?=$image['image']?>" class="view"></a>
+                            <a href="admin.php?plugin=pages&amp;addon=gallery&amp;op=delete_image&amp;id=<?=$image['id']?>" class="delete"></a>
+                         </span>
+                    </li>
+                        <?php }?>
+                    <?php }?>
+                </ul>
+            </div>
+        </div>
+    </div>
+</form>
+<script type="text/javascript" src="js/plugins/jquery.html5_upload.js"></script>
+<script type="text/javascript"> 
+    jQuery(function() {
+        jQuery("#seo-tools").load('system/seo/seo', function(a){
+            jQuery("#seo-tools").html(a);
+        });
+        jQuery("#upload_field").html5_upload({
+            extraFields: {
+                'id'            : '<?=$item['id']?>',
+                'folder_name'   : 'blog',
+                'op'            : 'photos',
+                'confirm_field' : '1'
+            },
+            url: 'uploads.php',
+            sendBoundary: window.FormData || jQuery.browser.mozilla,
+            onStart: function(event, total) {
+                jQuery('#progress_report').show();
+                return true;
+            },
+            setStatus: function(text) {
+                jQuery("#progress_report_status").text(text);
+            },
+            setProgress: function(val) {
+                jQuery("#progress_report_bar").css('width', Math.ceil(val*100)+"%");
+            },
+            onFinish: function(event) {
+                jQuery('#progress_report').hide();
+                jQuery('.avatar-img').css('background-image', 'url(images/no-image-60x60.jpg)');
+                jQuery.fn.colorbox.resize();
+            },
+            onFinishOne: function(event, response, name, number, total) {
+                jQuery.get('admin.php?plugin=blog&amp;op=load_images&amp;id=<?=$item['id']?>', function(data){
+                    jQuery('#img-holder').html(data);
+                });
+            },
+            onError: function(event, name, error) {
+                alert('error while uploading file ' + name);
+            }
+        });
+    });
+</script>

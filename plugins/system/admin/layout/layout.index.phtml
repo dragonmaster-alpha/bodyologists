@@ -1,0 +1,599 @@
+<script type="text/javascript" src="js/plugins/jquery.flot.min.js"></script>
+<script type="text/javascript" src="js/plugins/jquery.flot.resize.min.js"></script>
+<script type="text/javascript">
+<!--
+	jQuery(document).ready(function(){
+	   
+        var visits = <?=str_replace(array('{', '}', '"', ':'), array('[', ']', '', ','), $visits_per_day)?>;
+        var views = <?=str_replace(array('{', '}', '"', ':'), array('[', ']', '', ','), $views_per_day)?>;
+        var ticks = <?=str_replace(array('{', '}', ':'), array('[', ']', ','), $ticks_per_day)?>
+        
+		var plot = jQuery.plot(jQuery("#chartplace"),
+        [{
+        	data: visits, label: "Visits", color: "#069"
+        },{ 
+            data: views, label: "Page Views", color: "#FF6600"
+        }],{
+            series: {
+               lines: {show: true, fill: true, fillColor: {colors:[{opacity: 0.05}, {opacity: 0.15 }]}},points: {show: true}
+            },
+            legend: {position: 'nw'},
+            grid: {hoverable: true, clickable: true, borderColor: '#ccc', borderWidth: 1, labelMargin: 10},
+            xaxis: {
+                ticks: ticks,
+                tickDecimals: 0
+            }
+        });
+		
+    });
+-->
+</script>
+
+<div id="contentwrapper" class="contentwrapper">
+	<div id="updates" class="subcontent">
+        <div class="two_third dashboard_left">
+        	<ul class="shortcuts">
+                <?php if($administrator->admin_access('pages')) {?>
+                <li>
+                    <a href="admin.php?plugin=pages" class="pages">
+                        <span>Pages</span>
+                    </a>
+                </li>
+                <?php }?>
+                <?php if($helper->is_plugin('members') && $administrator->admin_access('members')) {?>
+                <li>
+                    <a href="admin.php?plugin=members" class="users">
+                        <span>Clients</span>
+                    </a>
+                </li>
+                <?php }?>
+                <?php if($helper->is_plugin('blog') && $administrator->admin_access('blog')) {?>
+                <li>
+                    <a href="admin.php?plugin=blog" class="blog">
+                        <span>Blog</span>
+                    </a>
+                </li>
+                <?php }?>
+                <?php if($helper->is_plugin('products') && $administrator->admin_access('products')) {?>
+                <li>
+                    <a href="admin.php?plugin=products" class="products">
+                        <span>Products</span>
+                    </a>
+                </li>
+                <?php }?>
+                <?php if($helper->is_plugin('orders') && $administrator->admin_access('orders')) {?>
+                <li>
+                    <a href="admin.php?plugin=orders" class="orders">
+                        <span>Orders</span>
+                    </a>
+                </li>
+                <?php }?>
+                <?php if($helper->is_addon('orders', 'coupons') && $administrator->admin_access('orders')) {?>
+                <li>
+                    <a href="admin.php?plugin=orders&amp;addon=coupons" class="coupons">
+                        <span>Coupons</span>
+                    </a>
+                </li>
+                <?php }?>
+                <?php if($administrator->admin_access('pages')) {?>
+                <li>
+                    <a href="admin.php?plugin=pages&amp;addon=gallery" class="gallery">
+                        <span>Gallery</span>
+                    </a>
+                </li>
+                <?php }?>
+                <?php if($administrator->admin_access('system')) {?>
+                <li>
+                    <a href="admin.php?plugin=system&amp;file=backups" class="backup">
+                        <span>Backups</span>
+                    </a>
+                </li>
+                <?php }?>
+                <?php if($helper->is_plugin('events') && $administrator->admin_access('events')) {?>
+                <li>
+                    <a href="admin.php?plugin=events" class="events">
+                        <span>Events</span>
+                    </a>
+                </li>
+                <?php }?>
+                <?php if($administrator->admin_access('system')) {?>
+                <li>
+                    <a href="admin.php?plugin=system&amp;file=stats" class="analytics">
+                        <span>Statistics</span>
+                    </a>
+                </li>
+                <?php }?>
+                <?php if($administrator->admin_access('system')) {?>
+                <li>
+                    <a href="admin.php?plugin=system&amp;file=settings" class="settings">
+                        <span>Settings</span>
+                    </a>
+                </li>
+                <?php }?>
+            </ul>
+            <br clear="all" />
+            <hr />
+            <?php
+            if(!empty($rss->item)) {
+            foreach ($rss->item as $item) 
+            {?>
+                <div class="row-fluid" style="width: auto; height: 100px; overflow: hidden; margin-bottom: 10px; border-radius: 2px; box-shadow: 0 0 5px rgba(0,0,0,.3); background-color: #fff">
+                    <div class="span5" style="background: url(<?=$item->enclosure ? $item->enclosure->attributes()->{'url'} : '' ?>) no-repeat center center; background-size: cover; height: 100%">
+                        <a href="<?=$item->link?>" target="_blank" class="title">
+                            <img src="images/blank.gif" alt="<?=$item->title?>" style="width: 100%; height: 100%;" />
+                        </a>
+                    </div>
+                    <div class="span7" style="padding: 10px 20px 10px 0; overflow: hidden;">
+                        <a href="<?=$item->link?>" target="_blank" class="title"><?=$item->title?></a>
+                        <div><?=$item->description?></div>
+                    </div>
+                </div>
+            <?php }?>
+            <?php }?>
+            <br clear="all" />
+            <div class="contenttitle2 nomargintop">
+                <h3>Visit Overview</h3>
+            </div><!--contenttitle-->
+            <div class="overviewhead">
+                <form action="admin.php" method="post" style="display: inline;">
+                    From: &nbsp;
+                    <input type="text" value="<?=$_SESSION['stats']['start']?>" style="width: 80px;" data-date-format="yyyy-mm-dd" name="start_date" id="datepickfrom" /> 
+                    &nbsp; &nbsp; To: &nbsp;
+                    <input type="text" value="<?=$_SESSION['stats']['end']?>" style="width: 80px;" data-date-format="yyyy-mm-dd" name="end_date" id="datepickto" />
+                    &nbsp; &nbsp; 
+                    <input type="submit" style="position: relative; top: 1px;" class="submit radius2" value="GO" />
+                </form>
+                <form action="admin.php" method="post" style="display: inline;">
+                	<div class="overviewselect">
+                        <select onchange="this.form.submit();" name="date-range" class="uniformselect">
+                            <option <?=($selected_date == 'thisweek') ? ' selected="selected"' : ''?> value="<?=date('Y-m-d')?>|<?=date('Y-m-d', strtotime('1 week ago'))?>|thisweek">This Week</option>
+                            <option <?=($selected_date == 'lastweek') ? ' selected="selected"' : ''?> value="<?=date('Y-m-d', strtotime('1 week ago'))?>|<?=date('Y-m-d', strtotime('2 weeks ago'))?>|lastweek">Last Week</option>
+                            <option <?=($selected_date == 'thismonth') ? ' selected="selected"' : ''?> value="<?=date('Y-m-d')?>|<?=date('Y-m-d', strtotime('1 month ago'))?>|thismonth">This Past Month</option>
+                            <option <?=($selected_date == 'lastmonth') ? ' selected="selected"' : ''?> value="<?=date('Y-m-d', strtotime('1 month ago'))?>|<?=date('Y-m-d', strtotime('2 months ago'))?>|lastmonth">Last Past Month</option>
+                        </select>
+                    </div><!--floatright-->
+                </form>
+            </div><!--overviewhead-->
+            <br clear="all" />
+            <div id="chartplace" style="height:300px;"></div>
+            <br clear="all" />
+            <?php if(!empty($get_latest_products)) {?>
+			<div class="widgetbox">
+                <div class="title">
+                    <h3>Products</h3>
+                </div>
+                <div class="widgetcontent">
+                    <div id="tabs">
+                        <ul>
+                            <li><a href="#new">Newly Added</a></li>
+                            <?php if(!$frm->empty_array($get_best_seller_items)) {?>
+                            <li><a href="#best">Best Sellers</a></li>
+                            <?php }?>
+                            <?php if(!$frm->empty_array($get_out_stock_items)) {?>
+                            <li><a href="#stock">Out of Stock</a></li>
+                            <?php }?>
+                            <?php if(!$frm->empty_array($get_recent_reviews_items)) {?>
+                            <li><a href="#reviews">Latest Reviews</a></li>
+                            <?php }?>
+                        </ul>
+                        <div id="new">
+                            <div class="widgetoptions">
+                                <div class="right">
+                                    <a href="admin.php?plugin=products">
+                                        View All Products
+                                    </a>
+                                </div>
+                                <a href="admin.php?plugin=products&amp;op=edit">
+                                    Add Product
+                                </a>
+                            </div>
+                            <div class="widgetcontent userlistwidget nopadding">
+                                <ul>
+                                    <?php foreach($get_latest_products as $new_products) {?>
+                                    <li>
+                                        <div class="row-fluid">
+                                            <div class="span2">
+                                                <a href="admin.php?plugin=products&amp;op=edit&amp;id=<?=$new_products['id']?>">
+                                                    <img src="<?=_SITE_PATH?>/uploads/products/<?=md5((string) $new_products['id'])?>/small-<?=$new_products['image']?>" />
+                                                </a>
+                                            </div>
+                                            <div class="span3 info">
+                                                <a href="admin.php?plugin=products&amp;op=edit&amp;id=<?=$new_products['id']?>">
+                                                    <?=$frm->reduce_text($new_products['title'], 20)?>
+                                                </a><br />
+                                                <strong>SKU:</strong> <?=$new_products['sku']?>
+                                            </div>
+                                            <div class="span3 link">
+                                                <strong>Reg Price:</strong> $<?=$frm->number($new_products['price'])?><br />
+                                                <strong>Sale Price:</strong> <?=(!empty($new_products['special'])) ? '$' . $frm->number($new_products['special']) : 'N\A'?>
+                                            </div>
+                                            <div class="span3 link">
+                                                <strong>Added on:</strong> <?=$frm->format_sort_date($new_products['date'])?><br />
+                                                <strong>Stock:</strong> <?=(!empty($new_products['stock'])) ? $new_products['stock'] : 'N/T'?>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <?php }?>
+                                </ul>
+                                <a class="more" href="admin.php?plugin=products">
+                                    View All Products
+                                </a>
+                            </div>
+                        </div>
+                        <?php if(!$frm->empty_array($get_best_seller_items)) {?>
+                        <div id="best">
+                            <div class="widgetoptions">
+                                <div class="right">
+                                    <a href="admin.php?plugin=products">
+                                        View All Products
+                                    </a>
+                                </div>
+                                <a href="admin.php?plugin=products&amp;op=edit">
+                                    Add Product
+                                </a>
+                            </div>
+                            <div class="widgetcontent userlistwidget nopadding">
+                                <ul>
+                                    <?php foreach($get_best_seller_items as $products_best_seller) {?>
+                                    <li>
+                                        <div class="row-fluid">
+                                            <div class="span2">
+                                                <a href="admin.php?plugin=products&amp;op=edit&amp;id=<?=$products_best_seller['id']?>">
+                                                    <img src="<?=_SITE_PATH?>/uploads/products/<?=md5((string) $products_best_seller['id'])?>/small-<?=$products_best_seller['image']?>" />
+                                                </a>
+                                            </div>
+                                            <div class="span3 info">
+                                                <a href="admin.php?plugin=products&amp;op=edit&amp;id=<?=$products_best_seller['id']?>">
+                                                    <?=$frm->reduce_text($products_best_seller['title'], 20)?>
+                                                </a><br />
+                                                <strong>SKU:</strong> <?=$products_best_seller['sku']?>
+                                            </div>
+                                            <div class="span3 link">
+                                                <strong>Reg Price:</strong> $<?=$frm->number($products_best_seller['price'])?><br />
+                                                <strong>Sale Price:</strong> <?=(!empty($products_best_seller['special'])) ? '$' . $frm->number($products_best_seller['special']) : 'N\A'?>
+                                            </div>
+                                            <div class="span3 link">
+                                                <strong>Added on:</strong> <?=$frm->format_sort_date($products_best_seller['date'])?><br />
+                                                <strong>Times Sold:</strong> <?=$products_best_seller['times_sold']?>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <?php }?>
+                                </ul>
+                                <a class="more" href="admin.php?plugin=products">
+                                    View All Products
+                                </a>
+                            </div>
+                        </div>
+                        <?php }?>
+                        <?php if(!$frm->empty_array($get_out_stock_items)) {?>
+                        <div id="stock">
+                            <div class="widgetoptions">
+                                <div class="right">
+                                    <a href="admin.php?plugin=products">
+                                        View All Products
+                                    </a>
+                                </div>
+                                <a href="admin.php?plugin=products&amp;op=edit">
+                                    Add Product
+                                </a>
+                            </div>
+                            <div class="widgetcontent userlistwidget nopadding">
+                                <ul>
+                                    <?php foreach($get_out_stock_items as $products_stock) {?>
+                                    <li>
+                                        <div class="row-fluid">
+                                            <div class="span2">
+                                                <a href="admin.php?plugin=products&amp;op=edit&amp;id=<?=$products_stock['id']?>">
+                                                    <img src="<?=_SITE_PATH?>/uploads/products/<?=md5((string) $products_stock['id'])?>/small-<?=$products_stock['image']?>" />
+                                                </a>
+                                            </div>
+                                            <div class="span3 info">
+                                                <a href="admin.php?plugin=products&amp;op=edit&amp;id=<?=$products_stock['id']?>">
+                                                    <?=$frm->reduce_text($products_stock['title'], 20)?>
+                                                </a><br />
+                                                <strong>SKU:</strong> <?=$products_stock['sku']?>
+                                            </div>
+                                            <div class="span3 link">
+                                                <strong>Reg Price:</strong> $<?=$frm->number($products_stock['price'])?><br />
+                                                <strong>Sale Price:</strong> <?=(!empty($products_stock['special'])) ? '$' . $frm->number($products_stock['special']) : 'N\A'?>
+                                            </div>
+                                            <div class="span3 link">
+                                                <strong>Added on:</strong> <?=$frm->format_sort_date($products_stock['date'])?><br />
+                                                <strong>Stock:</strong> <?=$products_stock['stock']?>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <?php }?>
+                                </ul>
+                                <a class="more" href="admin.php?plugin=products">
+                                    View All Products
+                                </a>
+                            </div>
+                        </div>
+                        <?php }?>
+                        <?php if(!$frm->empty_array($get_recent_reviews_items)) {?>
+                        <div id="reviews">
+                            <div class="widgetoptions">
+                                <div class="right">
+                                    <a href="admin.php?plugin=products">
+                                        View All Products
+                                    </a>
+                                </div>
+                                <a href="admin.php?plugin=products&amp;op=edit">
+                                    Add Product
+                                </a>
+                            </div>
+                            <div class="widgetcontent userlistwidget nopadding">
+                                <ul>
+                                    <?php foreach($get_recent_reviews_items as $products_reviews) {?>
+                                    <li>
+                                        <div class="row-fluid">
+                                            <div class="span2">
+                                                <a href="admin.php?plugin=products&amp;op=edit&amp;id=<?=$products_reviews['id']?>">
+                                                    <img src="<?=_SITE_PATH?>/uploads/products/<?=md5((string) $products_reviews['id'])?>/small-<?=$products_reviews['image']?>" />
+                                                </a>
+                                            </div>
+                                            <div class="span3 info">
+                                                <a href="admin.php?plugin=products&amp;op=edit&amp;id=<?=$products_reviews['id']?>">
+                                                    <?=$frm->reduce_text($products_reviews['title'], 20)?>
+                                                </a><br />
+                                                <strong>SKU:</strong> <?=$products_reviews['sku']?>
+                                            </div>
+                                            <div class="span6 link">
+                                                <a href="admin.php?plugin=members&amp;op=edit&amp;id=<?=$products_reviews['owner']?>">
+                                                    <strong><?=$frm->reduce_text($products_reviews['name'], 20)?></strong>
+                                                </a> <?=$frm->format_date($new_member['date'])?><br />
+                                                <?=$frm->reduce_text($products_reviews['text'], 200)?>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <?php }?>
+                                </ul>
+                                <a class="more" href="admin.php?plugin=products">
+                                    View All Products
+                                </a>
+                            </div>
+                        </div>
+                        <?php }?>
+                    </div>
+                </div>
+            </div>
+            <?php }?>
+        </div>
+        <div class="one_third last dashboard_right">
+            <div class="contenttitle2 nomargintop">
+                <h3>Stats: <?=date('Y-m-d', strtotime($_SESSION['stats']['start']))?> <span style="font-size: 12px;">to</span> <?=date('Y-m-d', strtotime($_SESSION['stats']['end']))?></h3>
+            </div>
+        	<ul class="toplist">
+            	<li>
+                	<div>
+                    	<span class="three_fourth">
+                        	<span class="left">
+                        		<span class="title">
+                                    Visits
+                                </span>
+                                <span class="desc">Total Visits For This Period</span>
+                        	</span>
+                        </span>
+                        <span class="one_fourth last">
+                        	<span class="right">
+                            	<span class="h3">
+                                    <?=$all_visits?>
+                                </span>
+                            </span>
+                        </span>
+                        <br clear="all" />
+                    </div>
+                </li>
+                <li>
+                    <div>
+                        <span class="three_fourth">
+                            <span class="left">
+                                <span class="title">
+                                    Unique Visits
+                                </span>
+                                <span class="desc">Total Unique Visitors</span>
+                            </span>
+                        </span>
+                        <span class="one_fourth last">
+                            <span class="right">
+                                <span class="h3">
+                                    <?=$unique_visits?>
+                                </span>
+                            </span>
+                        </span>
+                        <br clear="all" />
+                    </div>
+                </li>
+            	<li>
+                	<div>
+                    	<span class="three_fourth">
+                        	<span class="left">
+                        		<span class="title">
+                                    Pageviews
+                                </span>
+                                <span class="desc">Total Page Views</span>
+                        	</span>
+                        </span>
+                        <span class="one_fourth last">
+                        	<span class="right">
+                            	<span class="h3">
+                                    <?=$page_views?>
+                                </span>
+                            </span>
+                        </span>
+                        <br clear="all" />
+                    </div>
+                </li>
+                <li>
+                	<div>
+                    	<span class="three_fourth">
+                        	<span class="left">
+                        		<span class="title">
+                                    Pages / Visits
+                                </span>
+                                <span class="desc">Average Page Depth</span>
+                        	</span>
+                        </span>
+                        <span class="one_fourth last">
+                        	<span class="right">
+                            	<span class="h3">
+                                    <?=$pages_vs_visits?>
+                                </span>
+                            </span>
+                        </span>
+                        <br clear="all" />
+                    </div>
+                </li>
+                <?php if(!empty($count_latest_orders)) {?>
+                <li>
+                    <div>
+                        <span class="three_fourth">
+                            <span class="left">
+                                <span class="title">
+                                    Orders
+                                </span>
+                                <span class="desc">Total Orders Made</span>
+                            </span>
+                        </span>
+                        <span class="one_fourth last">
+                            <span class="right">
+                                <span class="h3">
+                                    <?=$count_latest_orders?>
+                                </span>
+                            </span>
+                        </span>
+                        <br clear="all" />
+                    </div>
+                </li>
+                <?php }?>
+                <?php if(!empty($count_latest_members)) {?>
+                <li>
+                    <div>
+                        <span class="three_fourth">
+                            <span class="left">
+                                <span class="title">
+                                    Members
+                                </span>
+                                <span class="desc">Total of Registered Members/Clients</span>
+                            </span>
+                        </span>
+                        <span class="one_fourth last">
+                            <span class="right">
+                                <span class="h3">
+                                    <?=$count_latest_members?>
+                                </span>
+                            </span>
+                        </span>
+                        <br clear="all" />
+                    </div>
+                </li>
+                <?php }?>
+            </ul>
+            <?php if(!empty($get_latest_orders)) {?>
+			<div class="widgetbox">
+                <div class="title">
+                    <h3>Recent Orders</h3>
+                </div>
+                <div class="widgetoptions">
+                    <div class="right">
+                        <a href="admin.php?plugin=orders&amp;addon=carts">
+	                        Abandon Carts
+	                    </a>
+                    </div>
+                    <a href="admin.php?plugin=orders">
+                        View All Orders
+                    </a>
+                </div>
+                <div class="widgetcontent userlistwidget nopadding">
+                    <ul>
+                        <?php foreach($get_latest_orders as $new_order) {?>
+                        <li>
+                            <div class="row-fluid">
+                                <div class="span6 info">
+                                    <a href="admin.php?plugin=orders">
+                                        <?=$new_order['trans']?>
+                                    </a><br />
+                                    <strong>$<?=$frm->number($new_order['total'])?></strong>
+                                </div>
+                                <div class="span6 link">
+                                    <a href="admin.php?plugin=orders">
+                                        <?=$frm->format_date(strtotime($new_order['date']))?>
+                                    </a><br />
+                                    <?=$new_order['full_name']?>
+                                </div>
+                            </div>
+                        </li>
+                        <?php }?>
+                    </ul>
+                    <a class="more" href="admin.php?plugin=orders">
+                        View More Orders
+                    </a>
+                </div>
+            </div>
+            <?php }?>
+            <?php if(!empty($get_latest_members)) {?>
+			<div class="widgetbox">
+                <div class="title">
+                    <h3>Latest Registered User</h3>
+                </div>
+                <div class="widgetoptions">
+                    <div class="right">
+                        <a href="admin.php?plugin=members">
+                            View All Clients
+                        </a>
+                    </div>
+                    <a href="admin.php?plugin=members&amp;op=edit">
+                        Add Client
+                    </a>
+                </div>
+                <div class="widgetcontent userlistwidget nopadding">
+                    <ul>
+                        <?php
+                        foreach($get_latest_members as $new_member) {?>
+                        <li>
+                            <div class="row-fluid">
+                                <div class="span6 info">
+                                    <a href="admin.php?plugin=members&amp;op=edit&amp;id=<?=$new_member['id']?>">
+                                        <?=$frm->reduce_text($new_member['full_name'], 20)?>
+                                    </a><br />
+                                    <?=$frm->format_date($new_member['date'])?>
+                                </div>
+                                <div class="span6 link">
+                                    <a href="admin.php?plugin=members&amp;op=edit&amp;id=<?=$new_member['id']?>">
+                                        <?=$frm->reduce_text(strtolower($new_member['email']), 20)?>
+                                    </a><br />
+                                    <?=$new_member['phone']?>
+                                </div>
+                            </div>
+                        </li>
+                        <?php }?>
+                    </ul>
+                    <a class="more" href="admin.php?plugin=members">
+                        View More Clients
+                    </a>
+                </div>
+            </div>
+            <?php }?>
+        </div>
+    </div>
+</div>
+<?php if(!empty($unapproved_blog_comments)) {?>
+<script type="text/javascript">
+    jQuery(document).ready(function(){
+        jQuery.jGrowl("There is <?=$unapproved_blog_comments?> blog comment<?=($unapproved_blog_comments != 1 ? 's' : '')?> awaiting your approval.", {life: 5000});
+    });
+</script>
+    <?php
+$_SESSION['admin_alerts']['comments_adviced'] = 1;
+}?>
+<?php if(!empty($unapproved_products_reviews)) {?>
+<script type="text/javascript">
+    jQuery(document).ready(function(){
+        jQuery.jGrowl("There is <?=$unapproved_products_reviews?> product review<?=($unapproved_products_reviews != 1 ? 's' : '')?> awaiting your approval.", {life: 7000});
+    });
+</script>
+    <?php
+$_SESSION['admin_alerts']['reviews_adviced'] = 1;
+}?>

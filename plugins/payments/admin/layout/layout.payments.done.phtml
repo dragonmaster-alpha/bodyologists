@@ -1,0 +1,25 @@
+<?if(isset($_SESSION['error'])) {?>
+    <div class="alert-error" title="Error">
+        <?=$_SESSION['error']?>
+    </div>
+<?
+    unset($_SESSION['error']);
+}
+?>
+<div class="pageheader">
+    <h1 class="head">
+        Approved
+    </h1>
+</div>
+<br clear="all" />
+<div class="summary-bar">
+    <a href="#" class="reload tipS" title="Back to payments" onclick="window.location.href = 'admin.php?plugin=payments'; return false;">
+        <span class="icon-arrow-left"></span>
+    </a>
+</div>
+<div id="contentwrapper" class="contentwrapper">
+    <div style="margin: 80px 0 40px 0;">
+        <img src="<?=_SITE_PATH?>/uploads/payments/<?=md5((string) $id)?>/barcode-<?=$id?>.png" alt="<?=$id?>" style="float: left; padding-right: 5px;" />
+        <p>The transaction number <strong><?=$id?></strong> has being successfully accepted and approved, you will find this transaction information on your virtual payments list.<br />Click on the button above to go back to your list.</p>
+    </div>
+</div>

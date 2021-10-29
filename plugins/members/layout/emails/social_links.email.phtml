@@ -1,0 +1,34 @@
+<?php
+if(
+    !empty($config('facebook_address')) ||
+    !empty($config('twitter_address')) ||
+    !empty($config('google_plus_address')) ||
+    !empty($config('pinterest_address')) ||
+    !empty($config('linkedin_address')) ||
+    !empty($config('youtube_address')))
+{
+?>
+    <div class="footer">
+        <p><?= _MEMBERS_EMAIL_REGISTRATION_BODY_SOCIAL ?></p>
+        <?php if (!empty($config('facebook_address'))) { ?>
+            <p>Facebook: <?= $config('facebook_address') ?></p>
+        <?php } ?>
+        <?php if (!empty($config('twitter_address'))) { ?>
+            <p>Twitter: <?= $config('twitter_address') ?></p>
+        <?php } ?>
+        <?php if (!empty($config('google_plus_address'))) { ?>
+            <p>Google+: <?= $config('google_plus_address') ?></p>
+        <?php } ?>
+        <?php if (!empty($config('pinterest_address'))) { ?>
+            <p>Pintrest: <?= $config('pinterest_address') ?></p>
+        <?php } ?>
+        <?php if (!empty($config('linkedin_address'))) { ?>
+            <p>Linked In: <?= $config('linkedin_address') ?></p>
+        <?php } ?>
+        <?php if (!empty($config('youtube_address'))) { ?>
+            <p>YouTube: <?= $config('youtube_address') ?></p>
+        <?php } ?>
+    </div>
+<?php
+}
+?>

@@ -1,0 +1,91 @@
+<?if(isset($_SESSION['error'])) {?>
+    <div class="alert-error" title="Error">
+        <?=$_SESSION['error']?>
+    </div>
+<?
+    unset($_SESSION['error']);
+}
+?>
+<div class="pageheader">
+    <h1 class="head">
+        Staff Summary
+    </h1>
+</div>
+<br clear="all" />
+<div class="summary-bar">
+    <a href="#" class="reload tipS" title="Reload" onclick="window.location.href = window.location.href; return false;">
+        <span class="icon-redo"></span>
+    </a>
+    <a class="tipS" title="Add New Staff" href="admin.php?plugin=system&amp;file=staff&amp;op=edit">
+        <span class="icon-plus-2"></span>
+    </a>
+</div>
+<div id="contentwrapper" class="contentwrapper">    
+    <table cellpadding="0" cellspacing="0" border="0" class="stdtable">
+        <colgroup>
+            <col />
+            <col style="width: 150px;" />
+            <col />
+            <col style="width: 10px;" />
+        </colgroup>
+        <thead>
+            <tr>
+                <th style="min-width: 100px;">Name</th>
+                <th>Access</th>
+                <th class="hidden-phone">Last Login</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <?
+            if(count($items_info)>0)
+            {
+            	foreach($items_info as $item)
+            	{?>
+            	<tr>
+            		<td>
+                        <div class="clearfix">
+                            <div class="hidden-phone" style="float: left; width: 80px;">
+	                            <?if(!empty($item['media']['image'])) {?>
+	                                <img src="<?=_SITE_PATH?>/uploads/staff/<?=md5((string) $item['aid'])?>/small-<?=$item['media']['image']?>" class="comment_authorimg" />
+	                            <?} else {?>
+	                                <img src="images/thumbs/avatar15.png" class="comment_authorimg" />
+	                            <?}?>
+	                        </div>
+	                        <div  style="float: left;">
+                            <a href="admin.php?plugin=system&amp;file=staff&amp;op=edit&amp;aid=<?=$item['aid']?>"><h5><?=$item['name']?></h5></a>
+	                            <strong>Username:</strong> <?=$item['aid']?>
+	                        </div>
+	                    </div>
+            		</td>
+            		<td>
+                        <span class="icon-locked-2"></span>
+            			<?=(!empty($item['radminsuper']) ? 'Global' : 'Partial')?><br />
+                        <a href="admin.php?plugin=system&amp;file=staff&amp;op=manage_activation&amp;aid=<?=$item['aid']?>" class="toggle-menu">
+                            <?=($item['active'] == 1) ? '<span class="icon-checkmark-green"></span>' : '<span class="icon-cancel-red"></span>'?> Active
+                        </a>
+            		</td>
+            		<td class="date hidden-phone">
+                        <?=(!empty((int) $item['last_login'])) ? date('M jS Y g:i A', strtotime($item['last_login'])) : 'N/A'?>
+            		</td>
+                    <td>
+                        <div class="navbar">
+                            <ul class="nav pull-right">
+                                <li class="dropdown">
+                                    <a href="#" role="button" data-toggle="dropdown"><span class="icon-menu"></span></a>
+                                    <ul id="actions_<?=$item['id']?>" class="dropdown-menu orders-actions" role="menu">
+                                        <li><a href="admin.php?plugin=system&amp;file=messages&amp;op=send_message&amp;email=<?=$item['email']?>&amp;name=<?=urlencode($item['name'])?>&amp;subject=<?=urlencode('Contact from ' . $helper->config['contactname'])?>" class="send-message"><span class="icon-mail-send left"></span> Email Staff</a></li>
+                                        <li><a href="admin.php?plugin=system&amp;file=staff&amp;op=edit&amp;aid=<?=$item['aid']?>"><span class="icon-pencil-3 left"></span> Edit</a></li>
+                                        <li><a href="admin.php?plugin=system&amp;file=staff&amp;op=delete&amp;aid=<?=$item['aid']?>" class="deletion" data-main-holder="main-area-for-<?=$item['id']?>"><span class="icon-remove-2 left"></span> Delete</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                    </td>
+            	</tr>
+            	<?}
+            }
+            ?>
+        </tbody>
+    </table>
+</div>

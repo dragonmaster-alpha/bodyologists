@@ -1,0 +1,139 @@
+<?=(!empty($_seo_settings['breadcrumbs'] && is_object($breadcrumbs)) ? !empty($_seo_settings['display_breadcrumbs']) ? $breadcrumbs->get() : $breadcrumbs->schema() : '')?>
+
+<div class="separator "></div>
+<h1 class="text-center">Find Events</h1>
+<div class="separator "></div>
+<div class="separator "></div>
+
+<form action="search/events" method="get">
+    <div class="row">
+        <div class="col-md-3 px-3">
+            <input type="text" list="by_category" value="<?=$query['q']?>" name="q" class="form-control form-control-lg input-field-text" placeholder="Any Event" />
+            <datalist id="by_category">
+                <option value="Health Events">
+                <option value="Beauty Events">
+                <option value="Fitness Events">
+            </datalist>          
+        </div>        
+        <div class="col-md-3 px-3">
+            <select name="date" class="form-control form-control-lg" id="thistodo" onchange='checkvalue(this.value)'>
+                <option value="">Any Date</option>
+                <option value="Today">Today</option>
+                <option value="Tomorrow">Tomorrow</option>
+                <option value="This week">This week</option>
+                <option value="This weekend ">This weekend </option>
+                <option value="This month">This month</option>
+                <option value="Next Month">Next Month</option>
+                <option value="pick">Pick a Date</option>
+            </select>
+            <input type="text" name="date" placeholder="mm/dd/yyyy" id="todo" class="datepicker form-control form-control-lg input-field-text" style="display: none; ">
+        </div>
+        <div class="col-md-3 px-3">
+            <input type="text" value="<?=$query['location']?>" name="location" class="form-control form-control-lg input-field-text" placeholder="City, Zip or State" />
+        </div>
+        <div class="col-md-3 px-3">
+            <button class="btn btn-primary btn-lg unset" style="width: 100%" type="submit">
+                Search
+            </button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6 offset-md-3 col-lg-4 offset-lg-4 mt-4 text-center">
+            <button class="btn btn-success mb-4 p-3 unset" style="width: 80%; margin: 0 auto; color: #000; font-size: 1.25rem;" data-toggle="collapse" data-target="#advanced_search" >
+                Advanced Filters <i class="icon-angle-down float-right"></i>
+            </button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-1"></div>
+        <div class="col-10 px-5">
+            <div class="collapse bg-light py-3 mx-4 rounded" id="advanced_search">
+                <div class="row mb-3">
+                    <div class="col-md-1"></div>
+                    <div class="col-md-5">
+                        <select name="main_category" class="form-control form-control-lg">
+                            <option value="">BY CATEGORY</option>
+                            <option value="Health Events">Health Events</option>
+                            <option value="Beauty Events">Beauty Events</option>
+                            <option value="Fitness Events">Fitness Events</option>
+                        </select>                         
+
+                    </div>
+                    <div class="col-md-5">
+                        <button class="form-control form-control-lg text-left" type="button" id="dropPriceRange" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            PRICE RANGE
+                        </button>
+                        <div class="dropdown-menu p-3" aria-labelledby="dropPriceRange" style="width: 90%">
+                            <input type="text" class="js-range-slider" name="price_range" value="" />
+                        </div>                        
+                        
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-1"></div>
+                    <div class="col-md-5">
+                        <select name="to_do" class="form-control form-control-lg" id="thistodo" onchange='checkvalue(this.value)'>
+                            <option value="">THINGS TO DO</option>
+                            <option value="Today">Today</option>
+                            <option value="Tomorrow">Tomorrow</option>
+                            <option value="This week">This week</option>
+                            <option value="This weekend ">This weekend </option>
+                            <option value="This month">This month</option>
+                            <option value="Next Month">Next Month</option>
+                            <option value="pick">Pick a Date</option>
+                        </select>
+                        <input type="text" name="to_do" placeholder="mm/dd/yyyy" id="todo" class="datepicker form-control form-control-lg" style="display: none; ">
+                    </div>
+                    <div class="col-md-5">
+                        <button class="form-control form-control-lg text-left" type="button" id="dropDistance" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            DISTANCE
+                        </button>
+                        <div class="dropdown-menu p-3" aria-labelledby="dropDistance" style="width: 90%">
+                            <input type="text" class="js-distance-slider" name="distance" value="" />
+                        </div>                        
+
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-1"></div>
+                    <div class="col-md-5"><input type="text" name="keyword" placeholder="KEYWORD" class="form-control form-control-lg"></div>
+                    <div class="col-md-5 custom-checkbox">
+                        <label for="Free_events">
+                            FREE EVENTS ONLY <input type="checkbox" name="only_free" value="yes" id="Free_events" class="">
+                        </label>                               
+                    </div>
+                </div>  
+            </div>  
+            <div class="separator"></div>    
+        </div>
+    </div>
+</form>
+
+<div class="separator"></div>
+    <?php if(!empty($items_info)) { ?>
+        <div class="dropdown mb-4">
+            <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <?=_SORT_BY?> <?=$sort_type?> 
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" href="<?=(!empty($_SERVER['QUERY_STRING']) ? $_SERVER['QUERY_STRING'] : 'search/events')?>?sb=d"><?=_SORT_BY?> <?=_DEFAULT?></a>
+                <a class="dropdown-item" href="<?=(!empty($_SERVER['QUERY_STRING']) ? $_SERVER['QUERY_STRING'] : 'search/events')?>?sb=new"><?=_SORT_BY?> <?=_NEWEST?></a>
+                <a class="dropdown-item" href="<?=(!empty($_SERVER['QUERY_STRING']) ? $_SERVER['QUERY_STRING'] : 'search/events')?>?sb=best"><?=_SORT_BY?> <?=_POPULAR?></a>
+                <a class="dropdown-item" href="<?=(!empty($_SERVER['QUERY_STRING']) ? $_SERVER['QUERY_STRING'] : 'search/events')?>?sb=down"><?=_SORT_BY?> <?=_PRICE_LOW_TO_HIGH?></a>
+                <a class="dropdown-item" href="<?=(!empty($_SERVER['QUERY_STRING']) ? $_SERVER['QUERY_STRING'] : 'search/events')?>?sb=up"><?=_SORT_BY?> <?=_PRICE_HIGH_TO_LOW?></a>
+                <a class="dropdown-item" href="<?=(!empty($_SERVER['QUERY_STRING']) ? $_SERVER['QUERY_STRING'] : 'search/events')?>?sb=az"><?=_SORT_BY?> <?=_TITLE_A_TO_Z?></a>
+                <a class="dropdown-item" href="<?=(!empty($_SERVER['QUERY_STRING']) ? $_SERVER['QUERY_STRING'] : 'search/events')?>?sb=za"><?=_SORT_BY?> <?=_TITLE_Z_TO_A?></a>
+            </div>
+        </div>    
+    <div class="row">
+        <?php foreach ($items_info as $item)
+	{
+		include($_SERVER["DOCUMENT_ROOT"] . _SITE_PATH . '/plugins/events/layout/layout.events.list.phtml');
+	}?>
+    </div>
+<?php
+    } else { ?>
+We are sorry but it look like there are not events configured yet, please try again later.
+<?php }?>
+
+

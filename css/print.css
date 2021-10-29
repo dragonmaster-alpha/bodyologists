@@ -1,0 +1,16 @@
+#content, .clear {
+    clear: both;
+    overflow: hidden;
+}
+
+#back-top, #cssmenu, #footer, #header, #menu, .btn, .copyrights, .flash, .hide, .menu, .navbar, .no-print, footer, header {
+    display: none;
+}
+
+#content {
+    min-height: 400px;
+}
+
+.break-after {
+    page-break-after: always;
+}

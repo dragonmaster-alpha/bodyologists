@@ -1,0 +1,48 @@
+<tr id="item_<?=$item['id']?>">
+	<td>
+        <a href="admin.php?plugin=pages&amp;op=edit&amp;id=<?=$item['id']?>">
+            <h5><?=$item['name']?></h5>
+        </a>
+        <a href="http://<?=$helper->site_domain() . _SITE_PATH . '/' . $item['url']?>" target="_blank">
+            <?=$helper->reduce_text($item['url'], 20)?>
+        </a><br />
+        <?=$helper->reduce_words($helper->filter($item['text'], 1), 10)?>
+	</td>
+	<td class="hidden-phone">
+        <?php if($languages_count > 1) {?>
+        <strong>Language:</strong> <?=ucwords($item['lang'])?><br />
+        <?php }?>
+        <strong>Visits:</strong> <?=$item['visits']?>
+	</td>
+	<td>
+        <a href="admin.php?plugin=pages&amp;op=manage_in_menu&amp;id=<?=$item['id']?>" class="toggle-menu tipS" title="Display page in menu.">
+            <?=($item['in_menu'] == 1) ? '<span class="icon-checkmark-green"></span>' : '<span class="icon-cancel-red"></span>'?> In menu
+        </a>
+		<a href="admin.php?plugin=pages&amp;op=manage_activation&amp;id=<?=$item['id']?>" class="toggle-menu tipS" title="Page visible to all visitors.">
+            <?=($item['active'] == 1) ? '<span class="icon-checkmark-green"></span>' : '<span class="icon-cancel-red"></span>'?> Active
+        </a>
+        <?php if(is_dir('../plugins/members')) {?>
+        <a href="admin.php?plugin=pages&amp;op=manage_members_only&amp;id=<?=$item['id']?>" class="toggle-menu tipS" title="Only members will access this page.">
+            <?=(!empty($item['only_members'])) ? '<span class="icon-checkmark-green"></span>' : '<span class="icon-cancel-red"></span>'?> Members only
+        </a>
+        <?php }?>
+	</td>
+	<td class="no_sort hidden-phone">
+        <?=$helper->format_sort_date($item['date'])?><br />
+        <?=$helper->format_sort_date($item['modified'])?>
+	</td>
+    <td>
+        <div class="navbar">
+            <ul class="nav pull-right">
+                <li class="dropdown">
+                    <a href="#" role="button" data-toggle="dropdown"><span class="icon-menu"></span></a>
+                    <ul id="actions_<?=$item['id']?>" class="dropdown-menu orders-actions" role="menu">
+                        <li><a href="http://<?=$helper->site_domain() . _SITE_PATH . '/' . $item['url']?>" target="_blank"><span class="icon-link left"></span> Live View</a></li>
+                        <li><a href="admin.php?plugin=pages&amp;op=edit&amp;id=<?=$item['id']?>"><span class="icon-pencil-3 left"></span> Edit</a></li>
+                        <li><a href="admin.php?plugin=pages&amp;op=delete&amp;id=<?=$item['id']?>" class="deletion" data-main-holder="main-area-for-<?=$item['id']?>"><span class="icon-remove-2 left"></span> Delete</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </td>
+</tr>

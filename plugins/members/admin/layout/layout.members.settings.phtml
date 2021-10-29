@@ -1,0 +1,325 @@
+
+<?if(isset($_SESSION['error'])) {?>
+    <div class="alert-error" title="Error">
+        <?=$_SESSION['error']?>
+    </div>
+<?
+    unset($_SESSION['error']);
+}
+?>
+<form action="admin.php?plugin=members" method="post" class="stdform">
+    <input type="hidden" value="save_settings" name="op" />
+    <div class="row-fluid">
+        <div class="span9">
+            <div class="pageheader">
+                <h1 class="head">
+                    Clients Settings
+                </h1>
+            </div>
+        </div>
+        <div class="span3">
+            <div class="submit-top">
+                <div style="text-align: right; margin-right: 40px;">
+                    <div style="position: relative; display: inline-block;">
+                        <button class="btn btn-success tipN" style="margin-right: 10px;" type="submit" title="Save Changes">
+                            <span class="icon-disk"></span>
+                        </button>
+                        <button class="btn btn-warning tipN" type="reset" title="Undo Changes">
+                            <span class="font20 icon-history"></span> 
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <ul class="hornav">
+        <li class="current">
+            <a href="#default" class="current">General</a>
+        </li>
+        <li>
+            <a href="#required-info">Required Info</a>
+        </li>
+        <li>
+            <a href="#security">Security</a>
+        </li>
+    </ul>
+    <div id="contentwrapper" class="contentwrapper">
+        <div id="default" class="subcontent">
+            <p>
+                <label>
+                    Force Email Validation: 
+                </label>
+                <div class="field">
+                    <select name="validation_required" class="uniformselect">
+                        <option value="">No</option>
+                        <option value="1" <?=(!empty($members_settings['validation_required'])) ? 'selected="selected"' : ''?>>Yes</option>
+                    </select>
+                </div>
+                <small class="desc">
+                    Force clients to validate their email address before they can access their account.
+                </small>
+            </p>
+            <p>
+                <label>
+                    Email Clients on Registration: 
+                </label>
+                <div class="field">
+                    <select name="email_on_registration" class="uniformselect">
+                        <option value="">No</option>
+                        <option value="1" <?=(!empty($members_settings['email_on_registration'])) ? 'selected="selected"' : ''?>>Yes</option>
+                    </select>
+                </div>
+                <small class="desc">
+                    Email clients once registration is done, this feature will not affect the email to be send out if the <strong>Force Validation</strong> option is selected.
+                </small>
+            </p>
+            <p>
+                <label>
+                    Email Admin on Registration: 
+                </label>
+                <div class="field">
+                    <select name="advice_admin" class="uniformselect">
+                        <option value="">No</option>
+                        <option value="1" <?=(!empty($members_settings['advice_admin'])) ? 'selected="selected"' : ''?>>Yes</option>
+                    </select>
+                </div>
+                <small class="desc">
+                    If this option is selected the system will send an email to the address used on the <strong>Default System Email Address</strong>.
+                </small>
+            </p>
+            <p>
+                <label>
+                    Allow Users Avatars: 
+                </label>
+                <div class="field">
+                    <select name="allow_avatar" class="uniformselect">
+                        <option value="">No</option>
+                        <option value="1" <?=(!empty($members_settings['allow_avatar'])) ? 'selected="selected"' : ''?>>Yes</option>
+                    </select>
+                </div>
+                <small class="desc">
+                    Allow users to upload a photo avatar to represent them within the site.
+                </small>
+            </p>
+            <?if(is_dir($_SERVER['DOCUMENT_ROOT'] . _SITE_PATH . '/plugins/members/addons/packages')) {?>
+            <p>
+                <label>
+                    Charge for Membership: 
+                </label>
+                <div class="field">
+                    <select name="charge_membership" class="uniformselect">
+                        <option value="">No</option>
+                        <option value="1" <?=(!empty($members_settings['charge_membership'])) ? 'selected="selected"' : ''?>>Yes</option>
+                    </select>
+                </div>
+                <small class="desc">
+                    Force clients to pay for their membership, the Packages must be available and configured for this feature to work.
+                </small>
+            </p>
+            <?}?>
+            <p>
+                <label>
+                    Registration Benefits: 
+                </label>
+                <div class="field">
+                    <textarea name="benefits" style="height: 80px;" max-lenght="200" placeholder="why should some one become your client... (max 200 chars)"><?=$members_settings['benefits']?></textarea>
+                </div>
+                <small class="desc">
+                    Enter a short explanation the advantages and benefits of having an account in this site.
+                </small>
+            </p>
+        </div>
+        <div id="required-info" class="subcontent" style="display: none">
+            <div style="margin-bottom: 20px;">
+                On the form below you can select the requirements your customers need to meet in order to become a member on this website, all changes will only apply to the clients that register from the time changes are saved and so on.
+            </div>
+            <p>
+                <label>
+                    Name: 
+                </label>
+                <div class="field">
+                    <select name="ask_name" class="uniformselect">
+                        <option value="">No</option>
+                        <option value="1" <?=(!empty($members_settings['ask_name'])) ? 'selected="selected"' : ''?>>Yes</option>
+                    </select>
+                </div>
+                <small class="desc">
+                    Force clients to enter their name on registration.
+                </small>
+            </p>
+            <p>
+                <label>
+                    Gender: 
+                </label>
+                <div class="field">
+                    <select name="ask_gender" class="uniformselect">
+                        <option value="">No</option>
+                        <option value="1" <?=(!empty($members_settings['ask_gender'])) ? 'selected="selected"' : ''?>>Yes</option>
+                    </select>
+                </div>
+                <small class="desc">
+                    Force clients to select their gender on registration.
+                </small>
+            </p>
+            <p>
+                <label>
+                    Birthday: 
+                </label>
+                <div class="field">
+                    <select name="ask_birthday" class="uniformselect">
+                        <option value="">No</option>
+                        <option value="1" <?=(!empty($members_settings['ask_birthday'])) ? 'selected="selected"' : ''?>>Yes</option>
+                    </select>
+                </div>
+                <small class="desc">
+                    Force clients to enter their date of birth on registration.
+                </small>
+            </p>
+            <p>
+                <label>
+                    18 and Over: 
+                </label>
+                <div class="field">
+                    <select name="ask_adults" class="uniformselect">
+                        <option value="">No</option>
+                        <option value="1" <?=(!empty($members_settings['ask_adults'])) ? 'selected="selected"' : ''?>>Yes</option>
+                    </select>
+                </div>
+                <small class="desc">
+                    Force clients to be 18 and over in order to register. Any person younger than 18 will be rejected.
+                </small>
+            </p>
+            <p>
+                <label>
+                    Company: 
+                </label>
+                <div class="field">
+                    <select name="ask_company" class="uniformselect">
+                        <option value="">No</option>
+                        <option value="1" <?=(!empty($members_settings['ask_company'])) ? 'selected="selected"' : ''?>>Yes</option>
+                    </select>
+                </div>
+                <small class="desc">
+                    Force clients to enter the name of their company on registration.
+                </small>
+            </p>
+            <p>
+                <label>
+                    Address 
+                </label>
+                <div class="field">
+                    <select name="ask_address" class="uniformselect">
+                        <option value="">No</option>
+                        <option value="1" <?=(!empty($members_settings['ask_address'])) ? 'selected="selected"' : ''?>>Yes</option>
+                    </select>
+                </div>
+                <small class="desc">
+                    Force clients to enter their address on registration.
+                </small>
+            </p>
+            <p>
+                <label>
+                    Phone No: 
+                </label>
+                <div class="field">
+                    <select name="ask_phone" class="uniformselect">
+                        <option value="">No</option>
+                        <option value="1" <?=(!empty($members_settings['ask_phone'])) ? 'selected="selected"' : ''?>>Yes</option>
+                    </select>
+                </div>
+                <small class="desc">
+                    Force clients to enter their phone number on registration.
+                </small>
+            </p>
+            <p>
+                <label>
+                    Fax No: 
+                </label>
+                <div class="field">
+                    <select name="ask_fax" class="uniformselect">
+                        <option value="">No</option>
+                        <option value="1" <?=(!empty($members_settings['ask_fax'])) ? 'selected="selected"' : ''?>>Yes</option>
+                    </select>
+                </div>
+                <small class="desc">
+                    Force clients to enter their fax number on registration.
+                </small>
+            </p>
+            <p>
+                <label>
+                    Newsletter Subscription: 
+                </label>
+                <div class="field">
+                    <select name="ask_newsletters" class="uniformselect">
+                        <option value="">No</option>
+                        <option value="1" <?=(!empty($members_settings['ask_newsletters'])) ? 'selected="selected"' : ''?>>Yes</option>
+                    </select>
+                </div>
+                <small class="desc">
+                    Ask customers if they want to receive newsletters from your company with regularity (opt out).
+                </small>
+            </p>
+            <p>
+                <label>
+                    Agree to Terms: 
+                </label>
+                <div class="field">
+                    <select name="ask_agree" class="uniformselect">
+                        <option value="">No</option>
+                        <option value="1" <?=(!empty($members_settings['ask_agree'])) ? 'selected="selected"' : ''?>>Yes</option>
+                    </select>
+                </div>
+                <small class="desc">
+                    Force clients to agree to your terms and conditions before they can register.
+                </small>
+            </p>
+        </div>
+        <div id="security" class="subcontent" style="display: none">
+            <div style="margin-bottom: 20px;">
+                A <strong>CAPTCHA</strong> is a type of challenge-response test used in computing as an attempt to ensure that the response is generated by a human being. The process usually involves a computer asking a user to complete a simple test which the computer is able to grade.
+            </div>
+            <p>
+                <label>
+                    Use CATPCHA on Registration: 
+                </label>
+                <div class="field">
+                    <select name="captcha_on_registration" class="uniformselect">
+                        <option value="">No</option>
+                        <option value="1" <?=(!empty($members_settings['captcha_on_registration'])) ? 'selected="selected"' : ''?>>Yes</option>
+                    </select>
+                </div>
+                <small class="desc">
+                    Use CAPTCHA on the registration form, clients will be forced to enter and validate the CAPTCHA in order to register on the site.
+                </small>
+            </p>
+            <p>
+                <label>
+                    Use CATPCHA on Login: 
+                </label>
+                <div class="field">
+                    <select name="captcha_on_login" class="uniformselect">
+                        <option value="">No</option>
+                        <option value="1" <?=(!empty($members_settings['captcha_on_login'])) ? 'selected="selected"' : ''?>>Yes</option>
+                    </select>
+                </div>
+                <small class="desc">
+                    Use CAPTCHA on the login form, clients will be forced to enter and validate the CAPTCHA in order to log in to their accounts.
+                </small>
+            </p>
+            <p>
+                <label>
+                    Use CATPCHA on Password Recovery: 
+                </label>
+                <div class="field">
+                    <select name="captcha_on_lost_password" class="uniformselect">
+                        <option value="">No</option>
+                        <option value="1" <?=(!empty($members_settings['captcha_on_lost_password'])) ? 'selected="selected"' : ''?>>Yes</option>
+                    </select>
+                </div>
+                <small class="desc">
+                    Use CAPTCHA on the password recovery form, clients will be forced to enter and validate the CAPTCHA in order to be able to request a password recovery session.
+                </small>
+            </p>
+        </div>
+    </div>
+</form>

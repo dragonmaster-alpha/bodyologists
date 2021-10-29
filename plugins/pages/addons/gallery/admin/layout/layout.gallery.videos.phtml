@@ -1,0 +1,41 @@
+<div class="photoEdit" style="padding: 10px;">
+    <h3>Insert Youtube Videos</h3>
+    <hr />
+    <form action="#" method="post" class="stdform quickform2">
+    <div class="row-fluid">
+        <div class="span12">
+            <input type="text" id="video-input" value="" style="width: 97% !important" name="video" placeholder="Paste video shared URL" />
+        </div>
+    </div>
+    </form>
+    <div class="small-gallery-holder"></div>
+    <div id="done-area" style="text-align: right; display: none; margin-top: 10px;">
+        <a href="#" class="cancel btn btn-warning">
+            Done
+        </a>
+    </div>
+</div>
+<script type="text/javascript"> 
+    jQuery(function() {
+        jQuery('form').submit(function(){
+            return false;
+        });
+        jQuery("#video-input").blur(function(){
+            var video_url = jQuery(this).val();
+            jQuery.ajax({
+                url: "uploads.php", 
+                type: "POST",
+                data: {'op':'youtube','folder_name':'gallery', 'id':'<?=$id?>','active':1,'video_url': video_url},
+                success: function(response){
+                    jQuery('.small-gallery-holder').prepend('<div class="loaded" style="background-image: url('+response.file+')"><img src="images/blank.gif" /></div>');
+                    jQuery("#video-input").val('');
+                    jQuery('#done-area').show();
+                    jQuery.fn.colorbox.resize(); 
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    alert ('There is an erro with the provided URL, please check it out and try again.');
+                }
+            });
+        });
+    });
+</script>

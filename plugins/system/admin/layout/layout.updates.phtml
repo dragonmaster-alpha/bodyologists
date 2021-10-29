@@ -1,0 +1,76 @@
+<?if(isset($_SESSION['error'])) {?>
+    <div class="alert-error" title="Error">
+        <?=$_SESSION['error']?>
+    </div>
+<?
+    unset($_SESSION['error']);
+}
+?>
+<div class="pageheader">
+    <h1 class="head">
+        <?=$meta['title']?>
+    </h1>
+</div>
+<br clear="all" />
+<div class="summary-bar">
+    <a href="#" class="reload tipS" title="Reload" onclick="window.location.href = window.location.href; return false;">
+        <span class="icon-redo"></span>
+    </a>
+    <a class="tipS" title="Add New Staff" href="admin.php?plugin=system&amp;file=staff&amp;op=edit">
+        <span class="icon-plus-2"></span>
+    </a>
+</div>
+<div id="contentwrapper" class="contentwrapper">    
+    <table cellpadding="0" cellspacing="0" border="0" class="stdtable">
+        <colgroup>
+            <col />
+            <col style="width: 200px;" />
+            <col />
+            <col />
+        </colgroup>
+        <thead>
+            <tr>
+                <th>File</th>
+                <th>Information</th>
+                <th>Available Since</th>
+                <th style="width: 30px;"></th>
+            </tr>
+        </thead>
+        <tbody>
+            <?
+            if(count($items_info)>0)
+            {
+            	foreach($items_info as $item)
+            	{?>
+            	<tr>
+            		<td>
+                        <h5><?=ucwords(str_replace('_', ' ', $item['file']))?></h5>
+                        <?=$item['text']?>
+            		</td>
+            		<td>
+                        <strong>Priority</strong>: 
+                        <?if($item['priority'] == 1) {?>
+                            <strong style="color: #00695c;">Low</strong>
+                        <?} else if($item['priority'] == 2) {?>
+                            <strong style="color: #ffb300;">Medium</strong>
+                        <?}  else {?>
+                            <strong style="color: #d50000;">High</strong>
+                        <?}?><br />
+                        <strong>Installed version</strong>: <?=$item['actual_version']?><br />
+                        <strong>Available version</strong>: <?=$item['new_version']?>
+            		</td>
+            		<td class="date">
+            			<?=date('M jS Y g:i A', strtotime($item['date']))?>
+            		</td>
+            		<td class="actions" style="width: 30px;">
+            			<a class="tipS" title="Update now" href="admin.php?plugin=system&amp;file=updates&amp;op=update&amp;id=<?=$item['id']?>">
+                            <span class="icon-download"></span>
+                        </a>
+            		</td>
+            	</tr>
+            	<?}
+            }
+            ?>
+        </tbody>
+    </table>
+</div>

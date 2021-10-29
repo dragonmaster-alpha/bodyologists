@@ -1,0 +1,957 @@
+<?php
+use App\Helper;
+use App\Html;
+
+function getHoursSelect($name): string
+{
+    return Html::renderHoursDropdown(
+        "extra[{$name}]",
+        $_SESSION['user_info']['extra'][$name],
+        true,
+        0,23, true,
+        'form-control form-control-lg');
+}
+$bid = md5((string) $_SESSION['user_info']['id']);
+$avatar = (!empty($_SESSION['user_info']['avatar'])) ?
+            _SITE_PATH.'/uploads/avatar/'.$bid.'/'.$_SESSION['user_info']['avatar'] :
+            'images/no-image-60x60.jpg';
+
+$services = [];
+$services = $helper->sql_get('customer_services', ['id', 'name', 'fee'], ['user_id' => $_SESSION['user_info']['id']]);
+$servicesCount = count($services);
+?>
+</div>
+</div>
+<div class="container-fluid" xmlns="http://www.w3.org/1999/html">
+    <div class="row">
+        <div class="col-md-4 col-lg-2 memberside">
+            <div>
+                <?php
+                require_once($_SERVER["DOCUMENT_ROOT"] . _SITE_PATH . '/plugins/members/nav_menu.php');
+                ?>
+            </div>
+        </div>
+        <div class="col-md-8 ">
+            <form action="index.php?plugin=members&amp;file=profile" method="post" class="form-horizontal validate-form">
+            	<input type="hidden" name="op" value="save" />
+                <input type="hidden" name="grouped" value="<?php echo Helper::encode($_SESSION['user_info']['grouped']); ?>" />
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <div class="separator xs"></div>
+                        <h4 role="heading">My Account</h4>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-10 offset-md-1 bg-light">
+                        <div class="row" style="margin-bottom: 50px;">
+                            <div class="col-lg-4">
+                                <div class="row">
+                                    <div class="col-12" id="cropper-container">
+                                        <div id="cropContainerModal">
+                                            <div id="img-holder" class="avatar avatar-big tipS" title="<?=_AVATAR_TITLE?>"
+                                                 onclick="$('i.cropControlUpload').click();"
+                                                 style="background-image: url(<?= $avatar ?>);">
+                                                <img id="avatar_holder" src="images/blank.gif" alt="<?=$_SESSION['user_info']['full_name']?>">
+                                            </div>
+                                        </div>
+
+                                <!-- ==================================== -->
+                                <!--      I M A G E   C R O P P E R       -->
+                                <!-- ==================================== -->
+                                        <link rel="stylesheet" href="/croppic/croppic.css">
+                                        <style>
+                                            #cropContainerModal {
+                                                width: 250px;
+                                                height: 315px;
+                                                /*position: absolute; !* or fixed or absolute *!*/
+                                            }
+
+                                            img {
+                                                /*max-height: none;
+                                                max-width: none;*/
+                                            }
+                                        </style>
+                                        <script src="/croppic/croppic.js"></script>
+                                        <script>
+                                            const croppicContainerModalOptions = {
+                                                cropData: {
+                                                    'owner': '<?=$_SESSION['user_info']['id']?>',
+                                                    'folder_name': 'avatar',
+                                                    'id': '<?=$_SESSION['user_info']['id']?>',
+                                                    'confirm_field': '1'
+                                                },
+                                                uploadUrl: 'uploads.php?op=cropImage',
+                                                cropUrl: 'uploads.php?op=saveAvatar',
+                                                modal: true,
+                                                imgEyecandyOpacity: 0.4,
+                                                defaultImg: '<?= $avatar ?>',
+                                                loaderHtml: '<div class="loader bubblingG"><span id="bubblingG_1"></span><span id="bubblingG_2"></span><span id="bubblingG_3"></span></div> ',
+                                                onAfterImgCrop: function () {
+                                                    $('#avatar_holder').attr('src', cropContainerModal.url);
+                                                },
+                                                onReset: function () {
+                                                    var container = $('#cropper-container');
+                                                    if (cropContainerModal) {
+                                                        cropContainerModal.destroy();
+                                                    }
+                                                    container.html(
+                                                    '<div id="cropContainerModal">'+
+                                                    '    <div id="img-holder" class="avatar avatar-big tipS" title="<?=_AVATAR_TITLE?>" '+
+                                                    'onclick=\"$(\'i.cropControlUpload\').click()\" '+
+                                                    'style="background-image: url(\'<?= $avatar ?>\');">'+
+                                                    '        <img id="avatar_holder" src="images/blank.gif" alt="<?=$_SESSION['user_info']['full_name']?>">'+
+                                                    '    </div>'+
+                                                    '</div>'
+                                                    );
+                                                    var cropContainerModal = new Croppic('cropContainerModal', croppicContainerModalOptions);
+                                                    $('i.cropControlUpload').hide();
+                                                }
+                                            };
+                                            var cropContainerModal = new Croppic('cropContainerModal', croppicContainerModalOptions);
+                                            $('i.cropControlUpload').hide();
+
+                                        </script>
+                                <!-- ==================================== -->
+                                <!-- ==================================== -->
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-8 p-4 pl-5">
+                                Upload a recent professional headshot (8x10)<br>
+                                *No Selfies. <br>
+                                *No cropped photo. <br>
+                                *Covered shoulders. <br>
+                                *Covered cleavage.
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-5">
+                                <label>First Name:</label>
+                                <input type="text" value="<?php echo Helper::encode($_SESSION['user_info']['first_name']); ?>" name="first_name" class="required form-control form-control-lg" placeholder="<?=_FIRST_NAME?>" />
+                            </div>
+                            <div class="col-md-5">
+                                <label>Last Name:</label>
+                                <input type="text" value="<?php echo Helper::encode($_SESSION['user_info']['last_name']); ?>" name="last_name" class="required form-control form-control-lg" placeholder="<?=_LAST_NAME?>" />
+                            </div>
+
+                            <div class="col-2">
+                                <label>Gender:</label>
+                                <?php
+                                echo Html::renderDropdown(
+                                        'gender',
+                                        Helper::getGendersList(),
+                                        $_SESSION['user_info']['gender'],
+                                        'required form-control form-control-lg'
+                                );
+                                ?>
+                            </div>
+
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-6">
+                                <label><?=_PHONE?>:</label>
+                                <input type="tel" value="<?php echo Helper::encode($_SESSION['user_info']['phone']); ?>" name="phone" class="required form-control form-control-lg" placeholder="<?=_PHONE?>" />
+                            </div>  
+                            <div class="col-md-6">
+                                <label><?=_EMAIL?>:</label>
+                                <input type="email" value="<?php echo Helper::encode($_SESSION['user_info']['email']); ?>" name="email" class="required email form-control form-control-lg" placeholder="<?=_EMAIL?>" />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-6">
+                                <label><?=_PASSWORD?>:</label>
+                                <input type="password" value="" name="pwd" autocomplete="off" class="form-control form-control-lg" placeholder="<?=_PASSWORD?>" />
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <div class="col-md-12">
+                                <label>
+                                    <input type="checkbox" value="1" name="is_new_password" /> Reset password
+                                </label>
+                            </div>
+                            <div class="col-md-6">
+                                <label><?=_NEW_PASSWORD?>:</label>
+                                <input type="password" value="" name="new_pwd" autocomplete="off" class="form-control form-control-lg" placeholder="<?=_NEW_PASSWORD?>" />
+                            </div>
+                            <div class="col-md-6">
+                                <label><?=_PASSWORD_CONFIRM?>:</label>
+                                <input type="password" value="" name="pwd2" autocomplete="off" class="form-control form-control-lg" placeholder="<?=_PASSWORD_CONFIRM?>" />
+                            </div>
+                            <div class="col-12">
+                                <span class="help-block"><small>(<?=_MEMBERS_REGISTRATION_TYPE_TWICE?>)</small></span>
+                            </div>
+                        </div>
+                        <?php if($_SESSION['user_info']['grouped'] != 4){?>
+                        <div class="separator"></div>
+                        <hr>
+                        <div class="separator"></div>
+                        <div class="row">
+                            <div class="col-12">
+                                <h4 role="heading" class="text-center">Business Information</h4>
+                                <div class="separator sm"></div>
+                            </div>
+                        </div>
+                            <?php if($members_settings['ask_company']) {?>
+                        <div class="form-group row">
+                            <div class="col-md-4">
+                                <label>Company</label>
+                                <input type="text" value="<?php echo Helper::encode($_SESSION['user_info']['company']); ?>" name="company" class="form-control form-control-lg" placeholder="<?=_COMPANY?>" />
+                            </div>
+
+                            <?php require_once 'app/class.helper.php'; ?>
+
+                            <div class="col-md-4">
+                                <label>Category:</label>
+                                <?php
+                                echo Html::renderDropdown(
+                                    'main_category',
+                                    array_keys(Helper::getCategoriesList()),
+                                    $_SESSION['user_info']['main_category'],
+                                    'form-control form-control-lg'
+                                );
+                                ?>
+                            </div>
+                            <div class="col-md-4">
+                                <label>Profession:</label>
+                                <?php
+                                echo Html::renderCategoriesDropdown(
+                                        'category',
+                                        $_SESSION['user_info']['category'],
+                                        'form-control form-control-lg'
+                                );
+                                ?>
+                            </div>
+                        </div>
+                            <?php }?>
+
+                        <div class="form-group row">
+                            <div class="col-12">
+                                <label>Street Address:</label>
+                                <input type="text" value="<?php echo Helper::encode($_SESSION['user_info']['address']); ?>" name="address" class="form-control form-control-lg" placeholder="Address" />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-6">
+                                <label><?=_CITY?>:</label>
+                                <input type="text" id="city" name="city" value="<?php echo Helper::encode($_SESSION['user_info']['city']); ?>" class="required form-control form-control-lg" placeholder="City" />
+                            </div>
+                            <div class="col-6">
+                                <label>State:</label>
+<!--                                < ?=$helper->get_states('state', $_SESSION['user_info']['state'], 'US', array('class' => ''))?>-->
+                                <?php
+                                echo Html::renderDropdownWithKeys(
+                                    'state',
+                                    Helper::getStatesList(),
+                                    $_SESSION['user_info']['state'],
+                                    'state form-control form-control-lg required')
+                                ?>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-6">
+                                <label>Zip Code:</label>
+                                <input type="text" id="zipcode" name="zipcode" value="<?php echo Helper::encode($_SESSION['user_info']['zipcode']); ?>" maxlength="5" class="required form-control form-control-lg" placeholder="Zip Code" />
+                            </div>
+                            <div class="col-6">
+                                <label>Phone Number:</label>
+                                <input type="tel" value="<?php echo Helper::encode($_SESSION['user_info']['business_phone']); ?>" name="business_phone" class="required form-control form-control-lg" placeholder="Business Phone Number" />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-12">
+                                <label style="margin-bottom: 0;">Website:</label> <br/>
+                                <small><i>(remember to include http(s)://)</i></small>
+                                <input type="url" value="<?php echo Helper::encode($_SESSION['user_info']['website']); ?>" name="website" class="form-control form-control-lg" placeholder="Website" />
+                            </div>
+                        </div>
+
+                        <div class="separator"></div>
+                        <div class="separator"></div>
+                        <div class="row">
+                            <div class="col-12 text-center">
+                                <h4>About Me:</h4>
+                                <p><small>Please give a personal statement describing yourself and your practice. How can you help? What sets you apart? Minimum 500 characters. Maximum 1000 characters).</small></p>
+                                <div class="separator sm"></div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <textarea name="extra[about_me]" class="form-control form-control-lg" style="height: 200px" maxlength="1000" ><?php echo Helper::encode($_SESSION['user_info']['extra']['about_me']); ?></textarea>
+                            </div>
+                        </div>
+                            
+                        <div class="separator"></div>
+                        <div class="row">
+                            <div class="col-12 text-center">
+                                <h4>Education:</h4>
+                                <div class="separator sm"></div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+
+                                <div class="row  mb-2" id="education-clone">
+                                    <div class="col-md-4">
+                                        <input type="text" value="<?php echo Helper::encode($_SESSION['user_info']['extra']['education']['certification']); ?>" name="extra[education][certification]" class="form-control form-control-lg" placeholder="Certification" />
+                                    </div>
+                                    <div class="col-md-2">
+                                        <input type="text" value="<?php echo Helper::encode($_SESSION['user_info']['extra']['education']['year']); ?>" name="extra[education][year]" class="form-control form-control-lg" placeholder="Year" />
+                                    </div>
+                                    <div class="col-md-3">
+                                        <input type="text" value="<?php echo Helper::encode($_SESSION['user_info']['extra']['education']['school']); ?>" name="extra[education][school]" class="form-control form-control-lg" placeholder="School" />
+                                    </div>
+                                    <div class="col-md-3">
+                                        <input type="text" value="<?php echo Helper::encode($_SESSION['user_info']['extra']['education']['city']); ?>" name="extra[education][city]" class="form-control form-control-lg" placeholder="City/State/Country" />
+                                    </div>
+                                </div>
+                                <div class="separator "></div>
+                                <div class="row">
+                                    <div class="col-md-2">
+
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="text" value="<?php echo Helper::encode($_SESSION['user_info']['extra']['license']); ?>" name="extra[license]" class="form-control form-control-lg" placeholder="License" />
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="text" value="<?php echo Helper::encode($_SESSION['user_info']['extra']['license_state']); ?>" name="extra[license_state]" class="form-control form-control-lg" placeholder="License State" />
+                                    </div>
+                                </div>
+                                <div id="add-education"></div>
+                            </div>
+                        </div>
+
+                        <div class="separator"></div>
+                        <div class="separator"></div>
+
+                        <div class="row">
+                            <div class="col-12 text-center">
+                                <h4>Advance Training:</h4>
+                                <div class="separator sm"></div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <?php if(!empty($_SESSION['user_info']['extra']['training']))
+                                {
+                                    foreach ($_SESSION['user_info']['extra']['training']['certification'] as $key => $value)
+                                    {
+                                        if(!empty($value)) {?>
+                                        <div class="row mb-2">
+                                            <div class="col-md-4">
+                                                <input type="text" value="<?php echo Helper::encode($_SESSION['user_info']['extra']['training']['certification'][$key]); ?>" name="extra[training][certification][<?=$key?>]" class="form-control form-control-lg" placeholder="Certification" />
+                                            </div>
+                                            <div class="col-md-2">
+                                                <input type="text" value="<?php echo Helper::encode($_SESSION['user_info']['extra']['training']['year'][$key]); ?>" name="extra[training][year][<?=$key?>]" class="form-control form-control-lg" placeholder="Year" />
+                                            </div>
+                                            <div class="col-md-2">
+                                                <input type="text" value="<?php echo Helper::encode($_SESSION['user_info']['extra']['training']['school'][$key]); ?>" name="extra[training][school][<?=$key?>]" class="form-control form-control-lg" placeholder="School" />
+                                            </div>
+                                            <div class="col-md-3">
+                                                <input type="text" value="<?php echo Helper::encode($_SESSION['user_info']['extra']['training']['city'][$key]); ?>" name="extra[training][city][<?=$key?>]" class="form-control form-control-lg" placeholder="City/State/Country" />
+                                            </div>
+                                        </div>
+                                        <?php
+                                        }
+                                    }
+                                }?>
+                                <div class="row  mb-2" id="training-clone">
+                                    <div class="col-md-4">
+                                        <?php
+                                        echo Html::renderDropdown(
+                                            'extra[training][certification][]',
+                                            Helper::getSpecialtiesList(),
+                                            $_GET['specialty'] ?? '',
+                                            'form-control form-control-lg',
+                                            false,
+                                            'Specialty');
+                                        ?>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <input type="text" value="" name="extra[training][year][]" class="form-control form-control-lg" placeholder="Year" />
+                                    </div>
+                                    <div class="col-md-2">
+                                        <input type="text" value="" name="extra[training][school][]" class="form-control form-control-lg" placeholder="School" />
+                                    </div>
+                                    <div class="col-md-3">
+                                        <input type="text" value="" name="extra[training][city][]" class="form-control form-control-lg" placeholder="City/State/Country" />
+                                    </div>
+                                    <div class="col-md-1">
+                                        <button type="button" class="btn btn-xs btn-success tipE addsection" data-parent="#training-clone" data-appent="#add-training" title="Add training">
+                                            <span class="icon-plus"></span>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div id="add-training"></div>
+                            </div>
+                        </div>
+                        <div class="separator"></div>
+
+                        <div class="row">
+                            <div class="col-md-6 text-center">
+                                Practicing Since:
+                                <?php
+                                echo Html::renderDropdown(
+                                    'extra[practicing_from]',
+                                    range(date('Y'), date('Y') - 70),
+                                    $_SESSION['user_info']['extra']['practicing_from'],
+                                    'form-control form-control-lg'
+                                )
+                                ?>
+                            </div>
+                            <div class="col-md-6 ">
+                                <div class="text-center">Spoken Languages</div>
+                                <?php
+                                echo Html::renderDropdown(
+                                    'languages[]',
+                                    Helper::getLanguagesList(),
+                                    $_SESSION['user_info']['languages'],
+                                    'chzn-select form-control form-control-lg',
+                                    true
+                                )
+                                ?>
+                            </div>
+                        </div>
+                        <div class="separator"></div>
+                            <?php //if($_SESSION['user_info']['main_category'] == 'Health'){?>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="text-center">Select insurance you accept:</div>
+                                <?php
+                                echo Html::renderDropdown(
+                                    'insurance[]',
+                                    Helper::getInsurancesList(),
+                                    $_SESSION['user_info']['insurance'],
+                                    'chzn-select form-control form-control-lg',
+                                    true
+                                )
+                                ?>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="text-center">Conditions you treat (if apply)</div>
+                                    <?php
+                                        echo Html::renderDropdown(
+                                        'extra[conditions][]',
+                                        Helper::getConditionsList(),
+                                        implode(', ', str_replace(', ', ',/', $_SESSION['user_info']['extra']['conditions'])),
+                                        'chzn-select form-control form-control-lg',
+                                        true
+                                    );
+                                    ?>
+                            </div>
+                        </div>
+                            <?php //}?>
+                        <div class="separator"></div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h4 class="text-center">Services &amp; Fees:</h4>
+                                <div class="separator sm"></div>
+
+                                <?php if(!empty($services))
+                                {
+                                    for ($i = 0; $i < $servicesCount; $i++)
+                                    {
+                                        if(!empty($services)) { ?>
+                                        <div class="row mb-2">
+                                            <div class="col-md-8">
+                                                <input type="hidden" value="<?php echo Helper::encode($services[$i]['id']); ?>" name="extra[service][id][<?=$i?>]" />
+                                                <input type="text" value="<?php echo Helper::encode($services[$i]['name']); ?>" name="extra[service][name][<?=$i?>]" class="form-control form-control-lg" placeholder="Service Name" />
+                                            </div>
+                                            <div class="col-md-4">
+                                                <input type="number" value="<?php echo Helper::encode($services[$i]['fee']); ?>" name="extra[service][fees][<?=$i?>]" class="form-control form-control-lg" placeholder="Service Fee" />
+                                            </div>
+                                        </div>
+                                        <?php
+                                        }
+                                    }
+                                } ?>
+                                <div class="row mb-2" id="service-clone">
+                                    <div class="col-md-8">
+                                        <input type="hidden" value="" name="extra[service][id][]" />
+                                        <input type="text" value="" name="extra[service][name][]" class="form-control form-control-lg" placeholder="Service Name" />
+                                    </div>
+                                    <div class="col-md-3">
+                                        <input type="number" value="" name="extra[service][fees][]" class="form-control form-control-lg" placeholder="Service Fee" />
+                                    </div>
+                                    <div class="col-md-1">
+                                        <button type="button" class="btn btn-xs btn-success tipE addsection" data-parent="#service-clone" data-appent="#add-service" title="Add Services &amp; Fees">
+                                            <span class="icon-plus"></span>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div id="add-service"></div>
+                            </div>
+                        </div>
+                        <div class="separator"></div>
+                        <div class="row">
+                            <div class="col-md-1"></div>
+                            <div class="col-md-10 text-center">
+                                Add your booking link if you have one  <br>
+                                <small><i>(remember to include http(s)://)</i></small> <br>
+                                <div class="separator sm"></div>
+                                <input type="url" value="<?php echo Helper::encode($_SESSION['user_info']['extra']['booking_url']); ?>" name="extra[booking_url]" class="form-control form-control-lg" placeholder="Scheduling / Booking URL" />
+                            </div>
+                        </div>
+                        <div class="separator"></div>
+                        <div class="row">
+                            <div class="col-md-1">
+
+                            </div>
+                            <div class="col-md-10">
+                                Location of your service. Please select all that apply:
+                                <div class="separator sm"></div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <label>
+                                            <input type="checkbox" <?=(!empty($_SESSION['user_info']['extra']['location']['my_location']) ? 'checked="checked"' : '')?> value="1" name="extra[location][my_location]" /> Client travels to my location *
+                                        </label>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <label>
+                                            <input type="checkbox" onclick="$('#clients_location_text').toggle();" <?=(!empty($_SESSION['user_info']['extra']['location']['clients_location']) ? 'checked="checked"' : '')?> value="1" name="extra[location][clients_location]" /> I travel to my client's location
+                                        </label>
+                                        <div class="row" id="clients_location_text" style="display: <?=(!empty($_SESSION['user_info']['extra']['location']['clients_location']) ? 'block' : 'none')?>">
+                                            <div class="col-md-1">
+
+                                            </div>
+                                            <div class="col-md-11">
+                                                Please specify your area of coverage<br />
+                                                <input type="text" value="<?php echo Helper::encode($_SESSION['user_info']['extra']['location']['clients_location_text']); ?>" name="extra[location][clients_location_text]" maxlength="120" class="form-control" />
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="col-md-12">
+                                        <label>
+                                            <input type="checkbox" <?=(!empty($_SESSION['user_info']['extra']['location']['virtual']) ? 'checked="checked"' : '')?> value="1" name="extra[location][virtual]" /> Virtual / Phone Consultation
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="separator"></div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h4 class="text-center">Accepted Payment Types:</h4>
+                                <div class="separator sm"></div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <label class="form-control form-control-lg">
+                                            <input type="checkbox" <?=(in_array('Visa', $_SESSION['user_info']['extra']['accepted_payments']) ? 'checked="checked"' : '')?>" value="Visa" name="extra[accepted_payments][]" /> Visa
+                                        </label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="form-control form-control-lg">
+                                            <input type="checkbox" <?=(in_array('MasterCard', $_SESSION['user_info']['extra']['accepted_payments']) ? 'checked="checked"' : '')?>" value="MasterCard" name="extra[accepted_payments][]" /> MasterCard
+                                        </label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="form-control form-control-lg">
+                                            <input type="checkbox" <?=(in_array('AMEX', $_SESSION['user_info']['extra']['accepted_payments']) ? 'checked="checked"' : '')?>" value="AMEX" name="extra[accepted_payments][]" /> AMEX
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <label class="form-control form-control-lg">
+                                            <input type="checkbox" <?=(in_array('Discover', $_SESSION['user_info']['extra']['accepted_payments']) ? 'checked="checked"' : '')?>" value="Discover" name="extra[accepted_payments][]" /> Discover
+                                        </label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="form-control form-control-lg">
+                                            <input type="checkbox" <?=(in_array('Checks', $_SESSION['user_info']['extra']['accepted_payments']) ? 'checked="checked"' : '')?>" value="Checks" name="extra[accepted_payments][]" /> Checks
+                                        </label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="form-control form-control-lg">
+                                            <input type="checkbox" <?=(in_array('Cash', $_SESSION['user_info']['extra']['accepted_payments']) ? 'checked="checked"' : '')?>" value="Cash" name="extra[accepted_payments][]" /> Cash
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="separator"></div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h4 class="text-center">Business Hours:</h4>
+                                <div class="separator sm"></div>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        Monday
+                                    </div>
+                                    <div class="col-md-1 text-center"> from </div>
+                                    <div class="col-md-2">
+                                        <?= getHoursSelect('mon_open'); ?>
+                                    </div>
+                                    <div class="col-md-1 text-center"> to </div>
+                                    <div class="col-md-2">
+                                        <?= getHoursSelect('mon_close'); ?>
+                                    </div>
+                                </div>
+                                <div class="separator xs"></div>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        Tuesday
+                                    </div>
+                                    <div class="col-md-1 text-center"> from </div>
+                                    <div class="col-md-2">
+                                        <?= getHoursSelect('tue_open'); ?>
+                                    </div>
+                                    <div class="col-md-1 text-center"> to </div>
+                                    <div class="col-md-2">
+                                        <?= getHoursSelect('tue_close'); ?>
+                                    </div>
+                                </div>
+                                <div class="separator xs"></div>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        Wednesday
+                                    </div>
+                                    <div class="col-md-1 text-center"> from </div>
+                                    <div class="col-md-2">
+                                        <?= getHoursSelect('wed_open'); ?>
+                                    </div>
+                                    <div class="col-md-1 text-center"> to </div>
+                                    <div class="col-md-2">
+                                        <?= getHoursSelect('wed_close'); ?>
+                                    </div>
+                                </div>
+                                <div class="separator xs"></div>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        Thursday
+                                    </div>
+                                    <div class="col-md-1 text-center"> from </div>
+                                    <div class="col-md-2">
+                                        <?= getHoursSelect('thu_open'); ?>
+                                    </div>
+                                    <div class="col-md-1 text-center"> to </div>
+                                    <div class="col-md-2">
+                                        <?= getHoursSelect('thu_close'); ?>
+                                    </div>
+                                </div>
+                                <div class="separator xs"></div>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        Friday
+                                    </div>
+                                    <div class="col-md-1 text-center"> from </div>
+                                    <div class="col-md-2">
+                                        <?= getHoursSelect('fri_open'); ?>
+                                    </div>
+                                    <div class="col-md-1 text-center"> to </div>
+                                    <div class="col-md-2">
+                                        <?= getHoursSelect('fri_close'); ?>
+                                    </div>
+                                </div>
+                                <div class="separator xs"></div>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        Saturday
+                                    </div>
+                                    <div class="col-md-1 text-center"> from </div>
+                                    <div class="col-md-2">
+                                        <?= getHoursSelect('sat_open'); ?>
+                                    </div>
+                                    <div class="col-md-1 text-center"> to </div>
+                                    <div class="col-md-2">
+                                        <?= getHoursSelect('sat_close'); ?>
+                                    </div>
+                                </div>
+                                <div class="separator xs"></div>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        Sunday
+                                    </div>
+                                    <div class="col-md-1 text-center"> from </div>
+                                    <div class="col-md-2">
+                                        <?= getHoursSelect('sun_open'); ?>
+                                    </div>
+                                    <div class="col-md-1 text-center"> to </div>
+                                    <div class="col-md-2">
+                                        <?= getHoursSelect('sun_close'); ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+
+                        <hr>
+                        <div class="separator"></div>
+                        <div class="row">
+                            <div class="col-12 text-center">
+                                <h4 role="heading">Social Media</h4>
+                                <small><i>(remember to include http(s)://)</i></small> <br>
+                                <div class="separator sm"></div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <input type="url" value="<?php echo Helper::encode($_SESSION['user_info']['extra']['facebook']); ?>" name="extra[facebook]" class="form-control form-control-lg" placeholder="Your Facebook Address" />
+                            </div>
+                            <div class="col-md-4">
+                                <input type="url" value="<?php echo Helper::encode($_SESSION['user_info']['extra']['twitter']); ?>" name="extra[twitter]" class="form-control form-control-lg" placeholder="Your Twitter Address" />
+                            </div>
+                            <div class="col-md-4">
+                                <input type="url" value="<?php echo Helper::encode($_SESSION['user_info']['extra']['instagram']); ?>" name="extra[instagram]" class="form-control form-control-lg" placeholder="Your Instagram Address" />
+                            </div>
+                        </div>
+                        <div class="separator xs"></div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <input type="url" value="<?php echo Helper::encode($_SESSION['user_info']['extra']['youtube']); ?>" name="extra[youtube]" class="form-control form-control-lg" placeholder="Your Youtube Address" />
+                            </div>
+                            <div class="col-md-4">
+                                <input type="url" value="<?php echo Helper::encode($_SESSION['user_info']['extra']['skype']); ?>" name="extra[skype]" class="form-control form-control-lg" placeholder="Your Skype Address" />
+                            </div>
+                            <div class="col-md-4">
+                                <input type="url" value="<?php echo Helper::encode($_SESSION['user_info']['extra']['linkin']); ?>" name="extra[linkin]" class="form-control form-control-lg" placeholder="Your Linked In Address" />
+                            </div>
+                        </div>
+                        <div class="separator"></div>
+                        <hr>
+                        <div class="separator"></div>
+                        <div class="row">
+                            <div class="col-12 text-center">
+                                <h4 role="heading">Review Sites</h4>
+                                <small><i>(remember to include http(s)://)</i></small> <br>
+                                <div class="separator sm"></div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <input type="url" value="<?php echo Helper::encode($_SESSION['user_info']['extra']['reviews']['Google']); ?>" name="extra[reviews][Google]" class="form-control form-control-lg" placeholder="Link for Google Review " />
+                            </div>
+                            <div class="col-md-4">
+                                <input type="url" value="<?php echo Helper::encode($_SESSION['user_info']['extra']['reviews']['Yelp']); ?>" name="extra[reviews][Yelp]" class="form-control form-control-lg" placeholder="Link for Yelp Review " />
+                            </div>
+                            <div class="col-md-4">
+                                <input type="url" value="<?php echo Helper::encode($_SESSION['user_info']['extra']['reviews']['BBB']); ?>" name="extra[reviews][BBB]" class="form-control form-control-lg" placeholder="Link for BBB Review " />
+                            </div>
+                        </div>
+
+                        <div class="separator"></div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h4 class="text-center">Frequently Asked Questions:</h4>
+                                <div class="separator sm"></div>
+                                <?php if(!empty($_SESSION['user_info']['extra']['faq']))
+                                {
+                                    foreach ($_SESSION['user_info']['extra']['faq']['question'] as $key => $value)
+                                    {
+                                        if(!empty($value)) {?>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <input type="text" value="<?php echo Helper::encode($_SESSION['user_info']['extra']['faq']['question'][$key]); ?>" name="extra[faq][question][<?=$key?>]" class="form-control form-control-lg" placeholder="Question..." />
+                                            </div>
+                                        </div>
+                                        <div class="row mb-2">
+                                            <div class="col-md-12">
+                                                <textarea name="extra[faq][answer][<?=$key?>]" class="form-control form-control-lg" placeholder="Answer..." /><?=$_SESSION['user_info']['extra']['faq']['answer'][$key]?></textarea>
+                                            </div>
+                                        </div>
+                                        <?php
+                                        }
+                                    }
+                                }?>
+                                <div id="faq-clone" class="mb-2">
+                                    <div class="row">
+                                        <div class="col-md-11">
+                                            <input type="text" name="extra[faq][question][]" class="form-control form-control-lg" placeholder="Question..." />
+                                        </div>
+                                        <div class="col-md-1">
+                                            <button type="button" class="btn btn-xs btn-success tipE addsection" data-parent="#faq-clone" data-appent="#add-faq" title="Add FAQ">
+                                                <span class="icon-plus"></span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <textarea name="extra[faq][answer][]" maxlength="500" class="form-control form-control-lg" placeholder="Answer..." /></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="separator xs"></div>
+                                </div>
+                                <div id="add-faq"></div>
+                            </div>
+                        </div>
+
+                        <div class="separator"></div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h4 class="text-center">Policies</h4>
+                                <div class="separator sm"></div>
+                                <textarea name="extra[policies]" class="form-control form-control-lg" style="height: 200px" maxlength="500" ><?=$_SESSION['user_info']['extra']['policies']?></textarea>
+                            </div>
+                        </div>
+                        <div class="separator"></div>
+                        <h4 class="text-center">Your Unique Bodyologists Profile Link</h4>
+                        <p class="text-center">Provide a business name to create your unique Professional Listing address.you can share with clients. Try using your business name or your name with no spaces or special characters</p>
+                        <div class="row">
+                            <div class="col-md-1"></div>
+                            <div class="col-md-10">
+                                <div class="row">
+                                    <div class="col-md-12" align="center">
+                                        www.bodyologists.com/members/
+                                        <input type="text" value="<?php echo Helper::encode(str_replace('members/', '', $_SESSION['user_info']['url'])); ?>" name="url"
+                                               align="middle" style="margin-left: -5px; width: 45%;"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <?php }?>
+                        
+                        <div class="separator"></div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-12 text-right">
+                                <button class="btn btn-primary btn-lg" type="Submit">
+                                    Submit
+                                </button>
+                            </div>
+                        </div>
+                        <div class="separator sm"></div>
+                        <p>By clicking "Submit" above, you agree all information provided in this form is truthful and accurate, and understand that any false and fraudulent entries may be punishable as a felony under federal and state laws.</p>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="col-md-2 memberside d-none d-lg-block">
+            <div class="row">
+                <button class="btn bg-light p-2 right-profile-img" type="button" data-toggle="collapse" data-target="#collapse-1" aria-expanded="true" aria-controls="collapse-1">
+                    <div class="row">
+                        <div class="col-xl-5">
+                            <img src="<?=_SITE_PATH . '/uploads/avatar/' . md5((string) $_SESSION['user_info']['id']) . '/' . $_SESSION['user_info']['avatar']?>" alt="" class="rounded-circle" />
+                        </div>
+                        <div class="col-xl-7 pt-2 text-ellipsis">
+                            Hi, <?=$_SESSION['user_info']['first_name']?>
+                        </div>
+                    </div>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>    
+
+
+<link href="css/plugins/jquery.chosen.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="admin/js/plugins/jquery.chosen.min.js"></script>
+<link href="css/jquery.flexdatalist.min.css" rel="stylesheet" type="text/css">
+<script src="js/jquery.flexdatalist.min.js"></script>
+<script type="text/javascript" src="js/plugins/jquery.html5.upload.js"></script>
+<script type="text/javascript"> 
+    $(function() {
+        $("#upload_field").html5_upload({
+            extraFields: {
+                'op': 'single',
+                'owner': '<?=$_SESSION['user_info']['id']?>',
+                'folder_name': 'avatar',
+                'id': '<?=$_SESSION['user_info']['id']?>',
+                'confirm_field': '1'
+            },
+            url: 'uploads.php',
+            sendBoundary: window.FormData || $.browser.mozilla,
+            onStart: function(event, total) {
+                $('#progress_report').show();
+                return true;
+            },
+            setProgress: function(val) {
+                $("#progress_report_bar").css('width', Math.ceil(val*100)+"%");
+            },
+            onFinishOne: function(event, response, name, number, total) {
+            	var data = JSON.parse(response);
+                $('#img-holder').css('background-image','url(<?=_SITE_PATH?>/uploads/' + data.belongs + '/' + data.bid + '/' + data.file + ')');
+                $('#progress_report').hide();
+            },
+            onError: function(event, name, error) {
+                alert('error while uploading file ' + name);
+            }
+        });
+
+        $(document).on('click', '[data-remove]', function(){
+            var r = $('#' + $(this).data('remove'));
+            r.find(':input').each(function(index) {
+                this.value = '';
+                $.get('forms/set?' + $(this).attr('name') +'=' + $(this).val());
+            });
+            r.find('input:checkbox').removeAttr('checked');
+            r.remove();
+            return false;
+        });
+
+        var regex = /^(.+?)(\d+)$/i;
+
+        $('body').on('click', '.addsection', function() {
+
+            var $parent     = $(this).data('parent');
+            var $apptTo     = $(this).data('appent');
+            var $cloneIndex = $($parent).length;
+            $cloneIndex++;
+
+            $(this).parents($parent).clone()
+            .find("input:text").val('').end()
+            .appendTo($apptTo)
+            .attr("id", $parent +  $cloneIndex)
+            .find("*")
+            .each(function() {
+                var id      = this.id || "";
+                var match   = id.match(regex) || [];
+                if (match.length == 3) {
+                    this.id = match[1] + ($cloneIndex);
+                }
+            })
+            .remove('.addsection');
+        });
+
+        $(".chzn-select").chosen({
+            width: '100%', 
+            no_results_text: 'Oops, nothing here!', 
+            disable_search_threshold: 10
+        });
+
+        var newPasswordCheckbox = $("input[name='is_new_password']");
+        var newPasswordInput = $("input[name='new_pwd']");
+        var confirmPasswordInput = $("input[name='pwd2']");
+
+        newPasswordCheckbox.prop("checked", false);
+        newPasswordInput.css({"pointer-events": "none", "opacity": "0.5"});
+        confirmPasswordInput.css({"pointer-events": "none", "opacity": "0.5"});
+
+        newPasswordCheckbox.on('change', function() {
+            if ($(this).is(':checked')) {
+                newPasswordInput.css({"pointer-events": "all", "opacity": "1"});
+                confirmPasswordInput.css({"pointer-events": "all", "opacity": "1"});
+            } else {
+                newPasswordInput.css({"pointer-events": "none", "opacity": "0.5"});
+                confirmPasswordInput.css({"pointer-events": "none", "opacity": "0.5"});
+            }
+        });
+
+        // function clone()
+        // {
+        //     $(this).parents(".education-clone").clone()
+        //     .appendTo("body")
+        //     .attr("id", "education-clone" +  cloneIndex)
+        //     .find("*")
+        //     .each(function() {
+        //         var id = this.id || "";
+        //         var match = id.match(regex) || [];
+        //         if (match.length == 3) {
+        //             this.id = match[1] + (cloneIndex);
+        //         }
+        //     })
+        //     .on('click', 'button.education-clone-btn', clone)
+        //     .on('click', 'button.remove', remove);
+        //     cloneIndex++;
+        // }
+
+        // function remove(){
+        //     $(this).parents(".education-clone").remove();
+        // }
+        // $("button.education-clone-btn").on("click", clone);
+
+        // $("button.remove").on("click", remove);
+    });
+</script>

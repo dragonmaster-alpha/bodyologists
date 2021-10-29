@@ -1,0 +1,103 @@
+<?=(!empty($_seo_settings['breadcrumbs'] && is_object($breadcrumbs)) ? !empty($_seo_settings['display_breadcrumbs']) ? $breadcrumbs->get() : $breadcrumbs->schema() : '')?>
+
+<h1 role="heading" class="text-center" style="font-size: 9rem !important; font-weight: 300; text-transform: uppercase;"><em class="find-events-title">BLOG</em></h1>
+<div class="separator no-separator-mobile"></div>
+<div class="separator"></div>
+
+<div class="row">
+    <div class="col-lg-7">
+        <article id="blogarticle" > 
+            <script type="application/ld+json"><?=$item['ld_json']?></script>
+            <div>
+                <h2 class="text-center"><?=$item['title']?></h2>
+                <small class="text-center d-block"><i>Posted on: <?=date('M jS Y', strtotime($item['date']))?></i></small>
+            </div>
+            <div class="row">
+                <div class="col-12 col-md-8 offset-md-2 my-4">
+                    <a href="<?=_SITE_PATH?>/uploads/blog/<?=$item['media']['bid']?>/<?=$item['media']['image']?>" rel="box">
+                        <img data-src="<?=_SITE_PATH?>/uploads/blog/<?=$item['media']['bid']?>/<?=$item['media']['image']?>" alt="<?=$item['title']?>" />
+                    </a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 p-5 bg-light" style="background-color: #FFF !important">
+                    <section class="article-text">
+                        <?=
+                        str_replace('contenteditable', 'data-tx', $item['text']);
+                        ?>
+                    </section>
+                </div>
+                <div class="col-12 mt-4 mb-2">
+                    <h2 style="font-weight: 100">About The Author</h2>
+                </div>
+                <div class="col-12 px-4 bg-light">
+                    <div class="row">
+                        <?php if(!empty($item['author']['id'])) {?>
+                        <div class="col-3 text-center py-5">
+                            <?php if(!empty($item['author']['avatar'])) {?>
+                            <div class="separator sm"></div>
+                            <img src="uploads/avatar/<?=md5((string) $item['author']['id'])?>/<?=$item['author']['avatar']?>" alt="<?=$item['author']['company']?>" />
+                            <?php } else {?>
+                            <img src="images/logo.png" class="rounded" alt="Bodyologist"/>
+                            <?php }?>
+                        </div>
+                        <div class="col-9 py-3">
+                            <div class="separator "></div>
+                            <h3 role="heading" style="text-align: left !important; margin-bottom: 3px !important;">
+                                <?=$item['author']['full_name']?>
+                            </h3>
+                            <div>
+                                <?=$item['author']['company']?>
+                            </div>
+                            <div>
+                                <?php
+                                $categories = \App\Helper::getCategoriesList();
+                                $label = $categories[$item['author']['main_category']][ucfirst($item['author']['category'])];
+                                ?>
+                                <?=ucwords($label)?>
+                            </div>
+                            <div>
+                                <a href="<?=$item['author']['url']?>" class="btn btn-primary">
+                                    View Profile
+                                </a>
+                            </div>
+                        </div>
+                        <?php } else {?>
+                        <div class="col-3 text-center py-5">
+                            <img src="images/logo.png" class="rounded" alt=""/>
+                        </div>
+                        <div class="col-9 py-3">
+                            <div class="separator x2"></div>
+                            <h3 role="heading">
+                                Bodyologists
+                            </h3>
+                        </div>
+                        <?php }?>
+                    </div>
+                </div>
+            </div>
+            
+        </article>
+    </div>
+    <div class="col-lg-1"></div>
+    <div class="col-lg-4 d-lg-block d-none pl-md-5">
+        <div class="separator "></div>
+        <form action="blog" method="post">
+            <input type="hidden" name="op" value="search">
+            <input type="text" class="form-control form-control-lg mb-2 mt-4 upper" name="q" placeholder="Type Keyword" style="height: 90px; font-size: 30px; background-color: transparent;">
+            <button class="btn btn-danger btn-lg d-block" type="submit" style="width: 100%; height: 80px; font-size: 30px; background-color: #f4b8a9; margin-top: 40px"> Search </button>
+        </form>
+        <div class="separator "></div>
+        <?php include($_SERVER['DOCUMENT_ROOT'] . _SITE_PATH . '/layout/menus/menu.blog.recent.php') ?>
+        <?php include($_SERVER['DOCUMENT_ROOT'] . _SITE_PATH . '/layout/menus/menu.blog.categories.php') ?>
+        <div class="separator "></div>
+        <div class="bg-light p-3">
+            <h3 role="heading">Tags</h3>
+            <div class="row">
+                <?php include($_SERVER['DOCUMENT_ROOT'] . _SITE_PATH . '/layout/menus/menu.blog.tags.php') ?>
+            </div>
+        </div>
+        <?php // include($_SERVER['DOCUMENT_ROOT'] . _SITE_PATH . '/layout/menus/menu.blog.recent.comments.php') ?>
+        <?php // include($_SERVER['DOCUMENT_ROOT'] . _SITE_PATH . '/layout/menus/menu.blog.archives.php') ?>
+    </div>
+</div>

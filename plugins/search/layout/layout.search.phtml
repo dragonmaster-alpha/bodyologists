@@ -1,0 +1,67 @@
+<div>
+	<h1>
+		<?=_SEARCHING_FOR?> <?=$frm->filter($query, 1)?>
+	</h1>
+    <form action="index.php?plugin=search" method="get">
+        <div class="input-group">
+            <input type="text" class="form-control input-lg" value="<?=$query?>" name="q" placeholder="Search for...">
+            <span class="input-group-btn">
+                <button class="btn btn-default btn-lg" type="submit">
+                    <span class="icon-search" style="font-size: 90%;"></span>
+                </button>
+            </span>
+        </div>
+    </form>
+    <hr />
+    <?php
+    if(!$frm->empty_array($search_results)) 
+    {
+        if(!empty($query_misspelled)) 
+        {?>
+            <div style="padding: 20px 0; font-size: 16px;">
+                <p style="font-size: 16px;">
+                    <?=_SEARCH_SHOWING_RESULTS_FOR?> <a href="index.php?plugin=search&amp;q=<?=urlencode($query)?>"><?=$query?></a>
+                </p>
+                <p>
+                    <?=_SEARCH_SEARCH_INSTEAD_FOR?> <a href="index.php?plugin=search&amp;q=<?=urlencode($old_query)?>&amp;nc=1"><?=$old_query?></a>
+                </p>
+            </div>
+        <?php }?>
+        <div class="clearfix">
+            <?php
+            foreach($search_results as $plugin_name => $plugin_results) 
+            {?>
+                <?php if(!empty($plugin_results)) {?>
+                <h3><?=ucfirst($plugin_name)?></h3>
+                <?php
+                foreach($plugin_results as $item) 
+                {?>
+                <div style="padding: 10px 0;">
+                    <a href="<?=$item['url']?>" style="font-size: 16px;">
+                        <?=$item['title']?>
+                    </a>
+                    <p>
+                        <?=$frm->reduce_words($frm->filter($item['text'], 1))?>
+                    </p>
+                    <a href="<?=$item['url']?>">
+                        <span class="icon-file left"></span> http://www.<?=$frm->site_domain() . _SITE_PATH?>/<?=$item['url']?>
+                    </a>
+                </div>
+                <?php }?>
+                <?php if($displayPaginator) {?>
+                <div class="pagination">
+                    <ul>
+                        <?=$paginator?>
+                    </ul>
+                </div>
+                <?php }?>
+                <hr />
+            <?php }?>
+            <?php }?>
+        </div>
+    <?php } else {?>
+		<div>
+            <?=_YOUR_SEARCH_TEXT?> - <strong><?=$query?></strong> <?=_YOUR_SEARCH_DIDNT_MATCH?>
+        </div>
+    <?php }?>
+</div>

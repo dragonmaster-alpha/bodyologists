@@ -1,0 +1,39 @@
+<div>
+    <form id="editphoto" action="admin.php?plugin=system&amp;file=messages" method="post" class="stdform quickform2">
+        <input type="hidden" value="update" name="op" />
+        <input type="hidden" value="0" name="parent" />
+        <input type="hidden" value="<?=$administrator->admin_info['email']?>" name="sent_from" />
+        <input type="hidden" value="1" name="readed" />
+        <input type="hidden" value="<?=time()?>" name="date" />
+        <h3>New Message</h3>
+        <br />
+        <div class="notifyMessage">Sent</div>
+        <br clear="all" />
+        <input type="text" value="" name="subject" placeholder="Enter your message subject..." />
+        <br clear="all" />
+        <select data-placeholder="Choose receiver..." class="chzn-select" style="width: 350px;" name="sent_to">
+          <option value=""></option> 
+          <?foreach($available_authors as $authors) {?>
+            <option value="<?=$authors['email']?>"><?=$authors['name']?></option>
+        <?}?>
+        </select>
+        <br clear="all" />
+            <textarea name="text" style="width: 450px; height: 100px;"></textarea>
+        <br />
+        <p class="action">
+            <button class="submit radius2">Send</button> &nbsp;
+            <button class="cancel radius2">Close</button>
+        </p>
+        <br />
+    </form>
+</div>
+
+
+
+
+
+
+
+
+
+

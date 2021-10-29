@@ -1,0 +1,135 @@
+<?
+if(isset($_SESSION['error'])) {
+?>
+    <div class="alert-error" title="Error">
+        <?=$_SESSION['error']?>
+    </div>
+<?
+    unset($_SESSION['error']);
+}
+?>
+<div id="contentwrapper" class="contentwrapper invoicewrapper">
+    <div class="one_half">
+        <div style="height: 45px">
+            <h1 style="text-transform: uppercase"><?=$frm->config['sitename']?></h1>
+        </div>
+        <table cellpadding="0" cellspacing="0" class="table">
+            <colgroup span="2">
+                <col style="width: 30%;" />
+                <col style="width: 70%;" />
+            </colgroup>
+            <tr>
+                <td>Order Date:</td>
+                <td>
+                    <?=date('jS M Y', strtotime($item['date']))?>
+                </td>
+            </tr>
+            <tr>
+                <td>Order No:</td>
+                <td>
+                    <?=$item['trans']?>
+                </td>
+            </tr>
+        </table>
+        <table cellpadding="0" cellspacing="0" class="table invoiceinfo">
+            <colgroup span="2">
+                <col style="width: 30%;" />
+                <col style="width: 70%;" />
+            </colgroup>
+            <tr>
+                <td>Receipt For:</td>
+                <td><strong><?=$item['first_name']?> <?=$item['last_name']?></strong></td><?=$item['']?>
+            </tr>
+            <tr>
+                <td>Address:</td>
+                <td>
+                    <?=$item['address']?> <?=$item['suite']?><br />
+                    <?=$item['city']?>, <?=$item['state']?> <?=$item['zipcode']?> <?=($item['country'] != 'US') ? $item['country'] : ''?>
+                </td>
+            </tr>
+            <tr>
+                <td>Phone:</td>
+                <td>
+                    <?=$item['phone']?>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="one_half last">
+        <table cellpadding="0" cellspacing="0" class="table">
+            <colgroup span="2">
+                <col style="width: 30%;" />
+                <col style="width: 70%;" />
+            </colgroup>
+            <tr>
+                <td>From:</td>
+                <td>
+                    <strong><?=$frm->config['sitename']?></strong><br />
+                    <?=$frm->config['address']?> <?=$frm->config['address2']?><br />
+                    <?=$frm->config['city']?>, <?=$frm->config['state']?> <?=$frm->config['zipcode']?><br />
+                    Tel No: <?=$frm->config['phone']?><br />
+                    Email: <?=$frm->config['contactemail']?>
+                </td>
+            </tr>
+        </table>
+        <table cellpadding="0" cellspacing="0" class="table invoiceinfo">
+              <tr>
+                <td width="30%">Method:</td>
+                <td width="70%"><strong><?=$item['payment_method']?></strong></td>
+            </tr>
+            <tr>
+                <td>Total:</td>
+                <td>
+                    $<?=$item['total']?>
+                </td>
+            </tr>
+            <tr>
+                <td>Receipt Date:</td>
+                <td>
+                    <?=date('m/d/Y', strtotime($item['date']))?>
+                </td>
+            </tr>
+            <tr>
+                <td>Billed To:</td>
+                <td>
+                    <?=(!empty($item['payment_info']['cc_type'])) ? strtoupper($item['payment_info']['cc_type']) . ' /' . $this->format_cc_number($item['payment_info']['cc_number']) : $item['payment_info']['payment_method']?>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <br clear="all" />
+    <div><hr />
+        <table style="width: 100%; position: relative; top: -1px; padding: 10px 0 0 0; margin: 0;">
+            <tr>
+                <td style="width: 80%; padding: 0;">&nbsp;</td>
+                <td style="width: 20%; padding: 10px 0 0 0;">
+                    <table cellpadding="0" cellspacing="0" style="width: 100%; padding: 0; margin: 0;">
+                        <tr>
+                            <td style="width: 50%; text-align: right; padding: 2px 10px;">Subtotal:</td>
+                            <td style="width: 50%; text-align: right; padding: 2px 10px;">$<?=$helper->number($item['subtotal'])?></td>
+                        </tr>
+                        <?if(!empty($item['shipping'])) {?>
+                        <tr>
+                            <td style="text-align: right; padding: 2px 10px;">Shipping:</td>
+                            <td style="text-align: right; padding: 2px 10px;">$<?=$helper->number($item['shipping'])?></td>
+                        </tr>
+                        <?}?>
+                        <?if(!empty($item['tax'])) {?>
+                        <tr>
+                            <td style="text-align: right; padding: 2px 10px;">Tax:</td>
+                            <td style="text-align: right; padding: 2px 10px;">$<?=$helper->number($item['tax'])?></td>
+                        </tr>
+                        <?}?>
+                        <tr>
+                            <td style="text-align: right; padding: 2px 10px;">Total:</td>
+                            <td style="text-align: right; padding: 2px 10px;">$<?=$helper->number($item['total'])?></td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+<script type="text/javascript">
+    window.setTimeout("window.print();", 1000);
+</script>

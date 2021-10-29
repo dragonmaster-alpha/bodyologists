@@ -1,0 +1,58 @@
+<?php
+
+use Plugins\Blog\Classes\Blog;
+
+?>
+<tr id="item_<?=$item['id']?>">
+    <td>
+        <a href="admin.php?plugin=blog&amp;op=edit&amp;id=<?=$item['id']?>"><h5><?=$helper->reduce_text($item['title'], 30)?></h5></a>
+        <div class="hidden-phone">
+            <a href="http://<?=$helper->site_domain() . _SITE_PATH . '/' . $item['url']?>" target="_blank">
+                <?=$helper->reduce_text(str_replace('blog/', '', $item['url']), 40)?>
+            </a>
+        </div>
+        <div class="hidden-phone">
+            <?=$helper->reduce_words($helper->filter($item['meta_description'], 1), 8)?>
+        </div>
+    </td>
+    <?php
+    $author = (new Blog())->get_author_info($item['poster']);
+    ?>
+    <td class="hidden-phone">
+        <strong>Visits:</strong> <?=$item['visits']?><br />
+        <strong>Author:</strong> <?=$author['last_name'].', '.$author['first_name']?>
+    </td>
+    <td class="hidden-phone">
+        <strong>Comments:</strong> <?=($item['comments_unapproved']) ? '<b style="color: red;">' . $item['comments_count'] . '</b>' : $item['comments_count']?>
+        <a href="admin.php?plugin=blog&amp;op=manage_comments&amp;id=<?=$item['id']?>" class="toggle-menu tipS" title="Allow comments to this article.">
+            <?=($item['allow_comments'] == 1) ? '<span class="icon-checkmark-green"></span>' : '<span class="icon-cancel-red"></span>'?> Allow comments
+        </a>
+    </td>
+    <td>
+        <a href="admin.php?plugin=blog&amp;op=manage_activation&amp;id=<?=$item['id']?>" class="toggle-menu tipS" title="Article visible to all visitors.">
+            <?=($item['active'] == 1) ? '<span class="icon-checkmark-green"></span>' : '<span class="icon-cancel-red"></span>'?> Active
+        </a>
+
+        <a href="admin.php?plugin=blog&amp;op=manage_featured&amp;id=<?=$item['id']?>" class="toggle-menu tipS" title="Article masked as featured">
+            <?=($item['featured'] == 1) ? '<span class="icon-checkmark-green"></span>' : '<span class="icon-cancel-red"></span>'?> Featured
+        </a>
+    </td>
+    <td class="no_sort hidden-phone">
+        <?=$helper->format_sort_date($item['date'])?><br />
+        <?=(!empty($item['modified']) ? $helper->format_sort_date($item['modified']) : 'N/A')?>
+    </td>
+    <td>
+        <div class="navbar">
+            <ul class="nav pull-right">
+                <li class="dropdown">
+                    <a href="#" role="button" data-toggle="dropdown"><span class="icon-menu"></span></a>
+                    <ul id="actions_<?=$item['id']?>" class="dropdown-menu orders-actions" role="menu">
+                        <li><a href="http://<?=$helper->site_domain() . _SITE_PATH . '/' . $item['url']?>" target="_blank"><span class="icon-link left"></span> Live View</a></li>
+                        <li><a href="admin.php?plugin=blog&amp;op=edit&amp;id=<?=$item['id']?>"><span class="icon-pencil-3 left"></span> Edit</a></li>
+                        <li><a href="admin.php?plugin=blog&amp;op=delete&amp;id=<?=$item['id']?>" class="deletion" data-main-holder="main-area-for-<?=$item['id']?>"><span class="icon-remove-2 left"></span> Delete</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </td>
+</tr>

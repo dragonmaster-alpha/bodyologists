@@ -1,0 +1,67 @@
+<div class="photoEdit" style="padding: 10px;">
+    <div class="row-fluid">
+        <div class="span3">
+            <div class="avatar-img" style="float: left; background-image: url(images/no-image-60x60.jpg)"> 
+                <img src="images/blank.gif" alt="Upload Images" />
+                <input type="file" name="Filedata" id="upload_field" multiple="multiple" accept="image/*" />
+            </div>
+        </div>
+        <div class="span9">
+            <div id="progress_report">
+                <div id="progress_report_name"></div>
+                <div id="progress_report_status" style="font-style: italic;"></div>
+                <div id="progress_report_bar_container" style="width: 90%; height: 5px;">
+                    <div id="progress_report_bar" style="background-color: blue; width: 0; height: 100%;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="small-gallery-holder"></div>
+    <div id="done-area" style="text-align: right; display: none; margin-top: 10px;">
+        <a href="#" class="cancel btn btn-warning">
+            Done
+        </a>
+    </div>
+    <script type="text/javascript" src="js/plugins/jquery.html5_upload.js"></script>
+    <script type="text/javascript"> 
+        jQuery(function() {
+            jQuery("#upload_field").html5_upload({
+                extraFields: {
+                    'id'            : '1',
+                    'folder_name'   : 'slider',
+                    'op'            : 'photos',
+                    'no_resize'     : '1',
+                    'confirm_field' : '1'
+                },
+                url: 'uploads.php',
+                sendBoundary: window.FormData || jQuery.browser.mozilla,
+                onStart: function(event, total) {
+                    jQuery('#done-area').hide();
+                    jQuery('#progress_report').show();
+                    jQuery('.avatar-img').css('background-image', 'url(images/loading.gif)');
+                    return true;
+                },
+                setStatus: function(text) {
+                    jQuery("#progress_report_status").text(text);
+                },
+                setProgress: function(val) {
+                    jQuery("#progress_report_bar").css('width', Math.ceil(val*100)+"%");
+                },
+                onFinish: function(event) {
+                    jQuery('#done-area').show();
+                    jQuery('#progress_report').hide();
+                    jQuery('.avatar-img').css('background-image', 'url(images/no-image-60x60.jpg)');
+                    jQuery.fn.colorbox.resize();
+                },
+                onFinishOne: function(event, response, name, number, total) {
+                    var data = JSON.parse(response);
+                    jQuery('.small-gallery-holder').prepend('<div class="loaded" style="background-image: url(<?=_SITE_PATH?>/uploads/' + data.belongs + '/' + data.bid + '/' + data.file + ')"><img src="images/blank.gif" /></div>');
+                    jQuery.fn.colorbox.resize();
+                },
+                onError: function(event, name, error) {
+                    alert('error while uploading file ' + name);
+                }
+            });
+        });
+    </script>
+</div>

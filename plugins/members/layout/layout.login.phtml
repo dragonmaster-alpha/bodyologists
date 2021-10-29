@@ -1,0 +1,50 @@
+<div class="separator "></div>
+<h1 class="text-center"><em class="find-bodyologist-title">Log in</em></h1>
+<div class="separator no-separator-mobile"></div>
+<div class="separator no-separator-mobile"></div>
+<form action="members/sign_in" method="post" class="validate-form">
+	<?if(isset($_REQUEST['return'])) {?>
+        <input type="hidden" value="<?=$_REQUEST['return']?>" name="return" />
+    <?}?>
+	<div class="login">
+		<?php if(!empty($members_settings['captcha_on_login'])) {?>
+		<p>
+	      	<?=$helper->display_catpcha()?>
+	    </p>
+		<?php }?>
+		<div class="form-row">
+			<div class="col-12 form-group">
+				<input type="email" name="username" value="<?php echo App\Helper::encode(($_SESSION['sign_in']['username']) ? $_SESSION['sign_in']['username'] : $_COOKIE['usedemail']); ?>" placeholder="<?=_EMAIL?>" class="required form-control form-control-lg" />
+			</div>
+		</div>
+		<div class="form-row">
+			<div class="col-12 form-group">
+				<input type="password" name="passwd" placeholder="<?=_PASSWORD?>" autocomplete="off" class="required form-control form-control-lg" />
+			</div>
+		</div>
+		<div class="form-row">
+			<div class="col-12 form-group">
+				<button class="btn btn-primary btn-block btn-lg" type="submit">
+					<span class="icon-locked-3"></span> Login
+				</button>
+			</div>
+		</div>
+		<hr />
+		<div class="row">
+			<div class="col-8">
+				<?=_MEMBERS_LOGIN_PAGE_FORGOT_PASSWORD?>
+			</div>
+			<div class="col-4 text-right">
+				<a href="members/register" class="right">
+					<i class="icon-key-4"></i> <?=_REGISTER?>
+				</a>
+			</div>
+		</div>
+	</div>
+</form>
+<div class="separator "></div>
+<script type="text/javascript">
+	$(document).ready(function(){
+		$('input[name="username"]').focus();
+	});
+</script>	

@@ -1,0 +1,107 @@
+<div>
+    <?require_once($_SERVER["DOCUMENT_ROOT"] . _SITE_PATH . '/plugins/members/nav_menu.php')?>
+    <div class="row">
+        <div class="col-md-10">
+            <h3><?=$meta['title']?></h3>
+        </div>
+        <div class="col-md-2 text-right">
+            <a href="index.php?plugin=members&amp;file=messages" class="btn btn-warning tipN" data-desc="<?=_SENT?> <?=_MESSAGES?>" title="<?=_INBOX?>" style="margin-top: 10px;">
+                <span class="icon-drawer-2"></span>
+            </a>
+            <a href="index.php?plugin=members&amp;file=messages&amp;op=new" class="popup btn btn-primary tipN" data-desc="<?=_NEW?> <?=_MESSAGE?>" title="<?=_NEW?> <?=_MESSAGE?>" style="margin-top: 10px;">
+                <span class="icon-plus-2"></span>
+            </a>
+        </div>
+    </div>
+    <table class="table table-bordered table-striped">
+        <colgroup span="2">
+            <col style="width: 120px;" />
+            <col />
+        </colgroup>
+        <tbody>
+            <?if(!$frm->empty_array($items_info)) 
+            {
+                foreach($items_info as $item) 
+                {?>
+                <tr>
+                    <td>
+                        <?if(!empty($item['sent_from'])) {?>
+                        <?=$helper->show_user_info_short($members->get_items_info($item['sent_to']))?>
+                        <?} else {?>
+                        <div class="user-data">
+                            <div class="avatar" style="float: none; margin: 5px auto; background-image: url(<?=_SITE_PATH?>/images/no-image-60x60.jpg);">
+                                <img src="images/blank.gif" alt="Sandra Forte">
+                            </div>
+                            <div class="text-center">
+                                <strong><?=$item['name']?></strong>
+                            </div>
+                        </div>
+                        <?}?>
+                        <hr style="margin: 20px 0 5px 0;" />
+                        <div class="text-center">
+                            <small>
+                                <?=$frm->format_sort_date(strtotime($item['date']))?>
+                            </small>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="text-right">
+                            <a href="index.php?plugin=members&amp;file=messages&amp;id=<?=$item['id']?>" class="popup btn btn-small btn-success" title="<?=ucfirst(strtolower($item['subject']))?>">
+                                <?=_READ_MORE?>
+                            </a>
+                        </div>
+                        <hr style="margin: 10px 0;" />
+                        <?if(!$frm->empty_array($item['replies'])) {?>
+                            <?foreach ($item['replies'] as $reply) {?>
+                                <div style="margin-bottom: 10px;">
+                                    <strong><?=$reply['subject']?></strong>
+                                </div>
+                                <div style="margin-bottom: 5px;">
+                                    <small>
+                                        <em><?=_FROM?>: <?=$reply['name']?> <?=_ON?> <?=$frm->format_sort_date(strtotime($reply['date']))?></em>
+                                    </small>
+                                </div>
+                                <div style="margin-bottom: 10px; height: 80px; overflow: hidden;">
+                                    <small>
+                                        <?=$frm->reduce_words($frm->filter($reply['text'], 1), 40)?>
+                                    </small>
+                                </div>
+                                <hr />
+                            <?}?>
+                        <?}?>
+                        <div style="margin-bottom: 10px;">
+                            <strong><?=$item['subject']?></strong>
+                        </div>
+                        <div style="margin-bottom: 5px;">
+                            <small>
+                                <em><?=_FROM?>: <?=$item['name']?> <?=_ON?> <?=$frm->format_sort_date(strtotime($item['date']))?></em>
+                            </small>
+                        </div>
+                        <div style="height: 80px; overflow: hidden;">
+                            <small>
+                                <?=$frm->reduce_words($frm->filter($item['text'], 1), 60)?>
+                            </small>
+                        </div>
+                    </td>
+                </tr>
+                <?}
+            } 
+            else 
+            {?>
+                <tr>
+                    <td colspan="4">
+                        <?=_MEMBERS_MAIN_NO_ORDERS_YET?>
+                    </td>
+                </tr>
+            <?}?>
+        </tbody>
+    </table>
+    <br clear="all" />
+    <?if($havePaginator) {?>
+    <div class="pagination">
+        <ul>
+            <?=$paginator?>
+        </ul>
+    </div>
+    <?}?>
+</div>

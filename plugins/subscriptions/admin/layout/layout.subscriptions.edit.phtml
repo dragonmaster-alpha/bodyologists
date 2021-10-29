@@ -1,0 +1,113 @@
+<?if(isset($_SESSION['error'])) {?>
+    <div class="alert-error" title="Error">
+        <?=$_SESSION['error']?>
+    </div>
+<?
+    unset($_SESSION['error']);
+}
+?>
+<form action="admin.php?plugin=subscriptions" method="post" class="stdform validate-form">
+    <input type="hidden" value="subscriptions" name="plugin" />
+    <input type="hidden" value="save" name="op" />
+    <input type="hidden" value="0" id="save_and" name="save_and" />
+    <input type="hidden" value="<?=$item['id']?>" name="id" />
+    <div class="row-fluid">
+        <div class="span9">
+            <div class="pageheader">
+                <h1 class="head">
+                    Subscriptions Management
+                </h1>
+            </div>
+        </div>
+        <div class="span3">
+            <div class="submit-top">
+                <div style="text-align: right; margin-right: 40px;">
+                    <div style="position: relative; display: inline-block;">
+                        <div class="navbar">
+                            <ul class="nav pull-right">
+                                <li class="dropdown">
+                                    <button class="btn btn-success tipS" type="button" style="padding: 5px 10px 6px 10px;" data-toggle="dropdown" title="Save Changes" >
+                                        <span class="btn-icon icon-disk"></span>
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu orders-actions" role="menu">
+                                        <li><a href="javascript:jQuery('.stdform').submit();"><span class="icon-disk"></span> Save</a></li>
+                                        <li><a href="javascript:jQuery('.stdform').submit();" onclick="jQuery('#save_and').val(1);"><span class="icon-file"></span> Save &amp; New</a></li>
+                                        <li><a href="javascript:jQuery('.stdform').submit();" onclick="jQuery('#save_and').val(2);"><span class="icon-pencil-3"></span> Save &amp; Edit</a></li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <button class="btn btn-warning tipS" type="reset" style="padding: 6px 10px; margin-left: 5px;" title="Undo Changes">
+                                        <span class="font20 icon-history"></span> 
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="contentwrapper" class="contentwrapper">
+        <div id="default" class="subcontent">
+            <p>
+                <label>
+                    Name: 
+                </label>
+                <div class="field">
+                    <input type="text" value="<?=$item['name']?>" name="name" class="required" />
+                </div>
+                <small class="desc">
+                    Enter subscriber name. This name will be used in the emails the system will send to this person.
+                </small>
+            </p>
+            <p>
+                <label>
+                    Email: 
+                </label>
+                <div class="field">
+                    <input type="email" value="<?=$item['email']?>" name="email" class="required email" />
+                </div>
+                <small class="desc">
+                    Enter subscriber email address, this email will be used in the emails the system will send to this person.
+                </small>
+            </p>
+            <?if(count($available_languages)>1) {?>
+            <p>
+                <label>
+                    Language: 
+                </label>
+                <div class="field">
+                    <select name="lang" class="uniformselect">
+                         <?foreach($available_languages as $lang) {?>
+                            <option value="<?=$lang['language']?>"<?=($lang['language'] == $item['lang'] ? ' selected="selected"' : '')?>><?=ucfirst($lang['language'])?></option>
+                        <?}?>
+                    </select>
+                </div>
+                <small class="desc">
+                    Select the language you want to associate this person with.
+                </small>
+            </p>
+            <?} else {?>
+                <input type="hidden" value="english" name="lang" />
+            <?}?>
+            <p>
+                <label>
+                    Category: 
+                </label>
+                <div class="field">
+                    <select name="category" class="uniformselect combo">
+                        <option value="">Select one...</option>
+                        <?foreach ($categories as $category) 
+                        {?>
+                        <option value="<?=$category?>" <?=($category == $item['category'] ? 'selected="selected"' : '')?>><?=$category?></option>
+                        <?}?>
+                    </select>
+                </div>
+                <small class="desc">
+                    Select the category you will like t associate this person with.
+                </small>
+            </p>
+		</div>
+	</div>
+</form>

@@ -1,0 +1,246 @@
+<?php
+
+// ==============================
+//  PUBLIC VIEW OF SINGLE EVENT
+// ==============================
+
+?>
+<?php
+use Plugins\Events\Classes\Events;
+use Plugins\Members\Classes\Wishlist;
+
+$user = $_SESSION['user_info'];
+$is_wished = $user && (new Wishlist())->isWished((int) $item['id'], (int) $user['id'], 'event');
+$is_flagged = $user && (new Events())->isFlagged((int) $item['id'], (int) $user['id']);
+?>
+<?=(!empty($_seo_settings['breadcrumbs'] && is_object($breadcrumbs)) ? !empty($_seo_settings['display_breadcrumbs']) ? $breadcrumbs->get() : $breadcrumbs->schema() : '')?>
+
+<div class="separator no-separator-mobile"></div>
+<h1 class="text-center"><em class="find-deals-title">Find Events</em></h1>
+<div class="separator no-separator-mobile"></div>
+<div class="separator no-separator-mobile"></div>
+
+<form class="d-none d-lg-block" action="search/events" method="get">
+    <?php include __DIR__.'/../../search/layout/search_event_form.phtml'; ?>
+</form>
+
+<div class="separator no-separator-mobile"></div>
+
+<?php $url = Events::getFirstImageURL((int) $item['id']); ?>
+
+<article class="deal-info"> 
+    <div class="row">
+        <div class="col-lg-8 pr-lg-5">
+            <a href="<?=_SITE_PATH?>/uploads/events/<?=$item['media']['bid']?>/<?=$item['media']['image']?>" class="popup" id="main-image-link">
+                <img src="<?= $url ?>" alt="<?=$item['title']?>" id="main-image" />
+            </a>
+            <?php if(count($item['images'])>1) {?>
+            <div class="separator sm"></div>
+            <div class="thumb-area">
+                <?php foreach($item['images'] as $image) {?>
+                <?php $thumb = Events::getThumbURL((int) $image['id'])?>
+                <img data-src="<?= $thumb ?>" alt="<?=$item['title']?>" itemprop="image" class="thumb-image" />
+                <?php }?>
+            </div>
+            <?php }?>
+        </div>
+        <div class="col-lg-4 deal-content pl-lg-5">
+            <div class="separator no-separator-mobile"></div>
+            <h1 class="text-center"><em class="mobile-details-page-title"><?=$item['title']?></em></h1>
+
+            <div class="text-center">
+                <a href="<?=$item['owner_info']['url']?>">
+                    <?=$item['owner_info']['company']?>
+                </a>
+            </div>
+            <div class="separator no-separator-mobile"></div>
+            <h5 role="heading" class="text-center">COST: $<?=$item['price']?></h5>
+            <div class="separator no-separator-mobile"></div>
+            <div class="text-center">
+            <?php
+                $event_link = $item['purchase_link'] ?? null;
+                $id = $event_link ? 'register' : 'contact';
+            ?>
+                <a role='link' href="<?=$event_link?>" id="<?=$id?>" class="btn btn-lg btn-primary mx-auto d-inline-block" target="_blank">
+                    Register
+                </a>                
+            </div>
+        </div>
+    </div>
+    <div class="separator"></div>
+    <div class="row">
+        <div class="col-lg-8 big-text pr-lg-5">
+            <h1 class="text-center"><em class="mobile-details-page-title">Description</em></h1>
+            <div class="separator no-separator-mobile"></div>
+            <div class="text-center">
+                <?= nl2br($item['text']) ?>
+            </div>
+            <div class="separator no-separator-mobile"></div>
+        </div>
+        <div class="col-md-4 pl-md-5 sidebar d-none d-lg-block">
+            <h1 class="text-center">&nbsp;</h1>
+            
+            <div class="separator no-separator-mobile"></div>
+            <p>DATE AND TIME <br>
+            <?=date('M d, Y', strtotime($item['start_date']))?> - <?=date('M d, Y', strtotime($item['end_date']))?>  <br>
+            <?=$item['start_time']?> - <?=$item['end_time']?>  <br>
+
+            <div class="separator"></div>
+            <p>LOCATION <br>
+            <?=$item['address']?> <br>
+            <?=$item['city']?>, <?=$item['state']?> <?=$item['zipcode']?></p>
+            
+            <div class="separator"></div>
+            <p>ORGANIZER <br>
+            <?=$item['owner_info']['company']?> <br>
+            PHONE: <?=$item['owner_info']['phone']?> <br>
+            EMAIL: <?=$item['owner_info']['email']?> <br>
+            WEB: <a href="<?=$item['owner_info']['website']?>" rel="nofollow" role="link" target="_blank"><?=$item['owner_info']['website']?></a> <br>
+            SOCIAL:
+                <?php if(isset($item['owner_info']['extra']['facebook'])) {?>
+                <a href="<?=$item['owner_info']['extra']['facebook']?>" rel="nofollow" role="link" target="_blank"><i class="icon-facebook-square"></i></a>
+                <?php }?>
+                <?php if(isset($item['owner_info']['extra']['twitter'])) {?>
+                <a href="<?=$item['owner_info']['extra']['twitter']?>" rel="nofollow" role="link" target="_blank"><i class="icon-twitter-square"></i></a>
+                <?php }?>
+                <?php if(isset($item['owner_info']['extra']['instagram'])) {?>
+                <a href="<?=$item['owner_info']['extra']['instagram']?>" rel="nofollow" role="link" target="_blank"><i class="icon-instagram"></i></a>
+                <?php }?>
+                <?php if(isset($item['owner_info']['extra']['youtube'])) {?>
+                <a href="<?=$item['owner_info']['extra']['youtube']?>" rel="nofollow" role="link" target="_blank"><i class="icon-youtube-square"></i></a>
+                <?php }?>
+                <?php if(isset($item['owner_info']['extra']['linkin'])) {?>
+                <a href="<?=$item['owner_info']['extra']['linkin']?>" rel="nofollow" role="link" target="_blank"><i class="icon-linkedin-square"></i></a>
+                <?php }?>
+                <?php if(isset($item['owner_info']['extra']['skype'])) {?>
+                <a href="<?=$item['owner_info']['extra']['skype']?>" rel="nofollow" role="link" target="_blank"><i class="icon-skype"></i></a>
+                <?php }?> <br></p>
+
+            <div class="separator"></div>
+
+            <!-- [ WISH & FLAG ] -->
+            <?php include 'layout.wish_report.event.phtml' ?>
+
+        </div>
+        <div class="col-lg-4 pl-lg-5 sidebar d-block d-lg-none">
+            <h1 class="text-center">&nbsp;</h1>
+
+            <div class="row">
+                <div class="col-6">
+                <p class="p-event-mobile">DATE AND TIME <br>
+                    <?=date('M d, Y', strtotime($item['start_date']))?> - <?=date('M d, Y', strtotime($item['end_date']))?>  <br>
+                    <?=$item['start_time']?> - <?=$item['end_time']?>  <br>
+                </div>
+                <div class="col-6">
+                <p class="p-event-mobile">LOCATION <br>
+                    <?=$item['address']?> <br>
+                    <?=$item['city']?>, <?=$item['state']?> <?=$item['zipcode']?></p>
+                </div>
+                <div class="separator"></div>
+                <div class="col-12">
+                <p class="p-event-mobile">ORGANIZER <br>
+                    <?=$item['owner_info']['company']?> <br>
+                    PHONE: <?=$item['owner_info']['phone']?> <br>
+                    EMAIL: <?=$item['owner_info']['email']?> <br>
+                    WEB: <a href="<?=$item['owner_info']['website']?>" rel="nofollow" role="link" target="_blank"><?=$item['owner_info']['website']?></a> <br>
+                    SOCIAL:
+                    <?php if(isset($item['owner_info']['extra']['facebook'])) {?>
+                        <a href="<?=$item['owner_info']['extra']['facebook']?>" rel="nofollow" role="link" target="_blank"><i class="icon-facebook-square"></i></a>
+                    <?php }?>
+                    <?php if(isset($item['owner_info']['extra']['twitter'])) {?>
+                        <a href="<?=$item['owner_info']['extra']['twitter']?>" rel="nofollow" role="link" target="_blank"><i class="icon-twitter-square"></i></a>
+                    <?php }?>
+                    <?php if(isset($item['owner_info']['extra']['instagram'])) {?>
+                        <a href="<?=$item['owner_info']['extra']['instagram']?>" rel="nofollow" role="link" target="_blank"><i class="icon-instagram"></i></a>
+                    <?php }?>
+                    <?php if(isset($item['owner_info']['extra']['youtube'])) {?>
+                        <a href="<?=$item['owner_info']['extra']['youtube']?>" rel="nofollow" role="link" target="_blank"><i class="icon-youtube-square"></i></a>
+                    <?php }?>
+                    <?php if(isset($item['owner_info']['extra']['linkin'])) {?>
+                        <a href="<?=$item['owner_info']['extra']['linkin']?>" rel="nofollow" role="link" target="_blank"><i class="icon-linkedin-square"></i></a>
+                    <?php }?>
+                    <?php if(isset($item['owner_info']['extra']['skype'])) {?>
+                        <a href="<?=$item['owner_info']['extra']['skype']?>" rel="nofollow" role="link" target="_blank"><i class="icon-skype"></i></a>
+                    <?php }?> <br>
+                </p>
+                </div>
+            </div>
+
+            <div class="separator no-separator-mobile"></div>
+
+            <!-- [ WISH & FLAG ] -->
+            <?php include 'layout.wish_report.event.phtml' ?>
+
+        </div>
+    </div>
+    <div class="separator x2"></div>
+    <div class="row">
+        <div class="col-12 text-center">
+            <a onClick="window.history.back();" class="btn btn-primary d-inline-block mx-auto">Back to Results</a>
+        </div>
+    </div>
+    <div class="hidden">
+        <div id="form">
+            <h4 class="hughs">Contact <?=$item['owner_info']['display_name']?></h4>
+            <small>
+                <strong>Event</strong>: <?=$item['title']?>
+            </small>
+            <hr />
+            <div class="separator sm"></div>
+            <form action="events/contact" method="post">
+                <input type="hidden" value="<?=$item['title']?>" name="deal" />
+                <div class="form-row">
+                    <div class="col-md-12 form-group">
+                        <input type="text" value="" name="name" class="form-control form-control-lg" placeholder="Your Name" />
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col-md-6 form-group">
+                        <input type="email" value="" name="email" class="form-control form-control-lg" placeholder="Your Email" />
+                    </div>
+                    <div class="col-md-5 form-group">
+                        <input type="tel" value="" name="phone" class="form-control form-control-lg" placeholder="Your Phone Number" />
+                    </div>
+                </div>
+                <div class="separator sm"></div>
+                <div class="form-row">
+                    <div class="col-md-12 form-group">
+                        <textarea name="message" class="form-control form-control-lg" placeholder="Your Message"></textarea>
+                    </div>
+                </div>
+                <div class="separator sm"></div>
+                <div class="text-right">
+                    <button type="submit" class="btn btn-primary btn-sm">
+                        Submit Comment
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</article>
+<script type="text/javascript" src="js/plugins/jquery.countdown.min.js"></script>
+<script>
+    $(function(){
+        $("a#contact").on('click', function(){
+            $.colorbox({
+                inline: true, 
+                href: '#form'
+            });
+            return false;
+        });
+        $('.thumb-image').on('click', function(){
+            var prop = $(this).prop('src').replace('small-', '');
+            $('img#main-image').prop('src', prop);
+            $('a#main-image-link').prop('href', prop);
+            $('.zoom').zoom({url: prop});
+        });
+        $('[data-countdown]').each(function() {
+            var $this = $(this), finalDate = $(this).data('countdown');
+            $this.countdown(finalDate, function(event) {
+                $this.html(event.strftime('<i class="icon-clock-o"></i> <strong><span> %D</span> d.</strong><strong><span>%H</span>st. </strong> <strong><span>%M</span>min.</strong>'));
+            });
+        });
+    });
+</script>
+
+

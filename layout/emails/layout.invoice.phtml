@@ -1,0 +1,173 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title><?=_RECEIPT?></title>
+        <base href="<?=(!empty($this->config['force_https'])) ? 'https' : 'http'?>://<?=$this->site_domain() . _SITE_PATH?>/" />
+        <link rel="stylesheet" href="css/plugins/bt.css" type="text/css" />
+        <link rel="stylesheet" href="css/default.css" type="text/css" />
+    </head>
+    <body style="font-size: 12px;">
+        <div id="contentwrapper" style="margin: 10px auto; width: 700px;">
+            <table style="width: 100%; margin-bottom: 20px;">
+                <tr>
+                    <td>
+                        <?if(file_exists($_SERVER['DOCUMENT_ROOT'] . _SITE_PATH . '/images/email-logo.png')) {?>
+                            <img src="<?=_SITE_PATH?>/images/email-logo.png" alt="<?=$this->config['contactname']?>" />
+                        <?} else {?>
+                            <h1><?=$this->config['contactname']?></h1>
+                        <?}?>
+                    </td>
+                </tr>
+            </table>
+            <table style="width: 100%; border-bottom: 1px solid #dddddd;">
+                <tr>
+                    <td style="width: 50%;">
+                        <table style="width: 100%;" cellpadding="0" cellspacing="0" class="table">
+                            <tr>
+                                <td style="width: 33%;">
+                                    <?=_ORDER_NUMBER?>:
+                                </td>
+                                <td>
+                                    <?=$this->api_data['trans']?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="width: 33%;">
+                                    <?=_ORDER_DATE?>:
+                                </td>
+                                <td>
+                                    <?=date('M jS, Y H:i A', strtotime($this->api_data['order_date']))?>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td style="width: 50%;">
+                        <table style="width: 100%;" cellpadding="0" cellspacing="0" class="table">
+                            <colgroup span="2">
+                                <col style="width: 33%" />
+                                <col />
+                            </colgroup>
+                            <tr>
+                                <td>
+                                    <?=_SUPPORT?> <?=_EMAIL?>:
+                                </td>
+                                <td>
+                                    <?=$this->config['contactemail']?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <?=_SUPPORT?> <?=_PHONE?>:
+                                </td>
+                                <td>
+                                    <?=$this->config['phone']?>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+            <table style="width: 100%; margin: 20px 0;">
+                <tr>
+                    <td style="width: <?=(!empty($this->api_data['ship_address']) ? 33 : 50)?>%;">
+                        <h5><?=_BILLING?></h5>
+                        <strong><?=$this->api_data['first_name']?> <?=$this->api_data['last_name']?></strong><br />
+                        <?if(!empty($this->api_data['address'])) {?>
+                        <?=$this->api_data['address']?> <?=$this->api_data['address2']?><br />
+                        <?=$this->api_data['city']?>, <?=$this->api_data['state']?> <?=$this->api_data['zipcode']?> <?=($this->api_data['country'] != 'US') ? $this->api_data['country'] : ''?><br />
+                        <?} else {?>
+                            <?if(!empty($this->api_data['zipcode'])) {?>
+                                <?=$this->api_data['zipcode']?><br />
+                            <?}?>
+                        <?}?>
+                        <?=(!empty($this->api_data['email'])) ? _EMAIL . ': ' . $this->api_data['email'] : ''?>
+                    </td>
+                    <? if(!empty($this->api_data['ship_address'])) {?>
+                    <td style="width: <?=(!empty($this->api_data['ship_address']) ? 33 : 50)?>%;">
+                        <h5><?=_SHIPPING?></h5>
+                        <strong><?=$this->api_data['ship_first_name']?> <?=$this->api_data['ship_last_name']?></strong><br />
+                        <?=$this->api_data['ship_address']?> <?=$this->api_data['ship_suite']?><br />
+                        <?=$this->api_data['ship_city']?>, <?=$this->api_data['ship_state']?> <?=$this->api_data['ship_zipcode']?> <?=($this->api_data['ship_country'] != 'US') ? $this->api_data['ship_country'] : ''?><br />
+                        <?=(!empty($this->api_data['phone'])) ? _PHONE . ': ' . $this->api_data['phone'] . '<br />' : ''?>
+                    </td>
+                    <?}?>
+                    <td style="width: <?=(!empty($this->api_data['ship_address']) ? 33 : 50)?>%;">
+                        <h5><?=_PAYMENT_INFO?></h5>
+                        <strong><?=_PAID_WITH?></strong>: <?=$this->api_data['payment_method']?><br />
+                        <strong><?=_TOTAL_CHARGED?></strong>: $<?=$this->number($this->api_data['total'])?><br />
+                        <strong><?=_RECEIPT_DATE?></strong>: <?=date('m/d/Y', strtotime($this->api_data['order_date']))?><br />
+                        <strong><?=_BILLED_TO?></strong>: <?=(!empty($this->api_data['cc_type'])) ? strtoupper($this->api_data['cc_type']) . ' /' . $this->format_cc_number($this->api_data['cc_number']) : $this->api_data['payment_method']?>
+                    </td>
+                </tr>
+            </table>
+            <?if(!empty($this->api_data['items'])) {?>
+            <table style="width: 100%; margin-bottom: 20px; border-bottom: 1px solid #dddddd;">
+                <tbody>
+                    <tr>
+                        <th style="width: 5%; padding: 5px 0; border-top: 1px solid #dddddd;"><?=_QTY?></th>
+                        <th style="width: 10%; padding: 5px 0; border-top: 1px solid #dddddd;"><?=_SKU?></th>
+                        <th style="width: 65%; padding: 5px 0; border-top: 1px solid #dddddd;"><?=_PRODUCT?></th>
+                        <th style="width: 10%; padding: 5px 0; border-top: 1px solid #dddddd; text-align: right;"><?=_PRICE?></th>
+                        <th style="width: 10%; padding: 5px 0; border-top: 1px solid #dddddd; text-align: right;"><?=_TOTAL?></th>
+                    </tr>
+                    <?foreach ($this->api_data['items'] as $order_items) {?>
+                    <tr>
+                        <td style="vertical-align: top; padding: 5px 0; border-top: 1px solid #dddddd;"><?=$order_items['qty']?></td>
+                        <td style="vertical-align: top; padding: 5px 0; border-top: 1px solid #dddddd;"><?=(!empty($order_items['sku'])) ? $order_items['sku'] : 'N/A'?></td>
+                        <td style="vertical-align: top; padding: 5px 0; border-top: 1px solid #dddddd;"><?=$order_items['item_info']['title']?> <?=(!empty($order_items['variation_text']) ? '<br /><small>' . $order_items['variation_text'] . '</small>' : '')?></td>
+                        <td style="vertical-align: top;  padding: 5px 0; border-top: 1px solid #dddddd; text-align: right;">$<?=$this->number($order_items['price'])?></td>
+                        <td style="vertical-align: top;  padding: 5px 0; border-top: 1px solid #dddddd; text-align: right;">$<?=$this->number($order_items['price'] * $order_items['qty'])?></td>
+                    </tr>
+                    <?}?>
+                </tbody>
+            </table>
+            <table style="width: 100%;">
+                <tr>
+                    <td style="width: 80%; padding: 0;">&nbsp;</td>
+                    <td style="width: 20%; padding: 10px 0 0 0;">
+                        <table cellpadding="0" cellspacing="0" style="width: 100%; padding: 0; margin: 0;">
+                            <?if(!empty($this->api_data['used_coupon'])) {?>
+                            <tr>
+                                <td style="text-align: right; padding: 10px;"><?=_USED?> <?=_COUPON?>:</td>
+                                <td style="text-align: right; padding: 0;"><?=$this->api_data['used_coupon']?></td>
+                            </tr>
+                            <?}?>
+                            <?if(!empty($this->api_data['discount']) && $this->api_data['discount'] != '0.00') {?>
+                            <tr>
+                                <td style="text-align: right; padding: 10px;"><?=_DISCOUNT?>:</td>
+                                <td style="text-align: right; padding: 0;">-$<?=$this->number($this->api_data['discount'])?></td>
+                            </tr>
+                            <?}?>
+                            <tr>
+                                <td style="width: 50%; text-align: right; padding: 2px 10px;"><?=_SUBTOTAL?>:</td>
+                                <td style="width: 50%; text-align: right; padding: 2px 0;">$<?=$this->number($this->api_data['subtotal'])?></td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: right; padding: 2px 10px;"><?=_SHIPPING?>:</td>
+                                <td style="text-align: right; padding: 2px 0;">$<?=$this->number($this->api_data['shipping'])?></td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: right; padding: 2px 10px;"><?=_TAX?>:</td>
+                                <td style="text-align: right; padding: 2px 0;">$<?=$this->number($this->api_data['tax'])?></td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: right; padding: 10px;"><?=_TOTAL?>:</td>
+                                <td style="text-align: right; padding: 0;">$<?=$this->number($this->api_data['total'])?></td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+            <?}?>
+            <hr />
+            <div class="disclaimer">
+                <p>This email has been generated automatically from <?=$this->config['contactname']?>. PLEASE DO NOT RESPOND TO THIS EMAIL. If you need help or more information about this or any other of our services please <a href="mailto:<?=$this->config['contactemail']?>?subject=Order number <?=$this->api_data['trans']?>.">click here</a> to contact our support team.</p>
+                <p><strong><?=$this->config['contactname']?> Feedback</strong></p>
+                <p>We'll love to hear from you, please <a href="http://<?=$this->site_domain() . _SITE_PATH?>/">click here</a> to leave us a feedback.</p>
+                <p>Copyright <?=date('Y')?> <?=$this->config['contactname']?>. All rights reserved </p>
+                Sent from <?=$this->config['contactname']?> on <?=date('l, F jS Y')?> to <?=$this->api_data['email']?>
+            </div>
+        </div>
+    </body>
+</html>

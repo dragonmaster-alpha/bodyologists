@@ -1,0 +1,43 @@
+<div>
+	<h1>
+		<?=_SEARCHING_FOR?> <?=$frm->filter($query, 1)?>
+	</h1>
+    <?php if(!$frm->empty_array($search_results)) {?>
+        <div class="clearfix">
+            <?php foreach($search_results as $plugin_results) {?>
+                <?php foreach($plugin_results as $item) {?>
+                <div style="padding: 10px 0;">
+                    <a href="<?=$item['url']?>" style="font-size: 16px;">
+                        <?=(!empty($item['title']) ? $item['title'] : $item['name'])?>
+                    </a>
+                    <p>
+                        <?=$frm->reduce_words($frm->filter($item['text'], 1))?>
+                    </p>
+                    <a href="<?=$item['url']?>">
+                        <span class="icon-file left"></span> http://www.<?=$frm->site_domain() . _SITE_PATH?>/<?=$item['url']?>
+                    </a>
+                </div>
+                <?php }?>
+                <?php if($havePaginator) {?>
+                <div style="text-align: right;">
+                    <div class="pagination">
+                        <ul>
+                            <?=$paginator?>
+                        </ul>
+                    </div>
+                </div>
+                <?php }?>
+            <?php }?>
+        </div>
+    <?php } else {?>
+		<div>
+			Your search - <b><?=$query?></b> - did not match any of our documents.<br /><br />
+			Suggestions:<br />
+			<ul>
+				<li>Make sure all words are spelled correctly.</li>
+				<li>Try different keywords.</li>
+				<li>Try a more specific keyword.</li>
+			</ul>
+		</div>
+    <?php }?>
+</div>

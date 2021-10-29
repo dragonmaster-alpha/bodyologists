@@ -1,0 +1,54 @@
+<html>
+    <head>
+    	<title>Notifications from <?=$frm->config['sitename']?></title>
+    	<style type="text/css">
+    		body {
+                font-size: 12px;
+                font-family: "Lucida Grande", "Lucida Sans Unicode", Helvetica, Arial, Verdana, sans-serif;
+            }
+            h1 {
+                color: #000000;
+                font-size: 50px;
+                marign: 0;
+                padding: 0;
+                line-height: 50px;
+                text-transform: uppercase;
+            }
+            div.header { 
+                padding: 10px;
+                margin-bottom: 10px;
+            }
+            div.footer { 
+                padding: 10px;
+                margin-top: 10px;
+            }
+            div.disclaimer {
+                font-size: 11px;
+                margin-top: 10px;
+                padding-top: 10px;
+                border-top: 1px solid #ddd;
+            }
+    	</style>
+    </head>
+    <body>
+        <div class="header">
+            <?if(file_exists($_SERVER['DOCUMENT_ROOT'] . _SITE_PATH . '/images/email-logo.png')) {?>
+            <a href="http://<?=$frm->site_domain() . _SITE_PATH?>">
+                <img src="http://<?=$frm->site_domain() . _SITE_PATH?>/images/email-logo.png" alt="<?=$frm->config['sitename']?>" />
+            </a>
+            <?} else {?>
+                <h1><?=$frm->config['sitename']?></h1>
+            <?}?>
+        </div>
+        <div>
+            <?=$data['message']?>
+        </div>
+        <div class="disclaimer">
+            <p>This email has been generated automatically from <?=$frm->config['sitename']?>. PLEASE DO NOT RESPOND TO THIS EMAIL. If you need help or more information about this or any other of our services please <a href="mailto:<?=$frm->config['contactemail']?>">click here</a> to contact our support team.</p>
+            <p><strong><?=$frm->config['sitename']?> Feedback</strong></p>
+            <p>We'll love to hear from you, please <a href="http://<?=$frm->site_domain() . _SITE_PATH?>/">click here</a> to leave us a feedback.</p>
+            <p>Copyright <?=date('Y')?> <?=$frm->config['sitename']?>. All rights reserved </p>
+            Sent from <?=$frm->config['sitename']?> on <?=date('l, F jS Y')?> to <?=$frm->api_data['email']?>
+        </div>
+    </body>
+</html>

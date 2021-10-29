@@ -1,0 +1,42 @@
+<div>
+    <form id="email-sent" action="admin.php?plugin=system&amp;file=messages" method="post" class="stdform quickform2">
+        <input type="hidden" value="email_message" name="op" />
+        <input type="hidden" value="0" name="parent" />
+        <input type="hidden" value="<?=$_GET['email']?>" name="receiver_email" />
+        <input type="hidden" value="<?=$_GET['name']?>" name="receiver_name" />
+        <h3>Clients Message</h3>
+        <br />
+        <div class="notifyMessage">Email successfully sent</div>
+        <br clear="all" />
+        <table cellpadding="2" cellspacing="2">
+            <colgroup span="2">
+                <col style="width: 60px;" />
+                <col />
+            </colgroup>
+            <tr>
+                <td style="padding: 5px;">
+                    To:
+                </td>
+                <td style="padding: 5px;">
+                    <input type="text" value="<?=$_GET['name']?> <<?=$_GET['email']?>>" name="display-to" />
+                </td>
+            </tr>
+            <tr>
+                <td style="padding: 5px;">
+                    Subject:
+                </td>
+                <td style="padding: 5px;">
+                    <input type="text" value="<?=(!empty($_GET['subject'])) ? $_GET['subject'] : 'Important information from ' . $frm->config['sitename']?>" name="subject" placeholder="Enter your message subject..." />
+                </td>
+            </tr>
+        </table>
+        <br clear="all" />
+            <textarea name="message" style="width: 450px; height: 100px;"></textarea>
+        <br />
+        <p class="action">
+            <button class="submit radius2">Send</button> &nbsp;
+            <button class="cancel radius2">Close</button>
+        </p>
+        <br />
+    </form>
+</div>

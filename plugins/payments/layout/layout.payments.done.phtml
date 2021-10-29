@@ -1,0 +1,25 @@
+<?if(isset($_SESSION['error'])) {?>
+    <div class="alert alert-error">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <?=$_SESSION['error']['message']?>
+    </div>
+<?
+    unset($_SESSION['error']);
+}
+?>
+<h2 class="head"><?=_SUCCESS_TRANSACTION?></h2>
+<div class="text-right">
+    <a href="payments/print/<?=$id?>" class="terminal_print_receipt">
+        <span class="icon-print"></span> <?=_TERMINAL_PRINT_RECEIPT?>
+    </a>
+</div>
+<br clear="all" />
+<div class="row">
+    <div class="col-sm-1">
+        <span class="icon-check icon-5x left" style="color: green;"></span>
+    </div>
+    <div class="col-sm-11">
+        <p><?=_TERMINAL_TRANSACTION_SUCCESS_MESSAGE_ONE?> <strong><?=$trans?></strong> <?=_TERMINAL_TRANSACTION_SUCCESS_MESSAGE_TWO?></p>
+    </div>
+</div>
+<div class="separator "></div>

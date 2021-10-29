@@ -1,0 +1,19 @@
+<? require_once($_SERVER["DOCUMENT_ROOT"] . _SITE_PATH . '/plugins/members/nav_menu.php') ?>
+<div style="padding: 10px;">
+    <br clear="all" />
+    <div>
+        <h1><?=_SUBMIT_MAIL_ORDER_CONFIRMATION?></h1>
+    </div>
+    <hr />
+    <div style="height: 200px; padding-top: 30px;">
+        <span class="icon-checkmark-2 transaction-success left"></span>
+        <p><?=_SUBMIT_SUBMITED_SUCCESS?></p>
+        <?if(empty($_REQUEST['s'])) {?>
+        <div class="text-right">
+            <a href="index.php?plugin=members&amp;file=payments&amp;op=print&amp;id=<?=$id?>" class="terminal_print_receipt">
+                <span class="icon-printer-2"></span> <?=_PRINT_RECEIPT?>
+            </a>
+        </div>
+        <?}?>
+    </div>
+</div>

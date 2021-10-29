@@ -1,0 +1,269 @@
+<?php if(isset($_SESSION['error'])) {?>
+    <div class="alert-error" title="Error">
+        <?=$_SESSION['error']?>
+    </div>
+<?php
+    unset($_SESSION['error']);
+}
+?>
+<form action="admin.php?plugin=blog" method="post" class="stdform">
+    <input type="hidden" value="save_settings" name="op" />
+    <div class="row-fluid">
+        <div class="span9">
+            <div class="pageheader">
+                <h1 class="head">
+                    Blogs Settings
+                </h1>
+            </div>
+        </div>
+        <div class="span3">
+            <div class="submit-top">
+                <div style="text-align: right; margin-right: 40px;">
+                    <div style="position: relative; display: inline-block;">
+                        <button class="btn btn-success tipN" style="margin-right: 10px;" type="submit" title="Save Changes">
+                            <span class="icon-disk"></span>
+                        </button>
+                        <button class="btn btn-warning tipN" type="reset" title="Undo Changes">
+                            <span class="font20 icon-history"></span> 
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <ul class="hornav">
+        <li class="current">
+            <a href="#default" class="current">Articles</a>
+        </li>
+        <li>
+            <a href="#comments">Comments</a>
+        </li>
+    </ul>
+    <div id="contentwrapper" class="contentwrapper">
+        <div id="default" class="subcontent">
+            <p>
+                <label>
+                    Articles per Page: 
+                </label>
+                <div class="field">
+                    <select name="display" class="uniformselect">
+                    	<option value="5"<?=($blog_settings['display'] == 5 ? ' selected="selected"' : '')?>>5</option>
+                    	<option value="10"<?=($blog_settings['display'] == 10 ? ' selected="selected"' : '')?>>10</option>
+                    	<option value="15"<?=($blog_settings['display'] == 15 ? ' selected="selected"' : '')?>>15</option>
+                    	<option value="20"<?=($blog_settings['display'] == 20 ? ' selected="selected"' : '')?>>20</option>
+                    	<option value="30"<?=($blog_settings['display'] == 30 ? ' selected="selected"' : '')?>>30</option>
+                    	<option value="40"<?=($blog_settings['display'] == 40 ? ' selected="selected"' : '')?>>40</option>
+                    	<option value="50"<?=($blog_settings['display'] == 50 ? ' selected="selected"' : '')?>>50</option>
+                    </select>
+                </div>
+                <small class="desc">
+                    Select how many articles will be displayed per page in the blog's from page.
+                </small>
+            </p>
+            <p>
+                <label>
+                    Articles in RSS and Atom: 
+                </label>
+                <div class="field">
+                    <select name="rss_qty" class="uniformselect">
+                    	<option value="5"<?=($blog_settings['rss_qty'] == 5 ? ' selected="selected"' : '')?>>5</option>
+                    	<option value="10"<?=($blog_settings['rss_qty'] == 10 ? ' selected="selected"' : '')?>>10</option>
+                    	<option value="15"<?=($blog_settings['rss_qty'] == 15 ? ' selected="selected"' : '')?>>15</option>
+                    	<option value="20"<?=($blog_settings['rss_qty'] == 20 ? ' selected="selected"' : '')?>>20</option>
+                    	<option value="30"<?=($blog_settings['rss_qty'] == 30 ? ' selected="selected"' : '')?>>30</option>
+                    	<option value="40"<?=($blog_settings['rss_qty'] == 40 ? ' selected="selected"' : '')?>>40</option>
+                    	<option value="50"<?=($blog_settings['rss_qty'] == 50 ? ' selected="selected"' : '')?>>50</option>
+                    </select>
+                </div>
+                <small class="desc">
+                    Select how many articles will be displayed in your RSS and Atom feeds.
+                </small>
+            </p>
+            <p>
+                <label>
+                    Related Articles: 
+                </label>
+                <div class="field">
+                    <select name="related_articles" class="uniformselect">
+                        <option value="5"<?=($blog_settings['related_articles'] == 5 ? ' selected="selected"' : '')?>>5</option>
+                        <option value="10"<?=($blog_settings['related_articles'] == 10 ? ' selected="selected"' : '')?>>10</option>
+                        <option value="15"<?=($blog_settings['related_articles'] == 15 ? ' selected="selected"' : '')?>>15</option>
+                        <option value="20"<?=($blog_settings['related_articles'] == 20 ? ' selected="selected"' : '')?>>20</option>
+                    </select>
+                </div>
+                <small class="desc">
+                    Select how many related articles should be shown in the article page.
+                </small>
+            </p>
+            <p>
+                <label>
+                    For each article in blog page: 
+                </label>
+                <div class="field">
+                    <select name="header" class="uniformselect">
+                    	<option value="40"<?=($blog_settings['header'] == 40 ? ' selected="selected"' : '')?>>Show Article Summary</option>
+                    	<option value="0"<?=($blog_settings['header'] == 0 ? ' selected="selected"' : '')?>>Show Full Article</option>
+                    </select>
+                </div>
+                <small class="desc">
+                    Select how to display each article in the blogs home page.
+                </small>
+            </p>
+            <p>
+                <label>
+                    Display author: 
+                </label>
+                <div class="field">
+                    <select name="allow_display_author" class="uniformselect">
+                        <option value="0">No</option>
+                        <option value="1"<?=($blog_settings['allow_display_author'] == 1 ? ' selected="selected"' : '')?>>Yes</option>
+                    </select>
+                </div>
+                <small class="desc">
+                    Select if you want to show the author name on articles.
+                </small>
+            </p>
+            <p>
+                <label>
+                    Display article date: 
+                </label>
+                <div class="field">
+                    <select name="allow_posted_date" class="uniformselect">
+                        <option value="0">No</option>
+                        <option value="1"<?=($blog_settings['allow_posted_date'] == 1 ? ' selected="selected"' : '')?>>Yes</option>
+                    </select>
+                </div>
+                <small class="desc">
+                    Select if you want to display the article date.
+                </small>
+            </p>
+            <p>
+                <label>
+                    Display reads: 
+                </label>
+                <div class="field">
+                    <select name="allow_display_visits" class="uniformselect">
+                        <option value="0">No</option>
+                        <option value="1"<?=($blog_settings['allow_display_visits'] == 1 ? ' selected="selected"' : '')?>>Yes</option>
+                    </select>
+                </div>
+                <small class="desc">
+                    Select if you want to display articles reads.
+                </small>
+            </p>
+        </div>
+        <div id="comments" class="subcontent" style="display: none">
+            <p>
+            	<label>
+                    Notify on Comments: 
+                </label>
+                <div class="field">
+                	<select name="email_admin" class="uniformselect" onchange="jQuery('#extra-info').slideToggle();">
+                		<option value="0"<?=($blog_settings['email_admin'] == 0 ? ' selected="selected"' : '')?>>No</option>
+                    	<option value="1"<?=($blog_settings['email_admin'] == 1 ? ' selected="selected"' : '')?>>Yes</option>
+                    </select>
+                    <div id="extra-info" class="extra-info" style="display: <?=(!empty($blog_settings['email_admin'])) ? 'block' : 'none'?>;">
+                        <div class="node">
+                            <span class="join"></span>
+                        </div>
+                        <div class="data">
+                        	<div class="row-fluid">
+                        		<div class="span2">
+                        			Notification Email:
+                        		</div>
+                        		<div class="span9">
+                        			<input type="email" class="smallinput" value="<?=(!empty($blog_settings['notification_email'])) ? $blog_settings['notification_email'] : $frm->config['contactemail']?>" name="notification_email" />
+                        		</div>
+                        	</div>
+                        	<br clear="all" />
+                        	<div class="row-fluid">
+                        		<div class="span2">
+                        			When to Notify: 
+                        		</div>
+                        		<div class="span9">
+                        			<select name="notify_on" class="uniformselect">
+    	                    			<option value="all" <?=($blog_settings['notify_on'] == 'all') ? 'selected="selected"' : ''?>>Notify me on all comments</option>
+    	                    			<option value="on_spam" <?=($blog_settings['notify_on'] == 'on_spam') ? 'selected="selected"' : ''?>>Only if comment is marked as spam</option>
+    	                    		</select>
+                        		</div>
+                        	</div>
+                        </div>
+                    </div>
+                </div>
+                <small class="desc">
+					Select when and how you will like to be notified when new comments are submitted.
+		        </small>
+            </p>
+            <?php if(is_dir('../plugins/Members')) {?>
+            <p>
+                <label>
+                    Who can Comment: 
+                </label>
+                <div class="field">
+                    <select name="allowed_comments" class="uniformselect">
+                    	<option value="0"<?=($blog_settings['allowed_comments'] == 0 ? ' selected="selected"' : '')?>>All Visitors</option>
+                    	<option value="1"<?=($blog_settings['allowed_comments'] == 1 ? ' selected="selected"' : '')?>>Register Users Only</option>
+                    </select>
+                </div>
+                <small class="desc">
+                    Select who is allowed to make comments under your blog articles.
+                </small>
+            </p>
+            <?php }?>
+            <p>
+            	<label>
+                    Auto-Approve Comments: 
+                </label>
+                <div class="field">
+                    <select name="auto_approve" class="uniformselect">
+                    	<option value="1"<?=($blog_settings['auto_approve'] == 1 ? ' selected="selected"' : '')?>>Yes</option>
+                    	<option value="0"<?=($blog_settings['auto_approve'] == 0 ? ' selected="selected"' : '')?>>No</option>
+                    </select>
+                </div>
+                <small class="desc">
+                    Select what to do when a comment is submitted.
+                </small>
+            </p>
+            <p>
+            	<label>
+                    What to do with spam: 
+                </label>
+                <div class="field">
+                    <select name="span_handler" class="uniformselect">
+                    	<option value="0"<?=($blog_settings['span_handler'] == 0 ? ' selected="selected"' : '')?>>Mark as spam and publish</option>
+                    	<option value="2"<?=($blog_settings['span_handler'] == 2 ? ' selected="selected"' : '')?>>Mark as span and wait for approval</option>
+                    	<option value="1"<?=($blog_settings['span_handler'] == 1 ? ' selected="selected"' : '')?>>Delete comment automatically</option>
+                    </select>
+                </div>
+                <small class="desc">
+                    Select what to do when a submitted comment is marked as spam by the spam filters.
+                </small>
+            </p>
+            <p>
+            	<label>
+                    Use CAPTCHA: 
+                </label>
+                <div class="field">
+                    <select name="use_captcha" class="uniformselect">
+                    	<option value="1"<?=($blog_settings['use_captcha'] == 1 ? ' selected="selected"' : '')?>>Yes</option>
+                    	<option value="0"<?=($blog_settings['use_captcha'] == 0 ? ' selected="selected"' : '')?>>No</option>
+                    </select>
+                </div>
+                <small class="desc">
+                    Select is you want to present a CAPTCHA to your visitors when commenting on your articles. CAPTCHA tries to identify visitors as humans and minimize the spam risk on the site.
+                </small>
+            </p>
+            <p>
+            	<label>
+                    Max Comment Length: 
+                </label>
+                <div class="field">
+                    <input type="number" value="<?=$blog_settings['comments_lenth']?>" style="width: 50px;" name="comments_lenth" />
+                </div>
+                <small class="desc">
+                    Enter the amount of words allowed in comments. Set as 0 for unlimited. Based on this amount when a comment is submitted all words are counted and striped if the comments exceeds the amount.
+                </small>
+            </p>
+        </div>
+    </div>
+</form>

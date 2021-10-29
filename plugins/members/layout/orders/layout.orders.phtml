@@ -1,0 +1,78 @@
+<?require_once($_SERVER["DOCUMENT_ROOT"] . _SITE_PATH . '/plugins/members/nav_menu.php')?>
+<table class="table table-bordered table-striped">
+    <colgroup span="5">
+        <col />
+        <col style="width: 120px;" />
+        <col style="width: 120px;" />
+        <col style="width: 170px;" />
+        <col style="width: 150px;" />
+    </colgroup>
+    <thead>
+        <tr>
+            <th>
+                <?=_MEMBERS_MAIN_TRANSACTIONS?>
+            </th>
+            <th>
+                <?=_MEMBERS_MAIN_TOTAL?>
+            </th>
+            <th>
+                <?=_MEMBERS_MAIN_STATUS?>
+            </th>
+            <th class="hidden-xs">
+                <?=_MEMBERS_MAIN_DATE?>
+            </th>
+            <th class="hidden-xs">
+                <?=_MEMBERS_MAIN_TRACKING_NUMBER?>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <?if(!$frm->empty_array($items_info)) {?>
+        <?foreach($items_info as $order) {?>
+        <tr ondblclick="location.href='index.php?plugin=members&amp;file=orders&amp;id=<?=$order['id']?>'">
+            <td>
+                <a href="index.php?plugin=members&amp;file=orders&amp;id=<?=$order['id']?>"><?=$order['trans']?></a>
+            </td>
+            <td>
+                $<?=$order['total']?></td>
+            <td>
+                <?=$order['status_info']['name']?>
+            </td>
+            <td class="hidden-xs">
+                <?=$frm->format_sort_date(strtotime($order['date']))?>
+            </td>
+            <td class="hidden-xs">
+                <?
+                if(!empty($order['order_updates'][0]['tracking_number'])) 
+                {?>
+                    <?if($order['order_updates'][0]['currier'] == "USPS") 
+                    {?>
+                        <a href="http://trkcnfrm1.smi.usps.com/PTSInternetWeb/InterLabelInquiry.do?origTrackNum=<?=$order['order_updates'][0]['tracking_number']?>" target="_blank"><?=$order['order_updates'][0]['tracking_number']?></a>
+                    <?} 
+                    else if($order['order_updates'][0]['currier'] == "UPS") 
+                    {?>
+                        <a href="http://wwwapps.ups.com/etracking/tracking.cgi?tracknum=<?=$order['order_updates'][0]['tracking_number']?>" target="_blank"><?=$order['order_updates'][0]['tracking_number']?></a>
+                    <?} 
+                    else if($order['order_updates'][0]['currier'] == "FedEx") 
+                    {?>
+                        <a href="http://www.fedex.com/Tracking?tracknumbers=<?=$order['order_updates'][0]['tracking_number']?>" target="_blank"><?=$order['order_updates'][0]['tracking_number']?></a>
+                    <?} 
+                    else if($order['order_updates'][0]['currier'] == "DHL") 
+                    {?>
+                        <a href="http://track.dhl-usa.com/atrknav.asp?ShipmentNumber=<?=$order['order_updates'][0]['tracking_number']?>" target="_blank"><?=$order['order_updates'][0]['tracking_number']?></a>
+                    <?}?>
+                <?} else {?>
+                    N/A
+                <?}?>
+            </td>
+        </tr>
+        <?}?>
+        <?} else {?>
+            <tr>
+                <td colspan="5">
+                    <?=_MEMBERS_MAIN_NO_ORDERS_YET?>
+                </td>
+            </tr>
+        <?}?>
+    </tbody>
+</table>

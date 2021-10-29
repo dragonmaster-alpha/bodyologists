@@ -1,0 +1,21 @@
+<tr id="item_<?=$item['id']?>">
+	<td>
+		<h5>Author: <?=(!empty($item['owner'])) ? '<a href="admin.php?plugin=members&amp;op=edit&amp;id=' . $item['owner'] . '">' . $item['name'] . '</a>' : $item['name']?></h5>
+         <a href="admin.php?plugin=system&amp;file=messages&amp;op=send_message&amp;email=<?=$item['email']?>&amp;name=<?=urlencode($item['name'])?>&amp;subject=<?=urlencode('Contact from ' . $frm->config['sitename'])?>" class="send-message">
+            <?=$item['email']?> <span class="icon-mail-send"></span> 
+        </a><br />
+		<?=$item['text']?>
+	</td>
+	<td class="no_sort">
+        <a href="admin.php?plugin=comments&amp;op=approve&amp;id=<?=$item['id']?>" class="toggle-menu tipS" title="Approve Comment">
+            <?=($item['approved'] == 1) ? '<span class="icon-checkmark-green"></span>' : '<span class="icon-cancel-red"></span>'?> Approved
+        </a><?=date('M jS Y, g:i A', strtotime($item['date']))?>
+        <img src="../images/rating/<?=$item['rate']?>.png" />
+		
+	</td>
+	<td class="actions no_sort" style="width: 30px !important;">
+		<a class="tipS deletion" title="Delete" href="admin.php?plugin=comments&amp;op=delete&amp;id=<?=$item['id']?>">
+            <span class="icon-cancel-4"></span>
+        </a>
+	</td>
+</tr>

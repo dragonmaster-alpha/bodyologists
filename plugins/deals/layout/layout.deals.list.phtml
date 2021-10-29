@@ -1,0 +1,112 @@
+<?php
+
+// ===================================================
+//  PUBLIC SEARCH DEALS LISTING (INDIVIDUAL ELEMENT)
+// ===================================================
+
+?>
+<?php
+
+use App\Helper;
+use Plugins\Deals\Classes\Deals;
+use Plugins\Members\Classes\Wishlist;
+
+$color = Helper::getCategoryColor($item['category']);
+$user = $_SESSION['user_info'] ?? null;
+$wished = (new Wishlist())->getWished((int) $user['id']);
+$flagged = (new Deals())->getFlagged((int) $user['id']);
+$itemMeta = json_decode($item['meta'], true);
+$has_bogo = isset($itemMeta['bogo_price']) && !empty($itemMeta['bogo_price']);
+$has_free = isset($itemMeta['free_item']) && !empty($itemMeta['free_item']);
+?>
+<div class="col-lg-6">
+    <div class="card deals-area">
+        <div class="deals-head"
+             style="background: url(<?= Deals::getImageURL($item)?>)
+                     no-repeat center center;
+                     border: solid 2px <?= $color ?> !important"
+        >
+    <!-- PERCENT  -->
+            <div class="percentage-stiches" style="background-color: <?= $color ?>">
+                <?php if ($has_bogo) { ?>BO<br>GO<?php } ?>
+                <?php if (!$has_bogo) { ?><?=$item['dicount_percentage']?>%<br> OFF<?php } ?>
+            </div>
+    <!--  main image -->
+            <a role="link" href="<?=$item['url']?>">
+                <img class="card-img-top" src="<?= Deals::getImageURL($item) ?>" alt="<?=$item['title']?>" style="width: 100%; height: 100%" role="img">
+            </a>
+        </div>
+
+        <div class="card-body text-center">
+            <a role="link" href="<?=$item['url']?>"><?=$item['title']?></a>
+        </div>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item border-0">
+                <div class="text-center" style="height: 100px; overflow: hidden">
+                    <?=$helper->reduce_text(strip_tags($item['text']), 90)?>
+                </div>
+            </li>
+            <li class="list-group-item border-0">
+                <div class="text-center city">
+                    <?=$item['city']?> <?=(!empty($item['state']) ? ', ' . $item['state'] : '')?> <br>
+<!--                    [DISTANCE] miles away-->
+                </div>
+            </li>
+            <li class="list-group-item border-0">
+                <div class="prices d-none d-lg-block">
+                    <div class="row">
+                        <div class="col-3" style="padding-right: 0;">
+
+                            <!-- [ WISH & FLAG ] -->
+                            <?php
+                            $is_wished = $user && (new Wishlist())->isWished((int) $item['id'], (int) $user['id'], 'deal');
+                            $is_flagged = $user && (new Deals())->isFlagged((int) $item['id'], (int) $user['id']);
+
+                            include 'layout.wish_report.deal.phtml'
+                            ?>
+
+                        </div>
+                        <div class="col-6" style="padding: 0; text-align: center;">
+                            <?php
+                            if ($has_bogo) { echo 'BOGO';}
+                            if ($has_bogo && $has_free) { echo ' + ';}
+                            if ($has_free) { echo 'FREE ITEM';}
+                            ?>
+                        </div>
+                        <div class="col-3 text-right dealsprice" style="padding-left: 0;">
+                            <s>$<?=str_replace('.00', '', $item['reg_price'])?></s>
+                            <em>$<?=str_replace('.00', '', $item['discount'])?></em>
+                        </div>
+                    </div>
+                </div>
+                <div class="prices d-block d-lg-none">
+                    <div class="" style="padding: 0; text-align: center;">
+                        <?php
+                        if ($has_bogo) { echo 'BOGO';}
+                        if ($has_bogo && $has_free) { echo ' + ';}
+                        if ($has_free) { echo 'FREE ITEM';}
+                        ?>
+                    </div>
+                    <div class="row">
+                        <div class="col-7">
+
+                            <!-- [ WISH & FLAG ] -->
+                            <?php
+                            $is_wished = $user && (new Wishlist())->isWished((int) $item['id'], (int) $user['id'], 'deal');
+                            $is_flagged = $user && (new Deals())->isFlagged((int) $item['id'], (int) $user['id']);
+
+                            include 'layout.wish_report.deal.phtml'
+                            ?>
+
+                        </div>
+                        <div class="col-5 text-right dealsprice">
+                            <s>$<?=str_replace('.00', '', $item['reg_price'])?></s>
+                            <em>$<?=str_replace('.00', '', $item['discount'])?></em>
+                        </div>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>
+

@@ -1,0 +1,129 @@
+<div class="separator "></div>
+<h1 class="text-center"><em class="find-deals-title">Find Deals</em></h1>
+<div class="separator no-separator-mobile"></div>
+<div class="separator no-separator-mobile"></div>
+<form action="search/deals" method="get">
+    <div class="row">
+        <div class="col-md-4 px-5">
+            <input type="text" value="<?=$query['category']?>" name="categoryq" class="form-control form-control-lg input-field-text upper" placeholder="Type Keyword" />
+        </div>
+        <div class="col-md-4 px-5">
+            <input type="text" value="<?=$query['location']?>" name="location" class="form-control form-control-lg input-field-text upper" placeholder="City, Zip or State" />
+        </div>
+        <div class="col-md-4 px-5">
+            <button class="btn btn-primary btn-lg" style="width: 100%" type="submit">
+                Search
+            </button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6 offset-md-3 col-lg-4 offset-lg-4 mt-4 text-center">
+            <button class="btn btn-success mb-4 p-3" style="width: 80%; margin: 0 auto; color: #000; font-size: 1.25rem;" data-toggle="collapse" data-target="#advanced_search" >
+                Advanced Filters <i class="icon-angle-down float-right"></i>
+            </button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-1"></div>
+        <div class="col-10 px-5">
+            <div class="collapse bg-light py-3 mx-4 rounded" id="advanced_search">
+                <div class="row mb-3">
+                    <div class="col-md-1"></div>
+                    <div class="col-md-5">
+                        <select name="category" class="form-control form-control-lg">
+                            <option value="">CATEGORY</option>
+                            <option <?=($_GET['category'] == 'Health') ? ' selected="selected"' : ''?> value="Health">Health Deals</option>
+                            <option <?=($_GET['category'] == 'Fitness') ? ' selected="selected"' : ''?> value="Fitness">Fitness Deals</option>
+                            <option <?=($_GET['category'] == 'Beauty') ? ' selected="selected"' : ''?> value="Beauty">Beauty Deals</option>
+                        </select>                         
+                    </div>
+                    <div class="col-md-5">
+                        <select name="to_do" class="form-control form-control-lg" id="thistodo" onchange='checkvalue(this.value)'>
+                            <option value="">THINGS TO DO</option>
+                            <option value="Today">Today</option>
+                            <option value="Tomorrow">Tomorrow</option>
+                            <option value="This week">This week</option>
+                            <option value="This weekend ">This weekend </option>
+                            <option value="This month">This month</option>
+                            <option value="Next Month">Next Month</option>
+                            <option value="pick">Pick a Date</option>
+                        </select>
+                        <input type="text" name="to_do" placeholder="mm/dd/yyyy" id="todo" class="datepicker form-control form-control-lg" style="display: none; ">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-1"></div>
+                    <div class="col-md-5">
+                        <div>
+                            <button class="form-control form-control-lg text-left" type="button" id="dropPriceRange" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                PRICE RANGE
+                            </button>
+                            <div class="dropdown-menu p-3" aria-labelledby="dropPriceRange" style="width: 90%">
+                                <input type="text" class="js-range-slider" name="price_range" value="" />
+                            </div>
+                        </div>                        
+                    </div>
+                    <div class="col-md-5">
+                        <button class="form-control form-control-lg text-left" type="button" id="dropDistance" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            DISTANCE
+                        </button>
+                        <div class="dropdown-menu p-3" aria-labelledby="dropDistance" style="width: 90%">
+                            <input type="text" class="js-distance-slider" name="distance" value="" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="separator"></div>   
+    </div>
+</form>
+
+
+<div class="separator"></div>   
+<?php if(!empty($items_info))
+{?>
+    <div class="dropdown mb-4">
+        <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <?=_SORT_BY?> <?=$sort_type?> 
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" href="<?=(!empty($_SERVER['QUERY_STRING']) ? $_SERVER['QUERY_STRING'] : 'search/deals')?>?sb=d"><?=_SORT_BY?> <?=_DEFAULT?></a>
+                <a class="dropdown-item" href="<?=(!empty($_SERVER['QUERY_STRING']) ? $_SERVER['QUERY_STRING'] : 'search/deals')?>?sb=new"><?=_SORT_BY?> <?=_NEWEST?></a>
+                <a class="dropdown-item" href="<?=(!empty($_SERVER['QUERY_STRING']) ? $_SERVER['QUERY_STRING'] : 'search/deals')?>?sb=best"><?=_SORT_BY?> <?=_POPULAR?></a>
+                <a class="dropdown-item" href="<?=(!empty($_SERVER['QUERY_STRING']) ? $_SERVER['QUERY_STRING'] : 'search/deals')?>?sb=down"><?=_SORT_BY?> <?=_PRICE_LOW_TO_HIGH?></a>
+                <a class="dropdown-item" href="<?=(!empty($_SERVER['QUERY_STRING']) ? $_SERVER['QUERY_STRING'] : 'search/deals')?>?sb=up"><?=_SORT_BY?> <?=_PRICE_HIGH_TO_LOW?></a>
+                <a class="dropdown-item" href="<?=(!empty($_SERVER['QUERY_STRING']) ? $_SERVER['QUERY_STRING'] : 'search/deals')?>?sb=az"><?=_SORT_BY?> <?=_TITLE_A_TO_Z?></a>
+                <a class="dropdown-item" href="<?=(!empty($_SERVER['QUERY_STRING']) ? $_SERVER['QUERY_STRING'] : 'search/deals')?>?sb=za"><?=_SORT_BY?> <?=_TITLE_Z_TO_A?></a>
+                <a class="dropdown-item" href="<?=(!empty($_SERVER['QUERY_STRING']) ? $_SERVER['QUERY_STRING'] : 'search')?>?sb=distance"><?=_SORT_BY?> Distance</a>
+                <a class="dropdown-item" href="<?=(!empty($_SERVER['QUERY_STRING']) ? $_SERVER['QUERY_STRING'] : 'search')?>?sb=expiring"><?=_SORT_BY?> Expiring Soon</a>
+        </div>
+    </div>
+    <div class="row">
+    <?php foreach ($items_info as $item)
+    {
+        $count++;
+        include($_SERVER["DOCUMENT_ROOT"] . _SITE_PATH . '/plugins/deals/layout/layout.deals.list.phtml');
+    }?>
+    </div>
+
+        <div class="pagination">
+            <ul>
+                <?=$paginator?>
+            </ul>
+        </div>
+
+<?php }
+else {?>
+We are sorry but it look like there are not deals configured yet, please try again later.
+<?php }?>
+<script type="text/javascript" src="js/plugins/jquery.countdown.min.js"></script>
+<script>
+    $(function(){
+        $('[data-countdown]').each(function() {
+            var $this = $(this), finalDate = $(this).data('countdown');
+            $this.countdown(finalDate, function(event) {
+                $this.html(event.strftime('<i class="icon-clock-o"></i> <strong><span> %D</span> days</strong><strong><span>%H</span> hrs</strong> <strong><span>%M</span> mins</strong> <strong><span>%S</span> secs</strong>'));
+            });
+        });
+    });  
+</script>

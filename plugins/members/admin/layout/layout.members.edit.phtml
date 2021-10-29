@@ -1,0 +1,556 @@
+<?php if(isset($_SESSION['error'])) {?>
+    <div class="alert-error" title="Error">
+        <?=$_SESSION['error']?>
+    </div>
+    <?php
+    unset($_SESSION['error']);
+}
+?>
+<form action="admin.php?plugin=members" method="post" class="stdform validate-form">
+    <input type="hidden" value="save" name="op" />
+    <input type="hidden" value="0" id="save_and" name="save_and" />
+    <input type="hidden" value="<?=$item['id']?>" name="id" />
+    <input type="hidden" value="<?=time()?>" name="modified" />
+    <input type="hidden" value="0" name="alive" />
+    <div class="row-fluid">
+        <div class="span9">
+            <div class="pageheader">
+                <h1 class="head">
+                    Clients Management
+                </h1>
+            </div>
+        </div>
+        <div class="span3">
+            <div class="submit-top">
+                <div style="text-align: right; margin-right: 40px;">
+                    <div style="position: relative; display: inline-block;">
+                        <div class="navbar">
+                            <ul class="nav pull-right">
+                                <li class="dropdown">
+                                    <button class="btn btn-success tipS" type="button" style="padding: 5px 10px 6px 10px;" data-toggle="dropdown" title="Save Changes" >
+                                        <span class="btn-icon icon-disk"></span>
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu orders-actions" role="menu">
+                                        <li><a href="javascript:jQuery('.stdform').submit();"><span class="icon-disk"></span> Save</a></li>
+                                        <li><a href="javascript:jQuery('.stdform').submit();" onclick="jQuery('#save_and').val(1);"><span class="icon-file"></span> Save &amp; New</a></li>
+                                        <li><a href="javascript:jQuery('.stdform').submit();" onclick="jQuery('#save_and').val(2);"><span class="icon-pencil-3"></span> Save &amp; Edit</a></li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <button class="btn btn-warning tipS" type="reset" style="padding: 6px 10px; margin-left: 5px;" title="Undo Changes">
+                                        <span class="font20 icon-history"></span> 
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <ul class="hornav">
+        <li class="current">
+            <a href="#default" class="current">General info</a>
+        </li>
+        <li>
+            <a href="#addresses">Address Book</a>
+        </li>
+        <?php if(!empty($members_orders)) {?>
+        <li>
+            <a href="#members_orders">Orders</a>
+        </li>
+        <?php }?>
+        <?php if(!empty($available_comments)) {?>
+        <li>
+            <a href="#members_comments">Comments &amp; Reviews</a>
+        </li>
+        <?php }?>
+        <li>
+            <a href="#notes">Notes</a>
+        </li>
+        <li>
+            <a href="#messages">Contact</a>
+        </li>
+    </ul>
+    <div id="contentwrapper" class="contentwrapper">
+        <div id="default" class="subcontent">
+            <div class="contenttitle2">
+                <h3>General info</h3>
+            </div>
+            <?php if(count($available_groups)>0) {?>
+            <p>
+                <label>
+                    Group: 
+                </label>
+                <div class="field">
+                    <select name="grouped" class="uniformselect">
+                        <option value="">Select one...</option>
+                        <?php foreach($available_groups as $group) {?>
+                        <option value="<?=$group['id']?>" <?=($item['grouped'] == $group['id']) ? 'selected="selected"' : '';?>><?=$group['name']?></option>
+                        <?php }?>
+                    </select>
+                </div>
+                <small class="desc">
+                    Select client group.
+                </small>
+            </p>
+            <?php }?>
+            <?php if($members_settings['ask_gender']) {?>
+            <p>
+                <label>
+                    Gender: 
+                </label>
+                <div class="field">
+                    <select name="gender" class="uniformselect">
+                        <option value="female" <?=($item['gender'] == 'female') ? 'selected="selected"' : '';?>>Female</option>
+                        <option value="male" <?=($item['gender'] == 'male') ? 'selected="selected"' : '';?>>Male</option>
+                    </select>
+                </div>
+                <small class="desc">
+                    Select client gender.
+                </small>
+            </p>
+            <?php }?>
+            <?php if($members_settings['ask_birthday']) {?>
+            <p>
+                <label>
+                    Date of birth: 
+                </label>
+                <div class="field">
+                    <input type="text" value="<?=($item['birthday'] != '0000-00-00') ? date('m/d/Y', strtotime($item['birthday'])) : ''?>" name="birthday" data-date-start-view="2" class="datepick hasDatepicker" />
+                </div>
+                <small class="desc">
+                    Enter client date of birth.
+                </small>
+            </p>
+            <?php }?>
+            <p>
+                <label>
+                    First Name: 
+                </label>
+                <div class="field">
+                    <input type="text" value="<?=$item['first_name']?>" name="first_name" class="required" />
+                </div>
+                <small class="desc">
+                    Enter client first name.
+                </small>
+            </p>
+            <p>
+                <label>
+                    Last Name: 
+                </label>
+                <div class="field">
+                    <input type="text" value="<?=$item['last_name']?>" name="last_name" class="required" />
+                </div>
+                <small class="desc">
+                    Enter client last name.
+                </small>
+            </p>
+            <p>
+                <label>
+                    Email: 
+                </label>
+                <div class="field">
+                    <input type="email" value="<?=$item['email']?>" name="email" class="required email" />
+                </div>
+                <small class="desc">
+                    Enter client email address.
+                </small>
+            </p>
+            <p>
+                <label>
+                    Password: 
+                </label>
+                <div class="field">
+                    <input type="password" value="" name="pwd" />
+                </div>
+                <small class="desc">
+                    Enter client account password, <strong>leave empty to keep the actual used one</strong>.
+                </small>
+            </p>
+            <?php if($members_settings['ask_company']) {?>
+            <p>
+                <label>
+                    Company: 
+                </label>
+                <div class="field">
+                    <input type="text" value="<?=$item['company']?>" name="company" />
+                </div>
+                <small class="desc">
+                    Enter client company name.
+                </small>
+            </p>
+            <?php }?>
+            <p>
+                <label>
+                    Phone No: 
+                </label>
+                <div class="field">
+                    <input type="text" value="<?=$item['phone']?>" name="phone" />
+                </div>
+                <small class="desc">
+                    Enter client phone number.
+                </small>
+            </p>
+            <?php if($members_settings['ask_fax']) {?>
+            <p>
+                <label>
+                    Fax No: 
+                </label>
+                <div class="field">
+                    <input type="text" value="<?=$item['fax']?>" name="fax" />
+                </div>
+                <small class="desc">
+                    Enter client fax number.
+                </small>
+            </p>
+            <?php }?>
+            <?php if($members_settings['ask_newsletters']) {?>
+            <p>
+                <label>
+                    Subscribed: 
+                </label>
+                <div class="field">
+                    <select name="newsletters" class="uniformselect">
+                        <option value="">No</option>
+                        <option value="1" <?=(!empty($item['newsletters'])) ? 'selected="selected"' : ''?>>Yes</option>
+                    </select>
+                </div>
+                <small class="desc">
+                    Select if this client will receive newsletter emails.
+                </small>
+            </p>
+            <?php }?>
+            <p>
+                <label>
+                    Avatar: 
+                </label>
+                <div class="field">
+                    <div id="img-holder" class="avatar-img" style="float: left; background-image: url(<?=(!empty($item['avatar'])) ? _SITE_PATH . '/uploads/avatar/' . md5((string) $item['id']) . '/small-' . $item['avatar'] : 'images/no-image-60x60.jpg'?>);">
+                        <input type="file" name="Filedata" id="upload_field" accept="image/*" />
+                        <img src="images/blank.gif" alt="<?=$item['name']?>">
+                    </div>
+                    <br clear="all" />
+                    <div id="progress_report">
+                        <div id="progress_report_name"></div>
+                        <div id="progress_report_status" style="font-style: italic;"></div>
+                        <div id="progress_report_bar_container" style="width: 90%; height: 5px;">
+                            <div id="progress_report_bar" style="background-color: blue; width: 0; height: 100%;"></div>
+                        </div>
+                    </div>
+                    <script type="text/javascript" src="js/plugins/jquery.html5_upload.js"></script>
+                    <script type="text/javascript"> 
+                        jQuery(function() {
+                            jQuery("#upload_field").html5_upload({
+                                extraFields: {
+                                    'op' : 'single',
+                                    'owner' : '1',
+                                    'folder_name' : 'avatar',
+                                    'id' : '<?=$item['id']?>',
+                                    'confirm_field' : '1'
+                                },
+                                url: 'uploads.php',
+                                sendBoundary: window.FormData || jQuery.browser.mozilla,
+                                onStart: function(event, total) {
+                                    jQuery('#progress_report').show();
+                                    return true;
+                                },
+                                setStatus: function(text) {
+                                    jQuery("#progress_report_status").text(text);
+                                },
+                                setProgress: function(val) {
+                                    jQuery("#progress_report_bar").css('width', Math.ceil(val*100)+"%");
+                                },
+                                onFinishOne: function(event, response, name, number, total) {
+                                    var data = JSON.parse(response);
+                                    jQuery('#img-holder').css('background-image','url(<?=_SITE_PATH?>/uploads/' + data.belongs + '/' + data.bid + '/small-' + data.file + ')');
+                                    jQuery('#progress_report').hide();
+                                },
+                                onError: function(event, name, error) {
+                                    alert('error while uploading file ' + name);
+                                }
+                            });
+                        });
+                    </script>
+                </div>
+            </p>
+            <hr />
+            <?php if(is_dir('../plugins/members/addons/packages')) {?>
+            <div class="contenttitle2">
+                <h3>Packages</h3>
+            </div>
+            <p>
+                <label>
+                    Plan: 
+                </label>
+                <div class="field">
+                    <?php if(count($available_plans)>0) {?>
+                    <select name="plan" class="uniformselect">
+                        <option value="">Select one...</option>
+                        <?php foreach($available_plans as $plan) {?>
+                        <option value="<?=$plan['id']?>" <?=($item['plan'] == $plan['id']) ? 'selected="selected"' : '';?>><?=$plan['name']?></option>
+                        <?php }?>
+                    </select>
+                    <?php } else {?>
+                    <select name="plan" class="uniformselect">
+                        <option value="">No Plans Available</option>
+                    </select> 
+                    <a href="admin.php?plugin=members&amp;addon=packages&amp;op=edit" style="padding-left: 10px;">
+                        <span class="icon-clipboard-2"></span>
+                        Create a New Plan
+                    </a>
+                    <?php }?>
+                </div>
+                <small class="desc">
+                    Select the plan this client is subscribed to.
+                </small>
+            </p>
+                <?php if(count($available_plans)>0) {?>
+            <p>
+                <label>
+                    Valid Until: 
+                </label>
+                <div class="field">
+                    <input type="text" value="<?=($item['next_payment'] != '0000-00-00') ? date('m/d/Y', strtotime($item['next_payment'])) : ''?>" name="next_payment" value="" data-date-start-view="2" class="datepick hasDatepicker" />
+                </div>
+                <small class="desc">
+                    Enter the date this plan will be available for this person, this configuration will overwrite the default settings configured on the plan.
+                </small>
+            </p>
+                <?php }?>
+            <?php }?>
+        </div>
+        <div id="addresses" class="subcontent" style="display: none">
+            <?php if(count($available_addresses)>0) {?>
+            <div class="row-fluid">
+                <?php foreach($available_addresses as $address) {?>
+                <div class="span4" style="height: 120px;">
+                    <div class="widgetcontent">
+                        <ul class="recent_list">
+                            <li class="address new">
+                                <div class="msg">
+                                    <strong><?=$address['first_name']?> <?=$address['last_name']?></strong>
+                                    <div>
+                                        <?=$address['address']?> <?=(!empty($address['address2'])) ? ', ' . $address['address2'] : ''?>
+                                        <?=$address['city']?> <?=(!empty($address['state'])) ? ', ' . $address['state'] : ''?> <?=(!empty($address['zipcode'])) ? $address['zipcode'] : ''?> <?=(!empty($address['country'])) ? ', ' . $address['country'] : ''?>
+                                    </div>
+                                    <div>
+                                        Phone: <?=$address['phone']?> <?=(!empty($address['phone_ext'])) ? 'ext: ' . $address['phone_ext'] : ''?>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <?php }?>
+            </div>
+            <?php }?>
+        </div>
+        <?php if(!empty($members_orders)) {?>
+        <div id="members_orders" class="subcontent" style="display: none">
+        <table class="regtable">
+            <colgroup>
+                <col />
+                <col style="width: 150px;" />
+                <col style="width: 150px;" />
+                <col style="width: 120px;" />
+                <col style="width: 150px;" />
+                <col style="width: 135px;" />
+            </colgroup>
+            <thead>
+                <tr>
+                    <th>Transaction</th>
+                    <th>Bill to</th>
+                    <th>Ship to</th>
+                    <th>Tax/Total</th>
+                    <th>Placed on/Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            <?php foreach($members_orders as $order_info) {?>
+                <tr id="main-area-for-<?=$item['id']?>">
+                    <td>
+                        <h5><?=$order_info['trans']?></h5>
+                        <strong>Paid with:</strong> <?=$order_info['payment_method']?>
+                    </td>
+                    <td>
+                        <div>
+                            <strong><?=$order_info['first_name']?> <?=$order_info['last_name']?> </strong>
+                        </div>
+                        <?=$order_info['address']?><?=(!empty($order_info['suite']) ? ', ' . $order_info['suite'] : '')?><br />
+                        <?=$order_info['city']?><?=(!empty($order_info['state'])) ? ', ' . $order_info['state'] : ''?> <?=$order_info['zipcode']?> <?=($order_info['country'] != 'US') ? ', ' . $order_info['country'] : ''?><br />
+                        <a href="admin.php?plugin=system&amp;file=messages&amp;op=send_message&amp;email=<?=$order_info['email']?>&amp;name=<?=urlencode($order_info['first_name']. ' ' . $order_info['last_name'])?>&amp;subject=<?=urlencode('Contact from from ' . $frm->config['sitename'])?>" class="send-message tipS" title="<strong>Contact Buyer">
+                            <?=$order_info['email']?> <span class="icon-mail-send" style="margin-left: 5px;"></span>
+                        </a>
+                    </td>
+                    <td>
+                        <div>
+                            <strong><?=$order_info['ship_first_name']?> <?=$order_info['ship_last_name']?></strong>
+                        </div>
+                        <?=$order_info['ship_address']?><?=(!empty($order_info['ship_suite']) ? ', ' . $order_info['ship_suite'] : '')?><br />
+                        <?=$order_info['ship_city']?><?=(!empty($order_info['ship_state'])) ? ', ' . $order_info['ship_state'] : ''?> <?=$order_info['ship_zipcode']?> <?=($order_info['ship_country'] != 'US') ? ', ' . $order_info['ship_country'] : ''?>
+                        <?=(!empty($order_info['phone']) ? '<br /><a href="tel:' . $order_info['phone'] . '"><span class="icon-phone" style="margin-right: 5px;"></span>' . $order_info['phone'] . ' </a>' : '')?>
+                    </td>
+                    <td>
+                        <?php if(!empty((int) $order_info['discount'])) {?>
+                        <div class="clearfix">
+                            <div style="width: 20px; float: left;">
+                                <strong class="icon-tag tipE" title="Applied Discount"></strong>
+                            </div>
+                            <div style="width: 60px; float: right; text-align: right;">
+                                -$<?=$order_info['discount']?>
+                            </div>
+                        </div>
+                        <?php }?>
+                        <div class="clearfix">
+                            <div style="width: 20px; float: left;">
+                                <strong class="icon-cart tipE" title="Merchandise"></strong>
+                            </div>
+                            <div style="width: 60px; float: right; text-align: right;">
+                                $<?=$order_info['subtotal']?>
+                            </div>
+                        </div>
+                        <div class="clearfix">
+                            <div style="width: 20px; float: left;">
+                                <strong class="icon-truck tipE" title="Shipping &amp; Handling"></strong>
+                            </div>
+                            <div style="width: 60px; float: right; text-align: right;">
+                                $<?=$order_info['shipping']?>
+                            </div>
+                        </div>
+                        <div class="clearfix">
+                            <div style="width: 20px; float: left; cursor: default;">
+                                <strong class="tipE" title="Tax">%</strong>
+                            </div>
+                            <div style="width: 60px; float: right; text-align: right;">
+                                $<?=$order_info['tax']?>
+                            </div>
+                        </div>
+                        <div class="clearfix">
+                            <div style="width: 20px; float: left;">
+                                <strong class="icon-coin tipE" title="Total"></strong>
+                            </div>
+                            <div style="width: 60px; float: right; text-align: right;">
+                                $<?=$order_info['total']?>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <?=$frm->format_sort_date($order_info['date'])?><br />
+                        <span id="status_<?=$order_info['id']?>" style="color: <?=$order_info['status_info']['color']?>;" class="<?=$order_info['status_info']['icon']?>">
+                            <?=$order_info['status_info']['name']?>
+                        </span>
+                    </td>
+                    <td>
+                        <div class="navbar">
+                            <ul class="nav pull-right">
+                                <li class="dropdown">
+                                    <a href="#" role="button" data-toggle="dropdown">Select one... <b class="caret"></b></a>
+                                    <ul id="actions_<?=$item['id']?>" class="dropdown-menu orders-actions" role="menu">
+                                        <li><a href="admin.php?plugin=orders&amp;op=check&amp;id=<?=$order_info['id']?>" class="popup"><span class="icon-info left"></span> Order Info</a></li>
+                                        <li><a href="admin.php?plugin=orders&amp;op=invoice&amp;id=<?=$order_info['id']?>" class="orders_actions_invoice"><span class="icon-file-download left"></span> Print Invoice</a></li>
+                                        <li><a href="admin.php?plugin=orders&amp;op=package_slip&amp;id=<?=$order_info['id']?>" class="orders_actions_package_slip"><span class="icon-license left"></span> Print Packing Slip</a></li>
+                                        <li><a href="admin.php?plugin=orders&amp;op=ship&amp;id=<?=$order_info['id']?>" class="order-statuses" data-status-element="status_<?=$order_info['id']?>"><span class="icon-truck left"></span> Ship Items</a></li>
+                                        <li><a href="admin.php?plugin=orders&amp;op=notes&amp;id=<?=$order_info['id']?>" class="order-statuses"><span class="icon-notebook left" data-item-id="<?=$order_info['id']?>"></span> View Notes (<span id="notes-count-<?=$order_info['id']?>"><?=$order_info['count_notes']?></span>)</a></li>
+                                        <li><a href="admin.php?plugin=orders&amp;op=complete&amp;id=<?=$order_info['id']?>" class="order-statuses" data-status-element="status_<?=$order_info['id']?>"><span class="icon-locked-2 left"></span> Complete Order</a></li>
+                                        <li><a href="admin.php?plugin=orders&amp;op=cancel&amp;id=<?=$order_info['id']?>" class="order-statuses" data-status-element="status_<?=$order_info['id']?>"><span class="icon-cancel-2 left"></span> Cancel Order</a></li>
+                                        <li><a href="admin.php?plugin=orders&amp;op=decline&amp;id=<?=$order_info['id']?>" class="order-statuses" data-status-element="status_<?=$order_info['id']?>"><span class="icon-blocked left"></span> Decline Order</a></li>
+                                        <!-- <li><a href="admin.php?plugin=orders&amp;op=refund&amp;id=<?=$order_info['id']?>" class="order-statuses" data-status-element="status_<?=$order_info['id']?>"><span class="icon-reply left"></span> Refund Order</a></li> -->
+                                        <li><a href="admin.php?plugin=orders&amp;op=delete&amp;id=<?=$order_info['id']?>" class="order-delete" data-main-holder="main-area-for-<?=$order_info['id']?>"><span class="icon-remove-2 left"></span> Delete Order</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+            <?php }?>
+        		</tbody>
+            </table>    
+        </div>
+        <?php }?>
+        <?php if(!empty($available_comments)) {?>
+        <div id="members_comments" class="subcontent" style="display: none">
+        <table class="regtable">
+            <colgroup>
+                <col />
+                <col style="width: 160px;" />
+                <col style="width: 30px !important;"  />
+            </colgroup>
+            <thead>
+                <tr>
+                    <th>Comment</th>
+                    <th>Information</th>
+                    <th>&nbsp;</th>
+                </tr>
+            </thead>
+            <tbody>
+            <?php foreach($available_comments as $comment) {?>
+                <tr id="item_<?=$item['id']?>">
+                    <td>
+                        <h5><?=ucwords(($comment['plugin'] == 'blog') ? 'Article' : $comment['plugin'])?>: <a href="admin.php?plugin=<?=$comment['plugin']?>&amp;op=edit&amp;id=<?=$comment['item']['id']?>"><?=$comment['item']['title']?></a></h5>
+                        <strong>Author</strong>: <?=$comment['name']?> 
+                        - <a href="admin.php?plugin=system&amp;file=messages&amp;op=send_message&amp;email=<?=$comment['email']?>&amp;name=<?=urlencode($comment['name'])?>&amp;subject=<?=urlencode('Contact from ' . $frm->config['sitename'])?>" class="send-message">
+                            <?=$comment['email']?> <span class="icon-mail-send"></span> 
+                        </a> - IP: <?=$comment['ip']?><br />
+                        <?=$comment['plain_text']?>
+                    </td>
+                    <td class="no_sort">
+                        <a href="admin.php?plugin=comments&amp;op=approve&amp;id=<?=$comment['id']?>" class="toggle-menu tipS" title="Approve Comment">
+                            <?=($comment['approved'] == 1) ? '<span class="icon-checkmark-green"></span>' : '<span class="icon-cancel-red"></span>'?> Approved
+                        </a><?=date('M jS Y, g:i A', strtotime($comment['date']))?>
+                        <img src="../images/rating/<?=$comment['rate']?>.png" />
+                        
+                    </td>
+                    <td class="actions no_sort" style="width: 30px !important;">
+                        <a class="tipS deletion" title="Delete" href="admin.php?plugin=comments&amp;op=delete&amp;id=<?=$comment['id']?>">
+                            <span class="icon-cancel-4"></span>
+                        </a>
+                    </td>
+                </tr>
+            <?php }?>
+                </tbody>
+            </table>    
+        </div>
+        <?php }?>
+        <div id="notes" class="subcontent" style="display: none;">
+            <div>
+                <div class="widgetcontent userlistwidget nopadding">
+                    <ul>
+                        <?php if(!empty($item['notes'])) {?>
+                            <?=$item['notes']?>
+                        <?php } else {?>
+                        <li>
+                            There is no notes added for this clients, you can start adding notes by entering them into the following text area and save changes.
+                        </li>
+                        <?php }?>
+                    </ul>
+                </div>
+                <div style="margin-top: 20px;">
+                    <textarea name="notes"></textarea>
+                    <small class="desc" style="margin: 0;">
+                        Enter your notes for this client, all notes will be saved and keep for future references, clients in general have no access to this notes.
+                    </small>
+                </div>
+            </div>
+        </div>
+        <div id="messages" class="subcontent" style="display: none;">
+            <div style="margin-bottom: 20px;">
+                Use the following form to contact this client, all information entered in the following fields will be formatted and send to via email to this client. Once you are done all you need to do is click on save and all information will be saved and emails send.
+            </div>
+            <div style="margin-top: 20px;">
+                    <input type="text" value="" name="subject" placeholder=" Subject" />
+                    <small class="desc" style="margin: 0;">
+                        Enter your message subject.
+                    </small>
+                </div>
+            <div style="margin-top: 20px;">
+                    <textarea name="message" style="height: 100px;" placeholder="Message"></textarea>
+                    <small class="desc" style="margin: 0;">
+                        Enter your message.
+                    </small>
+                </div>
+        </div>
+    </div>
+</form>

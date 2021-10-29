@@ -1,0 +1,127 @@
+</div>
+</div>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-4 col-lg-2 memberside">
+            <div>
+                <?php require_once($_SERVER["DOCUMENT_ROOT"] . _SITE_PATH . '/plugins/members/nav_menu.php'); ?>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="separator xs"></div>
+            <h4 role="heading" class="text-center">My Account</h4>
+            <div class="separator xs"></div>
+            <p>
+        	   <?=_WELCOME?> <strong><?=$_SESSION['user_info']['first_name']?></strong>
+            </p>
+            <div class="text-center my-3">
+                <a id="availabilityLink" class="btn btn-lg btn-success p-3">
+                    I will be Available for the next 2 hours
+                </a>
+                <script>
+                    let offset = new Date().getTimezoneOffset();
+                    let link = "members/set_availability?o=" + offset;
+                    $('#availabilityLink').attr("href", link);
+                </script>
+                <p><small>Click the button to appear on the search results as available today.</small></p>
+            </div>
+            <p>
+            <p>This area is dedicated to you. This is your member panel where you can access to your account, edit your professional listing, create deals, events and articles, save your favorites, track your payments and submit questions or suggestions to us.</p>
+            <p>Please use the provided link below to promote your direct professional listing.</p>
+            <p>Thank you very much for using our services.</p>
+            </p>
+            <?php if($_SESSION['user_info']['grouped'] != 4){?>
+            <div class="row">
+                <div class="col-md-7">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text btn-primary p-2" id="btnGroupAddon2">Profile Link: </div>
+                        </div>
+                        <input type="text" class="form-control" readonly value="<?=$_seo_settings['url_syntax']?><?=$helper->site_domain() . _SITE_PATH?>/<?=$_SESSION['user_info']['url']?>"  aria-label="Profile Link" aria-describedby="btnGroupAddon2">
+                    </div>
+                </div>
+            </div>
+            <div class="separator"></div>
+            <?php }?>
+            <div class="row">
+                <div class="col-md-3 mb-2">
+                    <a href="members/dashboard" class="btn btn-primary text-center d-block px-3 py-4">
+                        <span class="icon-home icon-lg icon-fw" style="font-size: 50px; margin-bottom: 10px; "></span> <br> <?=_MY_ACCOUNT?>
+                    </a>
+                </div>
+                <div class="col-md-3 mb-2">
+                    <a href="index.php?plugin=members&amp;file=profile" class="btn btn-primary text-center d-block px-3 py-4">
+                        <span class="icon-user icon-lg icon-fw" style="font-size: 50px; margin-bottom: 10px;    "></span> <br> <?=_PROFILE?>
+                    </a>
+                </div>
+                <?php if($_SESSION['user_info']['grouped'] != 4){?>
+                <div class="col-md-3 mb-2">
+                    <a href="members/deals" class="btn btn-primary text-center d-block px-3 py-4">
+                        <span class="icon-tags icon-lg icon-fw" style="font-size: 50px; margin-bottom: 10px;"></span> <br> Deals
+                    </a>
+                </div>
+                <div class="col-md-3 mb-2">
+                    <a href="members/events" class="btn btn-primary text-center d-block px-3 py-4">
+                        <span class="icon-calendar icon-lg icon-fw" style="font-size: 50px; margin-bottom: 10px;"></span> <br> Events
+                    </a>
+                </div>
+                <div class="col-md-3 mb-2">
+                    <a href="members/wishlist" class="btn btn-primary text-center d-block px-3 py-4">
+                        <span class="icon-heart icon-lg icon-fw" style="font-size: 50px; margin-bottom: 10px;"></span> <br> My Favorites
+                    </a>
+                </div>
+                <div class="col-md-3 mb-2">
+                    <a href="members/stats" class="btn btn-primary text-center d-block px-3 py-4">
+                        <span class="icon-signal icon-lg icon-fw" style="font-size: 50px; margin-bottom: 10px;"></span> <br> Statistics
+                    </a>
+                </div>
+                <div class="col-md-3 mb-2">
+                    <a href="" class="btn btn-primary text-center d-block px-3 py-4">
+                        <span class="icon-bank icon-lg icon-fw" style="font-size: 50px; margin-bottom: 10px;"></span> <br> Payments
+                    </a>
+                </div>
+                <?php }?>
+                <div class="col-md-3 mb-2">
+                    <a href='#preview' class="btn btn-primary text-center d-block px-3 py-4 inline">
+                        <span class="icon-question icon-lg icon-fw" style="font-size: 50px; margin-bottom: 10px;"></span> <br> Support
+                    </a>
+                </div>
+            </div>
+            
+        </div>
+        <div class="col-md-2 memberside d-none d-lg-block">
+            <div class="row">
+                <button class="btn bg-light p-2 right-profile-img" type="button" data-toggle="collapse" data-target="#collapse-1" aria-expanded="true" aria-controls="collapse-1">
+                    <div class="row">
+                        <div class="col-xl-5">
+                            <img src="<?=_SITE_PATH . '/uploads/avatar/' . md5((string) $_SESSION['user_info']['id']) . '/' . $_SESSION['user_info']['avatar']?>" alt="" class="rounded-circle" />
+                        </div>
+                        <div class="col-xl-7 pt-2 text-ellipsis">
+                            Hi, <?=$_SESSION['user_info']['first_name']?>
+                        </div>
+                    </div>
+                </button>
+            </div>
+        </div>
+
+        <div id="preview" class="p-4 d-none pb-5">
+            <h4 class="modal-title">Email Support</h4>
+            <form action="sendMail.php" method="post" >
+                <fieldset class="form-group">
+                    <label for="exampleInputEmail1">Subject</label>
+                    <input type="text" class="form-control" name="subject" placeholder="Subject">
+                </fieldset>
+                <fieldset class="form-group">
+                    <label for="exampleTextarea">Message</label>
+                    <textarea class="form-control" name="message" rows="3"></textarea>
+                </fieldset>
+                <button type="submit" class="btn btn-primary mb-2">Submit</button>
+                <input type="hidden" name="name" value="<?=$_SESSION['user_info']['full_name']?>" />
+                <input type="hidden" name="email" value="<?=$_SESSION['user_info']['email']?>" />
+                <input type="hidden" name="source" value="support" />
+                <input type="hidden" name="reply-to" value="<?=$_SESSION['user_info']['email']?>" />
+            </form>
+            <div class="separator"></div>
+        </div>
+    </div>
+</div>

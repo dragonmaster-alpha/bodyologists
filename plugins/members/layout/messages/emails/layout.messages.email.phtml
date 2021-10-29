@@ -1,0 +1,81 @@
+<html>
+    <head>
+    	<title>Welcome to <?=$this->config['sitename']?></title>
+    	<style type="text/css">
+            body {
+                font-size: 12px;
+                font-family: "Lucida Grande", "Lucida Sans Unicode", Helvetica, Arial, Verdana, sans-serif;
+            }
+            h1 {
+                color: #000000;
+                font-size: 50px;
+                marign: 0;
+                padding: 0;
+                line-height: 50px;
+                text-transform: uppercase;
+            }
+            div.header { 
+                padding: 10px;
+                margin-bottom: 10px;
+            }
+            div.footer { 
+                padding: 10px;
+                margin-top: 10px;
+            }
+            div.disclaimer {
+                font-size: 11px;
+                margin-top: 10px;
+                padding-top: 10px;
+                border-top: 1px solid #ddd;
+            }
+    	</style>
+    </head>
+    <body>
+        <div class="header">
+            <?if(file_exists($_SERVER['DOCUMENT_ROOT'] . _SITE_PATH . '/images/email-logo.png')) {?>
+                <img src="http://<?=$this->site_domain() . _SITE_PATH?>/images/email-logo.png" alt="<?=$this->config['sitename']?>" />
+            <?} else {?>
+                <h1><?=$this->config['sitename']?></h1>
+            <?}?>
+        </div>
+        <p>Hello <?=$data['receiver_name']?></p>
+        <p>We thought you will like to know that <strong><?=$_SESSION['user_info']['full_name']?></strong> sent you a message on our site.</p>
+        <p>To read your message click on the following link.</p>
+        <p>
+            <a href="http://<?=$this->site_domain() . _SITE_PATH?>/members/messages">
+                http://<?=$this->site_domain() . _SITE_PATH?>/members/messages
+            </a>
+        </p>
+        <?if(!empty($this->config['facebook_address']) || empty($this->config['twitter_address']) || empty($this->config['google_plus_address']) || empty($this->config['pinterest_address']) || empty($this->config['linkedin_address']) || empty($this->config['youtube_address'])) {?>
+        <div class="footer">
+            <p><?=_MEMBERS_EMAIL_REGISTRATION_BODY_SOCIAL?></p>
+            <?if(!empty($this->config['facebook_address'])) {?>
+                <p>Facebook: <?=$this->config['facebook_address']?></p>
+            <?}?>
+            <?if(!empty($this->config['twitter_address'])) {?>
+                <p>Twitter: <?=$this->config['twitter_address']?></p>
+            <?}?>
+            <?if(!empty($this->config['google_plus_address'])) {?>
+                <p>Google+: <?=$this->config['google_plus_address']?></p>
+            <?}?>
+            <?if(!empty($this->config['pinterest_address'])) {?>
+                <p>Pintrest: <?=$this->config['pinterest_address']?></p>
+            <?}?>
+            <?if(!empty($this->config['linkedin_address'])) {?>
+                <p>Linked In: <?=$this->config['linkedin_address']?></p>
+            <?}?>
+            <?if(!empty($this->config['youtube_address'])) {?>
+                <p>YouTube: <?=$this->config['youtube_address']?></p>
+            <?}?>
+        </div>
+        <?}?>
+        <div class="disclaimer">
+            <p>This email has been generated automatically from <?=$this->config['sitename']?>. PLEASE DO NOT RESPOND TO THIS EMAIL. Need Help, <a href="http://<?=$this->site_domain() . _SITE_PATH?>/contact-us.html">click here</a> to contact our Support Services team.</p>
+            <p><strong><?=$this->config['sitename']?> Feedback</strong></p>
+            <p>Let us know what you think about our services on the <?=$this->config['sitename']?> website by <a href="http://<?=$this->site_domain() . _SITE_PATH?>/contact-us.html">clicking here</a>.</p>
+            <p>Copyright <?=date('Y')?> <?=$this->config['sitename']?>. All rights reserved </p>
+            <p>We respect your right to privacy - <a href="http://<?=$this->site_domain() . _SITE_PATH?>/terms.html">view our terms and conditions</a>.</p>
+            Sent from <?=$this->config['sitename']?> on <?=date('l, F jS')?> to <?=$data['receiver_email']?>
+        </div>
+    </body>
+</html>

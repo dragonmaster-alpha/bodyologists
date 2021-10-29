@@ -1,0 +1,213 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title><?=$meta['title']?> | Admin Console</title>
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<base href="//<?=$_SERVER["HTTP_HOST"] . _SITE_PATH . '/admin'?>/" />
+<link rel="apple-touch-icon-precomposed" sizes="114x114" href="images/ico/apple-touch-icon-114x114-precomposed.png">
+<link rel="apple-touch-icon-precomposed" sizes="72x72" href="images/ico/apple-touch-icon-72x72-precomposed.png">
+<link rel="apple-touch-icon-precomposed" href="images/ico/apple-touch-icon-57x57-precomposed.png">
+<link rel="shortcut icon" href="images/ico/favicon.png">
+<meta http-equiv="content-style-type" content="text/css" />
+<link rel="stylesheet" href="css/style.default.css" type="text/css" />
+<link id="addonstyle" rel="stylesheet" href="css/style.contrast.css" type="text/css">
+<meta http-equiv="content-script-type" content="text/javascript" />
+<script type="text/javascript" src="js/plugins/jquery-1.7.min.js"></script>
+<script type="text/javascript" src="js/plugins/jquery-ui-1.8.16.custom.min.js"></script>
+<script type="text/javascript" src="js/plugins/jquery.cookie.js"></script>
+<script type="text/javascript" src="js/custom/general.js"></script>
+<script type="text/javascript" src="js/custom/default.js"></script>
+<script type="text/javascript">
+    var token = '<?=$csrf?>';
+    <?php if(isset($_REQUEST['plugin'])) { ?>
+    var plugin = '<?=$_REQUEST['plugin']?>';
+    <?php } ?>
+    <?php if(isset($_REQUEST['addon'])) { ?>
+    var plugin = '<?=$_REQUEST['addon']?>';
+    <?php } ?>
+    <?php if(isset($_REQUEST['file'])) { ?>
+    var plugin = '<?=$_REQUEST['file']?>';
+    <?php } ?>
+</script>
+<script type="text/javascript">
+tinymce.init({
+    selector: "textarea.mce",
+    theme: "modern",
+    height: 420,
+    browser_spellcheck : true,
+    convert_fonts_to_spans : true,
+    entity_encoding: 'raw',
+    relative_urls: true,
+    document_base_url : "//<?=$_SERVER['HTTP_HOST'] . _SITE_PATH . ''?>/",
+    verify_html: false,
+    setup: function(editor) {
+        editor.on('blur', function(e) {
+            var meta_description = editor.getContent().replace(/(<([^>]+)>)/ig, '').substring(0,160);
+            jQuery('#meta_description').val(meta_description);
+            jQuery('.google-text').text(meta_description);
+        });
+    },
+    content_css: '<?=_SITE_PATH?>/css/imported.styles.css?' + new Date().getTime(),
+    theme_advanced_font_sizes: "10px,12px,13px,14px,16px,18px,20px",
+    font_size_style_values : "10px,12px,13px,14px,16px,18px,20px",
+    plugins: ["advlist autolink link image lists charmap print preview hr anchor pagebreak image_gallery","searchreplace visualblocks visualchars code fullscreen insertdatetime media moxiemanager nonbreaking","table contextmenu directionality emoticons template paste textcolor image_gallery"],
+    toolbar: "undo redo searchreplace | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent hr | link unlink anchor | image_gallery image media insertfile | forecolor backcolor | fullscreen code ",
+}); 
+</script>
+<!--[if lte IE 7]>
+    <script language="javascript" type="text/javascript" src="js/custom/lte-ie7.js"></script>
+<![endif]-->
+<!--[if lte IE 8]>
+    <script language="javascript" type="text/javascript" src="js/plugins/excanvas.min.js"></script>
+<![endif]-->
+<!--[if IE 9]>
+    <link rel="stylesheet" media="screen" href="css/style.ie9.css"/>
+<![endif]-->
+<!--[if IE 8]>
+    <link rel="stylesheet" media="screen" href="css/style.ie8.css"/>
+<![endif]-->
+<!--[if lt IE 9]>
+	<script src="http://css3-mediaqueries-js.googlecode.com/svn/trunk/css3-mediaqueries.js"></script>
+<![endif]-->
+</head>
+<body class="withvernav">
+<div class="bodywrapper">
+    <div class="topheader">
+        <div class="left">
+            <h1 class="logo">Admin <span>Console</span></h1>
+            <span class="slogan">advanced administration system v3.0</span>
+            <br clear="all" />
+        </div>
+        <div class="right">
+            <div class="userinfo">
+                <?php if(!empty($administrator->admin_info['image']['image'])) { ?>
+                    <img src="<?=_SITE_PATH?>/uploads/staff/<?=$administrator->admin_info['image']['bid']?>/small-<?=$administrator->admin_info['image']['image']?>" />
+                <?php } else { ?>
+                    <img src="images/thumbs/avatar.png" alt="" />
+                <?php } ?>
+                <span><?=$administrator->admin_info['name']?></span>
+            </div>
+            <div class="userinfodrop">
+            	<div class="avatar">
+                	<a href="">
+                        <?php if(!empty($administrator->admin_info['image']['image'])) {?>
+                            <img src="<?=_SITE_PATH?>/uploads/staff/<?=$administrator->admin_info['image']['bid']?>/thumb-<?=$administrator->admin_info['image']['image']?>" />
+                        <?php } else {?>
+                            <img src="images/thumbs/avatarbig.png" alt="" />
+                        <?php }?>
+                    </a>
+                </div>
+                <div class="userdata">
+                	<h4><?=$administrator->admin_info['name']?></h4><br />
+                    <span class="email"><?=$administrator->admin_info['email']?></span>
+                    <ul>
+                        <?php if($administrator->is_global_admin()) {?>
+                        <li><a href="admin.php?plugin=system&amp;file=staff&amp;op=edit&amp;aid=<?=$administrator->admin_info['aid']?>">Edit Account</a></li>
+                        <li><a href="#" onclick="window.open('http://messenger.providesupport.com/messenger/webdesignerexpress.html', 'wde_chat', 'width=500; height=600'); return false;">WDE Support</a></li>
+                        <?php } ?>
+                        <li><a href="admin.php?logout=1">Sign Out</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="header">
+    	<ul class="headermenu">
+        	<li<?=(empty($_SERVER["QUERY_STRING"])) ? ' class="current"' : ''?>>
+                <a href="admin.php"><span class="icon icon-screen"></span>Dashboard</a>
+            </li>
+            <?php if($administrator->admin_access('system')) {?>
+            <li<?=(strpos($_SERVER["QUERY_STRING"], 'file=backups') !== false) ? ' class="current"' : ''?>>
+                <a href="admin.php?plugin=system&amp;file=backups">
+                    <span class="icon icon-shield"></span>Backups
+                </a>
+            </li>
+            <li>
+                <a href="admin.php?plugin=system&amp;file=stats">
+                    <span class="icon icon-chart"></span>Stats
+                </a>
+            </li>
+            <?php }?>
+        </ul>
+        <div class="headerwidget">
+        	<div class="earnings">
+                <?php if(!empty($blogs_totals)) {?>
+                <div class="one_half">
+                	<h4>Articles</h4>
+                    <h2><?=$blogs_totals?></h2>
+                </div>
+                <?php }?>
+                <?php if(!empty($events_totals)) {?>
+                <div class="one_half">
+                	<h4>Events</h4>
+                    <h2><?=$events_totals?></h2>
+                </div>
+                <?php }?>
+                <?php if(!empty($members_totals)) {?>
+                <div class="one_half">
+                	<h4>Members</h4>
+                    <h2><?=$members_totals?></h2>
+                </div>
+                <?php }?>
+
+                <?php if(!empty($products_totals)) {?>
+                <div class="one_half">
+                	<h4>Products</h4>
+                    <h2><?=$products_totals?></h2>
+                </div>
+                <?php }?>
+                <?php if(!empty($properties_totals)) {?>
+                <div class="one_half">
+                	<h4>Products</h4>
+                    <h2><?=$properties_totals?></h2>
+                </div>
+                <?php }?>
+                <div class="one_half last alignright">
+                    <?php if(!empty($pages_totals)) {?>
+                	<h4>Pages</h4>
+                    <h2><?=$pages_totals?></h2>
+                    <?php }?>
+                </div>
+                <?php if(!empty($orders_totals)) {?>
+                <div class="one_half">
+                    <h4>Orders</h4>
+                    <h2><?=$orders_totals?></h2>
+                </div>
+                <div class="one_half" style="width: 150px;">
+                    <h4>Total Sold</h4>
+                    <h2><span style="font-size: 18px;">$</span><?=$sold_total?></h2>
+                </div>
+                <?php }?>
+            </div>
+        </div>
+    </div>
+    <div class="vernav2 iconmenu">
+    	<?=$admin_menu?>
+        <a class="togglemenu"></a>
+        <br /><br />
+    </div>
+    <div class="centercontent">
+        <?=$layout?>
+        <div class="mediaLibraryPopup">
+            <div class="box"></div>
+        </div>
+        <br clear="all" />
+	</div>
+</div>
+<?php if(!empty($flash_error)) {?>
+<script type="text/javascript">
+    jQuery(document).ready(function(){
+        jAlert('<?=$flash_error?>', 'ERROR');
+    });
+</script>
+<?php }?>
+<?php if(!empty($flash_success)) {?>
+<script type="text/javascript">
+    jQuery(document).ready(function(){
+        jAlert('<?=$flash_success?>', 'SUCCESS');
+    });
+</script>
+<?php }?>
+</body>
+</html>

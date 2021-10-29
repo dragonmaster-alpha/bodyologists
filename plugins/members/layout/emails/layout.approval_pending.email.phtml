@@ -1,0 +1,25 @@
+<html>
+
+<?php
+$title = "Your professional membership at {$config('sitename')}";
+
+include 'header.email.phtml';
+?>
+
+    <body>
+
+        <?php include 'logo_header.email.phtml'; ?>
+
+        <p>Hello <b><?= $args['name'] ?>.</b></p>
+
+        <p>This email is to confirm that we have received your request to get listed as professional at <b><?= $config('sitename') ?></b></p>
+        <p>Our staff will review your information and certifications (if any) and you will get an email from us soon.</p>
+        <p>Thank you very much for trusting our services.</p>
+
+        <?php
+        include 'social_links.email.phtml';
+
+        include 'disclaimer.email.phtml';
+        ?>
+    </body>
+</html>

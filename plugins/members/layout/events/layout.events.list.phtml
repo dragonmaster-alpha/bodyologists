@@ -1,0 +1,33 @@
+<div class="row">
+    <div class="col-md-3">
+        <time datetime="<?=$item['start_date']?>" class="icon">
+            <em><?=date('l', strtotime($item['end_date']))?></em>
+            <strong><?=date('F', strtotime($item['end_date']))?></strong>
+            <span><?=date('d', strtotime($item['end_date']))?></span>
+        </time>
+    </div>
+    <div class="col-md-9">
+        <div class="separator xs"></div>
+        <div class="row">
+            <div class="col-md-10">
+                <a href="<?=$item['url']?>">
+                    <h4><?=$item['title']?></h4>
+                </a>
+            </div>
+            <div class="col-md-2">
+                <a href="members/events/add?id=<?=$item['id']?>" class="btn btn-warning btn-sm">
+                    Edit
+                </a>
+                <a href="members/events/delete?id=<?=$item['id']?>" class="btn btn-danger btn-sm">
+                    Delete
+                </a>
+            </div>
+        </div>
+        
+        <small class="muted">
+            <?=$item['city']?>, <?=$item['zipcode']?>
+        </small>
+        <p style="overflow-wrap: break-word"><?=$helper->reduce_text($item['text'], 150)?></p>
+    </div>
+</div>
+<hr />

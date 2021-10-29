@@ -1,0 +1,74 @@
+<div class="separator "></div>
+<h1 class="text-center"><em class="find-deals-title">Find Deals</em></h1>
+<div class="separator no-separator-mobile"></div>
+<div class="separator no-separator-mobile"></div>
+
+<form id="deal-search-form" action="search/deals" method="get">
+    <?php include 'search_deal_form.phtml' ?>
+</form>
+
+
+<div class="separator"></div>   
+<?php if(!empty($items_info))
+{?>
+    <div class="dropdown mb-4">
+        <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <?=_SORT_BY?> <?=$sort_type?> 
+        </button>
+        <?php
+        $hasQuery = false;
+        $queryString = '';
+        if(!empty($_SERVER['QUERY_STRING'])) {
+            if(strpos($_SERVER['QUERY_STRING'], 'keyword=') !== false) {
+                $hasQuery = true;
+                if(strpos($_SERVER['QUERY_STRING'], 'sb=') !== false){
+                    $queryString = 'search/deals?' . substr($_SERVER['QUERY_STRING'], 0, strpos($_SERVER['QUERY_STRING'], "sb="));
+                } else {
+                    $queryString = 'search/deals?' . $_SERVER['QUERY_STRING'] . '&';
+                }
+            } else {
+                $hasQuery = false;
+            }
+        }
+        ?>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" href="<?=($hasQuery ? $queryString : 'search/deals?')?>sb=d"><?=_SORT_BY?> <?=_DEFAULT?></a>
+                <a class="dropdown-item" href="<?=($hasQuery ? $queryString : 'search/deals?')?>sb=new"><?=_SORT_BY?> <?=_NEWEST?></a>
+                <a class="dropdown-item" href="<?=($hasQuery ? $queryString : 'search/deals?')?>sb=best"><?=_SORT_BY?> <?=_POPULAR?></a>
+                <a class="dropdown-item" href="<?=($hasQuery ? $queryString : 'search/deals?')?>sb=down"><?=_SORT_BY?> <?=_PRICE_LOW_TO_HIGH?></a>
+                <a class="dropdown-item" href="<?=($hasQuery ? $queryString : 'search/deals?')?>sb=up"><?=_SORT_BY?> <?=_PRICE_HIGH_TO_LOW?></a>
+                <a class="dropdown-item" href="<?=($hasQuery ? $queryString : 'search/deals?')?>sb=az"><?=_SORT_BY?> <?=_TITLE_A_TO_Z?></a>
+                <a class="dropdown-item" href="<?=($hasQuery ? $queryString : 'search/deals?')?>sb=za"><?=_SORT_BY?> <?=_TITLE_Z_TO_A?></a>
+                <!--<a class="dropdown-item" href="<?/*=($hasQuery ? $queryString : 'search/deals?')*/?>sb=distance"><?/*=_SORT_BY*/?> Distance</a>-->
+                <a class="dropdown-item" href="<?=($hasQuery ? $queryString : 'search/deals?')?>sb=expiring"><?=_SORT_BY?> Expiring Soon</a>
+        </div>
+    </div>
+    <div class="row">
+	<?php foreach ($items_info as $item)
+	{
+        $count++;
+		include($_SERVER["DOCUMENT_ROOT"] . _SITE_PATH . '/plugins/deals/layout/layout.deals.list.phtml');
+	}?>
+    </div>
+
+        <div class="pagination">
+            <ul>
+                <?=$paginator?>
+            </ul>
+        </div>
+
+<?php }
+else {?>
+We are sorry but it look like there are not deals configured yet, please try again later.
+<?php }?>
+<script type="text/javascript" src="js/plugins/jquery.countdown.min.js"></script>
+<script>
+    $(function(){
+        $('[data-countdown]').each(function() {
+            var $this = $(this), finalDate = $(this).data('countdown');
+            $this.countdown(finalDate, function(event) {
+                $this.html(event.strftime('<i class="icon-clock-o"></i> <strong><span> %D</span> days</strong><strong><span>%H</span> hrs</strong> <strong><span>%M</span> mins</strong> <strong><span>%S</span> secs</strong>'));
+            });
+        });
+    });  
+</script>

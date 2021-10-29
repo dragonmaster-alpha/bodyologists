@@ -1,0 +1,27 @@
+<div class="photoEdit">
+	<form id="editphoto" action="admin.php?plugin=pages&amp;addon=gallery" method="post" class="stdform quickform2">
+    <input type="hidden" value="update_images" name="op" />
+    <input type="hidden" value="<?=$item['id']?>" name="id" />
+    	<h3>Edit Image Details</h3>
+        <br />
+        <div class="notifyMessage">Updated</div>
+        <p>
+            <label>Title: </label>
+            <input type="text" value="<?=$item['title']?>" name="title" />
+        </p>
+        <p>
+            <label>Description: </label>
+            <textarea name="text" style="width: 300px;"><?=$item['text']?></textarea>
+        </p>
+        <p>
+            <label>Link: </label>
+            <input type="text" value="<?=$item['link']?>" name="link" />
+        </p>
+        <br />
+        <p class="action">
+        	<button class="submit radius2">Update Changes</button> &nbsp;
+            <button class="cancel radius2">Close</button>
+        </p>
+        <br />
+</form>
+</div>

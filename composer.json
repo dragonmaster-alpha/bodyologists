@@ -1,0 +1,36 @@
+{
+	"config": {
+		"vendor-dir": "app/vendors"
+	},
+	"autoload": {
+		"psr-4": {
+			"App\\":"app/",
+			"Plugins\\":"plugins/"
+		}
+	},
+	"require": {
+		"omnipay/stripe": "^2.4",
+		"omnipay/authorizenet": "^2.5",
+		"omnipay/paypal": "^2.6",
+		"omnipay/firstdata": "^2.3",
+		"omnipay/payflow": "^2.2",
+		"phpmailer/phpmailer": "^5.2",
+		"dg/rss-php": "^1.2",
+		"evert/sitemap-php": "^1.2",
+      "ext-pdo": "*",
+      "ext-json": "*",
+      "ext-openssl": "*",
+      "ext-fileinfo": "*",
+      "ext-gd": "*",
+      "ext-dom": "*"
+    },
+	"require-dev": {
+		"roave/security-advisories": "dev-master"
+		,
+		"phpstan/phpstan": "^0.12.17"
+	},
+	"scripts": {
+		"fix": "php $HOME/.config/composer/vendor/bin/php-cs-fixer --config=php_cs.dist fix",
+		"stan": "app/vendors/bin/phpstan analyse --autoload-file=app/vendors/autoload.php app -l 1"
+	}
+}

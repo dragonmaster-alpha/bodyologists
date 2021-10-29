@@ -1,0 +1,50 @@
+<html>
+    <head>
+    	<title>New Registration</title>
+    	<style type="text/css">
+            body {
+                font-size: 12px;
+                font-family: "Lucida Grande", "Lucida Sans Unicode", Helvetica, Arial, Verdana, sans-serif;
+            }
+            h1 {
+                color: #000000;
+                font-size: 50px;
+                marign: 0;
+                padding: 0;
+                line-height: 50px;
+                text-transform: uppercase;
+            }
+            div.header { 
+                padding: 10px;
+                margin-bottom: 10px;
+            }
+            div.footer { 
+                padding: 10px;
+                margin-top: 10px;
+            }
+            div.disclaimer {
+                font-size: 11px;
+                margin-top: 10px;
+                padding-top: 10px;
+                border-top: 1px solid #ddd;
+            }
+    	</style>
+    </head>
+    <body>
+        <div class="header">
+            <?if(file_exists($_SERVER['DOCUMENT_ROOT'] . _SITE_PATH . '/images/email-logo.png')) {?>
+            <a href="http://<?=$frm->site_domain() . _SITE_PATH?>">
+                <img src="http://<?=$frm->site_domain() . _SITE_PATH?>/images/email-logo.png" alt="<?=$frm->config['sitename']?>" />
+            </a>
+            <?} else {?>
+                <h1><?=$frm->config['sitename']?></h1>
+            <?}?>
+        </div>
+        <p><b>New Registration on <?=$frm->config['sitename']?></b></p>
+        <p>A new client has register on <?=$frm->config['sitename']?>, this new client name and email address information is listed bellow, for more information log into your administration area and browse to your clients area.</p>
+        <p></p>
+        <p>Name: <?=$_SESSION['register']['first_name']?> <?=$_SESSION['register']['last_name']?></p>
+        <p>Email: <?=$_SESSION['register']['email']?></p>
+        <p>Reg Date: <?=date('m/d/Y ')?></p>
+    </body>
+</html>

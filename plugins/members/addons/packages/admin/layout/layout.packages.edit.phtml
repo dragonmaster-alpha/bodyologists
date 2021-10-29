@@ -1,0 +1,140 @@
+<?if(isset($_SESSION['error'])) {?>
+    <div class="alert-error" title="Error">
+        <?=$_SESSION['error']?>
+    </div>
+<?
+    unset($_SESSION['error']);
+}
+?>
+<form action="admin.php?plugin=members&amp;addon=packages" method="post" class="stdform">
+    <input type="hidden" value="save" name="op" />
+    <input type="hidden" value="0" id="save_and" name="save_and" />
+    <input type="hidden" value="<?=$item['id']?>" name="id" />
+    <input type="hidden" value="<?=time()?>" name="modified" />
+    <div class="row-fluid">
+        <div class="span9">
+            <div class="pageheader">
+                <h1 class="head">
+                    Plan Management
+                </h1>
+            </div>
+        </div>
+        <div class="span3">
+            <div class="submit-top">
+                <div style="text-align: right; margin-right: 40px;">
+                    <div style="position: relative; display: inline-block;">
+                        <div class="navbar">
+                            <ul class="nav pull-right">
+                                <li class="dropdown">
+                                    <button class="btn btn-success tipS" type="button" style="padding: 5px 10px 6px 10px;" data-toggle="dropdown" title="Save Changes" >
+                                        <span class="btn-icon icon-disk"></span>
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu orders-actions" role="menu">
+                                        <li><a href="javascript:jQuery('.stdform').submit();"><span class="icon-disk"></span> Save</a></li>
+                                        <li><a href="javascript:jQuery('.stdform').submit();" onclick="jQuery('#save_and').val(1);"><span class="icon-file"></span> Save &amp; New</a></li>
+                                        <li><a href="javascript:jQuery('.stdform').submit();" onclick="jQuery('#save_and').val(2);"><span class="icon-pencil-3"></span> Save &amp; Edit</a></li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <button class="btn btn-warning tipS" type="reset" style="padding: 6px 10px; margin-left: 5px;" title="Undo Changes">
+                                        <span class="font20 icon-history"></span> 
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="contentwrapper" class="contentwrapper">
+        <div id="default" class="subcontent">
+            <p>
+                <label>
+                    Name: 
+                </label>
+                <div class="field">
+                    <input type="text" value="<?=$item['name']?>" name="name" />
+                </div>
+                <small class="desc">
+                    Enter plan name. This name will be shown to clients when they have to select a plan.
+                </small>
+            </p>
+            <p>
+                <label>
+                    Category: 
+                </label>
+                <div class="field">
+                    <?if(count($available_categories)>0) {?>
+                    <select name="category"  class="uniformselect combo">
+                        <option value="">Select one...</option>
+                        <?foreach($available_categories as $category) {?>
+                        <option value="<?=$category?>" <?=($category == $item['category']) ? 'selected="selected"' : ''?>><?=$category?></option>
+                        <?}?>
+                    </select>
+                    <?} else {?>
+                        <input type="text" value="" name="category" />
+                    <?}?>
+                </div>
+                <small class="desc">
+                    Select the category this plan will be assigned to.
+                </small>
+            </p>
+            <p>
+                <label>
+                    New Clients Only: 
+                </label>
+                <div class="field">
+                    <select name="new_only"  class="uniformselect">
+                    	<option value="">No</option>
+                    	<option value="1" <?=(!empty($item['new_only'])) ? 'selected="selected"' : ''?>>Yes</option>
+                    </select>
+                </div>
+                <small class="desc">
+                    If set to yes all this package will be shown to clients only the first time they register on the site.
+                </small>
+            </p>
+            <p>
+                <label>
+                    Price: 
+                </label>
+                <div class="field">
+                    <div class="input-prepend">
+                        <div class="input-prepend">
+                            <span class="add-on">$</span>
+                            <input type="text" class="price-field"  value="<?=$item['price']?>" name="price" />
+                        </div>
+                    </div>
+                </div>
+                <small class="desc">
+                    Enter how much this plan will cost, this will not include taxes as services do not pay taxes in U.S.
+                </small>
+            </p>
+            <p>
+                <label>
+                    Period: 
+                </label>
+                <div class="field">
+                    <input type="text" class="number-field"  value="<?=$item['period']?>" name="period" /> days
+                </div>
+                <small class="desc">
+                    Enter the amount of day this plan will be good for, all data is based on days (one month: 30, six months: 180, one year: 365).<br />
+                    After this time is pass the client will be force to select and pay for a plan again.
+                </small>
+            </p>
+            <p>
+                <label>
+                    Description: 
+                </label>
+                <div class="field">
+                    <textarea name="text"><?=$item['text']?></textarea>
+                </div>
+                <small class="desc">
+                    Enter plan description, this option will help the clients to select the plan than is closes to their needs.
+                </small>
+            </p>
+		</div>
+	</div>
+</div>
+</form>

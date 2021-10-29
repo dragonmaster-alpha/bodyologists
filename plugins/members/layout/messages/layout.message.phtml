@@ -1,0 +1,51 @@
+<div class="popup-area">
+    <?if(!empty($item)) {?>
+    <div style="max-height: 700px; overflow: auto;">
+        <?if(!$frm->empty_array($item['replies'])) {?>
+            <?foreach ($item['replies'] as $reply) {?>
+                <div style="margin-bottom: 10px;">
+                    <strong><?=$reply['subject']?></strong>
+                </div>
+                <div style="margin-bottom: 5px;">
+                    <small>
+                        <em><?=_FROM?>: <?=$reply['name']?> <?=_ON?> <?=$frm->format_sort_date(strtotime($reply['date']))?></em>
+                    </small>
+                </div>
+                <div style="margin-bottom: 10px;">
+                    <small>
+                        <?=nl2br($reply['text'])?>
+                    </small>
+                </div>
+            <?}?>
+            <hr />
+            <div style="margin-bottom: 10px;">
+                <strong><?=$item['subject']?></strong>
+            </div>
+        <?}?>
+        <div style="margin-bottom: 5px;">
+            <small>
+                <em><?=_FROM?>: <?=$item['name']?> <?=_ON?> <?=date(_DATE_LONG_FORMAT, strtotime($item['date']))?></em>
+            </small>
+        </div>
+        <hr />
+        <div>
+            <small>
+                <?=nl2br($item['text'])?>
+            </small>
+        </div>
+        <hr />
+        <div class="text-right">
+            <a href="#" class="cancel tipN" title="<?=_CLOSE?>">
+                    <?=_CLOSE?>
+                </a>
+            <a href="index.php?plugin=members&amp;file=messages&amp;op=reply&amp;id=<?=$item['id']?>" class="popup btn btn-small btn-info tipN" data-desc="<?=_REPLY?>" title="<?=_REPLY?>">
+                <span class="icon-reply"></span>
+            </a>
+        </div>
+    </div>
+    <?} else {?>
+    <div style="max-height: 300px; overflow: auto;">
+        <?=_MEMBERS_DIRECTORY_MESSAGES_ERROR?>
+    </div>
+    <?}?>
+</div>

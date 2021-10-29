@@ -1,0 +1,51 @@
+<html>
+    <head>
+    	<title>Notifications from <?=$this->config['sitename']?></title>
+    	<style type="text/css">
+    		body {
+                font-size: 12px;
+                font-family: "Lucida Grande", "Lucida Sans Unicode", Helvetica, Arial, Verdana, sans-serif;
+            }
+            h1 {
+                color: #000000;
+                font-size: 50px;
+                marign: 0;
+                padding: 0;
+                line-height: 50px;
+                text-transform: uppercase;
+            }
+            div.header { 
+                padding: 10px;
+                margin-bottom: 10px;
+            }
+            div.footer { 
+                padding: 10px;
+                margin-top: 10px;
+            }
+            div.disclaimer {
+                font-size: 11px;
+                margin-top: 10px;
+                padding-top: 10px;
+                border-top: 1px solid #ddd;
+            }
+    	</style>
+    </head>
+    <body>
+        <div class="header">
+            <?if(file_exists($_SERVER['DOCUMENT_ROOT'] . _SITE_PATH . '/images/email-logo.png')) {?>
+            <a href="http://<?=$this->site_domain() . _SITE_PATH?>">
+                <img src="http://<?=$this->site_domain() . _SITE_PATH?>/images/email-logo.png" alt="<?=$this->config['sitename']?>" />
+            </a>
+            <?} else {?>
+                <h1><?=$this->config['sitename']?></h1>
+            <?}?>
+        </div>
+        <?=$data['message']?>
+        <div class="disclaimer">
+            <p><strong><?=$this->config['sitename']?> Feedback</strong></p>
+            <p>We'll love to hear from you, please <a href="http://<?=$this->site_domain() . _SITE_PATH?>/">click here</a> to leave us a feedback.</p>
+            <p>Copyright <?=date('Y')?> <?=$this->config['sitename']?>. All rights reserved </p>
+            Sent from <?=$this->config['sitename']?> on <?=date('l, F jS Y')?> to <?=$data['email']?>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,82 @@
+<? 
+require_once($_SERVER["DOCUMENT_ROOT"] . _SITE_PATH . '/plugins/members/nav_menu.php');
+?>
+<div>
+    <p>The following is a <strong>Summary Report</strong> of all the commissions earned by you in the past. If you need more information of something does not look right on your eyes please <a href="contact.html">contact us</a>.</p>
+    <div style="height: 40px;"></div>
+    
+    <table class="table table-hover table-striped">
+        <colgroup span="8">
+            <col style="width: 50px;" />
+            <col style="width: 200px;" />
+            <col style="width: 200px;" />
+            <col style="width: 100px;" />
+            <col style="width: 60px;" />
+            <col style="width: 160px;" />
+            <col style="width: 70px;" />
+            <col style="width: 160px;" />
+        </colgroup>
+		<tr>
+            <th style="text-align: center;">
+                <?=_PAID?>
+            </th>
+			<th>
+                <?=_DESCRIPTION?>
+            </th>
+			<th>
+                <?=_COMMISSION_REFERRAL_RELATIONSHIP?>
+            </th>
+			<th>
+                <?=_COMMISSION_ORDER_NO?>
+            </th>
+			<th>
+                <?=_COMMISSION?>
+            </th>
+            <th>
+                <?=_COMMISSION_EARNED_ON?>
+            </th>
+			<th style="text-align: center;">
+                <?=_COMMISSION_CHECK_NUMBER?>
+            </th>
+			<th>
+                <?=_COMMISSION_PAID_ON?>
+            </th>
+		</tr>
+        <?if(!$frm->empty_array($commissions)) {?>
+            <?foreach($commissions as $commission) {?>
+                <tr>
+                    <td style="font-size: 12px; text-align: center;">
+                        <?=(!empty($commission['status'])) ? '<div class="icon-checkmark-3 tip" title="Paid"></div>' : '<div class="icon-x tip" title="Pending"></div>'?>
+                    </td>
+                    <td style="font-size: 12px;">
+                        <?=$commission['description']?>
+                    </td>
+                    <td style="font-size: 12px;">
+                        <?=$commission['relationship']?>
+                    </td>
+                    <td style="font-size: 12px;">
+                        <?=$commission['order_no']?>
+                    </td>
+                    <td style="font-size: 12px; text-align: center;">
+                        $<?=$commission['amount']?>
+                    </td>
+                    <td style="font-size: 12px;">
+                        <?=$commission['date']?>
+                    </td>
+                    <td style="font-size: 12px; text-align: center;">
+                        <?=$commission['check_no']?>
+                    </td>
+                    <td style="font-size: 12px;">
+                        <?=$commission['paid_on']?>
+                    </td>
+                </tr>
+            <?}?>
+        <?} else {?>
+            <tr>
+                <td colspan="8">
+                    There is no record of commissions in our database.
+                </td>
+            </tr>
+        <?}?>
+	</table>
+</div>

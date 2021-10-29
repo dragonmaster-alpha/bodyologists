@@ -1,0 +1,204 @@
+.separator.x2 {
+  height: 80px;
+}
+
+#advanced_search.bg-light {
+  background-color: #FFF !important;
+}
+
+.search-list .bio {
+  font-family: "Brandon Grotesque", sans-serif;
+  text-transform: none;
+  font-size: 20px;
+}
+.search-list h5 {
+  font-size: 24px;
+  line-height: 25px;
+  font-family: "Brandon Grotesque", sans-serif;
+}
+.search-list h5 small {
+  font-size: 20px;
+}
+.search-list a.btn-light {
+  font-family: "Brandon Grotesque", sans-serif;
+  background-color: #f7f4f1;
+  font-size: 24px;
+}
+.search-list a.btn-light:hover {
+  background-color: #e1dede;
+  border-color: #e1dede;
+}
+
+.deal-content {
+  font-family: "Brandon Grotesque", sans-serif;
+}
+.deal-content h1 {
+  font-family: "Brandon Grotesque", sans-serif;
+}
+.deal-content p {
+  font-family: "Brandon Grotesque", sans-serif;
+  font-size: 25px;
+}
+
+.blognumber {
+  border-radius: 50%;
+  color: #FFF;
+  font-size: 24px;
+  width: 50px;
+  height: 50px;
+  position: absolute;
+  right: 10px;
+  bottom: 12px;
+  padding-top: 7px;
+  text-align: center;
+}
+.blognumber.beauty {
+  background: #ab929b;
+}
+.blognumber.fitness {
+  background: #f48c7a;
+}
+.blognumber.health {
+  background: #afdcc1;
+}
+
+#blogarticle section h2 {
+  font-family: "Brandon Grotesque", sans-serif;
+  font-size: 36px;
+  font-weight: bold;
+  margin-bottom: 30px;
+}
+#blogarticle h3 {
+  font-family: "Brandon Grotesque", sans-serif;
+  font-size: 30px !important;
+  font-weight: bold;
+}
+#blogarticle .authortext {
+  font-family: "Brandon Grotesque", sans-serif;
+  font-size: 24px;
+  font-weight: light;
+  font-style: italic;
+  line-height: 30px;
+}
+
+.font-Health {
+  color: #bae0ca;
+}
+
+.font-Fitness {
+  color: #f7a08b;
+}
+
+.font-Beauty {
+  color: #baa3ab;
+}
+
+.memberprofile h3 .text-Health, .memberprofile h3 .text-Fitness, .memberprofile h3 .text-Beauty {
+  border-radius: 40px;
+  color: #FFF;
+}
+.memberprofile h3 .text-Health {
+  color: #000;
+}
+.memberprofile .dottedbox-Health {
+  border: 7px dotted #bae0ca;
+  padding: 30px;
+}
+.memberprofile .dottedbox-Fitness {
+  border: 7px dotted #f7a08b;
+  padding: 30px;
+}
+.memberprofile .dottedbox-Beauty {
+  border: 7px dotted #baa3ab;
+  padding: 30px;
+}
+.memberprofile i.font-Health, .memberprofile i.font-Fitness, .memberprofile i.font-Beauty {
+  font-size: 65px;
+  vertical-align: bottom;
+}
+.memberprofile .font-Health > i:hover, .memberprofile .font-Fitness > i:hover, .memberprofile .font-Beauty > i:hover {
+  transition: all 0.2s linear;
+  color: #000;
+}
+.memberprofile p {
+  font-family: "Brandon Grotesque", sans-serif;
+  font-size: 20px;
+}
+.memberprofile .avatar-lg {
+  height: 290px;
+  width: 290px;
+  margin-bottom: 30px;
+}
+.memberprofile .contact-details {
+  border: 10px solid;
+}
+.memberprofile .background-none {
+  background: transparent !important;
+}
+.memberprofile .card button {
+  color: #000;
+}
+
+.border-Health .avatar-lg {
+  border: 10px solid #bae0ca !important;
+}
+.border-Health .contact-details {
+  border: 10px solid #bae0ca;
+}
+
+.border-Fitness .avatar-lg {
+  border: 10px solid #f7a08b !important;
+}
+.border-Fitness .contact-details {
+  border: 10px solid #f7a08b;
+}
+
+.border-Beauty .avatar-lg {
+  border: 10px solid #baa3ab !important;
+}
+.border-Beauty .contact-details {
+  border: 10px solid #baa3ab;
+}
+
+.memberside {
+  position: relative;
+}
+.memberside > div {
+  position: sticky;
+  top: 100px;
+}
+.memberside .flex-column {
+  width: 100% !important;
+  background: #8b7f80;
+  padding: 10px 0;
+}
+.memberside a {
+  background: #8b7f80;
+  color: #FFF;
+}
+.memberside a.active {
+  background: #8b7f80 !important;
+}
+.memberside a.active:after {
+  content: " > ";
+  float: right;
+}
+
+#upload-area .long-upload-images.bg-light {
+  width: 100%;
+}
+
+article .text-muted {
+  color: #a0a0a0 !important;
+}
+
+.ql-hidden {
+  display: none !important;
+}
+
+img.card-img-top {
+  height: 300px;
+  object-fit: cover;
+}
+
+/*# sourceMappingURL=custom.css.map */

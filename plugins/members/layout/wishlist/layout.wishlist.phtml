@@ -1,0 +1,106 @@
+<?php
+use Plugins\Deals\Classes\Deals;
+use Plugins\Events\Classes\Events;
+use Plugins\Members\Classes\Members;
+use Plugins\Members\Classes\Wishlist;
+
+$wishlist = new Wishlist();
+
+?>
+</div>
+</div>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-4 col-lg-2 memberside">
+            <div>
+            <?php
+                require_once($_SERVER["DOCUMENT_ROOT"] . _SITE_PATH . '/plugins/members/nav_menu.php');
+            ?>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="row">
+                <div class="col-md-10 text-center">
+                    <div class="separator xs"></div>
+                    <h4>My Favorites</h4>
+                </div>
+            </div>
+            <hr />
+            <div class="separator "></div>
+            <?php if(!empty($items_info))
+            {
+                $sort_by_type = array_group_by($items_info, 'belongs');
+
+                foreach ($sort_by_type as $belong => $items_info) {?>
+                <div class="row">
+                    <div class="col-12">
+                        <h2 role="heading"><?=ucwords($belong)?></h2>
+                    </div>
+                    <?php foreach ($items_info as $item) {
+                        $url = $wishlist->getItemImageURL($item);
+                    ?>
+                        <div class="col-md-4 mb-3">
+                            <div class="card border-primary">
+                                <?php
+                                $q = http_build_query([
+                                        'uid' => $_SESSION['user_info']['id'],
+                                        'iid' => $item['item_id'],
+                                        'type' => $belong,
+                                    ])
+                                ?>
+                                <a href="members/wishlist/delete?<?= $q ?>" class="btn btn-primary">Delete</a>
+                                <img src="<?= $url ?>" class="card-img-top" alt="">
+                                <div class="card-body">
+                                    <h5 role="heading"><strong><?=ucwords($item['belongs'])?></strong>: <?=$item['title']?></h5>
+
+                                    <?php if($item['end_date'] != 0){?>
+                                        End Date: <?=date('M d, Y', strtotime($item['end_date']))?>
+                                    <?php
+                                    }?>
+                                    <a href="<?=$item['url']?>" class="btn btn-primary">View <?=$item['belongs']?></a>                             
+                                </div>
+                            </div>
+                        </div>
+                    <?php
+                    }?>
+
+                </div>
+                <?php
+                }
+
+                } else {?>
+                    <div class="col-12">
+<p>There are no favorites saved yet.</p>
+    <p>Click the <i class="icon-heart"></i> icon on professional listings, events, deals and articles to save your favorites.</p>
+                    </div>
+            <?php }?>
+
+        </div>
+        <div class="col-md-2 memberside d-none d-lg-block" style="padding: 0;">
+            <div>
+                <button class="btn bg-light p-2 right-profile-img" type="button" data-toggle="collapse" data-target="#collapse-1" aria-expanded="true" aria-controls="collapse-1">
+                    <div class="row">
+                        <div class="col-xl-5">
+                            <img src="<?=_SITE_PATH . '/uploads/avatar/' . md5((string) $_SESSION['user_info']['id']) . '/' . $_SESSION['user_info']['avatar']?>" alt="" class="rounded-circle" />
+                        </div>
+                        <div class="col-xl-7 pt-2 text-ellipsis">
+                            Hi,
+                            <?=$_SESSION['user_info']['first_name']?> <i class="icon-angle-down"></i>
+                        </div>
+                    </div>
+                    <div id="collapse-1" class="collapse">
+                        <div class="row">
+                            <div class="col-12 mt-4">
+                                <div class="text-right card-body bg-light text-center pt-0 " style="font-size: 16px">
+                                    <a href="index.php?plugin=members&amp;op=logout" title="<?=_LOGOUT?>">
+                                        <span class="icon-power-off"></span> Logout
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>            

@@ -1,0 +1,197 @@
+<form action="admin.php?plugin=system&amp;file=staff" method="post" class="stdform">
+    <input type="hidden" value="update" name="op" />
+    <div class="row-fluid">
+        <div class="span9">
+            <div class="pageheader">
+                <h1 class="head">
+                    Staff Management
+                </h1>
+            </div>
+        </div>
+        <div class="span3">
+            <div class="submit-top">
+                <div style="text-align: right; margin-right: 40px;">
+                    <div style="position: relative; display: inline-block;">
+                        <button class="btn btn-success tipN" style="margin-right: 10px;" type="submit" title="Save Changes">
+                            <span class="icon-disk"></span>
+                        </button>
+                        <button class="btn btn-warning tipN" type="reset" title="Undo Changes">
+                            <span class="font20 icon-history"></span> 
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <?if(isset($_SESSION['error'])) {?>
+        <div class="notibar msgerror">
+            <a class="close"></a>
+            <p><?=$_SESSION['error']?></p>
+        </div>
+        <?
+        unset($_SESSION['error']);
+    }
+    ?>
+    <ul class="hornav">
+        <li class="current">
+            <a href="#default" class="current">Staff Info</a>
+        </li>
+        <li>
+            <a href="#permissions">Permissions</a>
+        </li>
+    </ul>
+    <div id="contentwrapper" class="contentwrapper">
+    	<div id="default" class="subcontent">
+            <p>
+            	<label>
+                    Login name: 
+                </label>
+                <div class="field">
+                    <input type="text" value="<?=$item['aid']?>"<? if(!empty($item['aid'])) echo ' readonly="readonly"'; ?> name="aid" />
+                </div>
+                <small class="desc">
+                    Enter the username this person will use to log into this administration area.
+                </small>
+            </p>
+            <p>
+            	<label>
+                    Name: 
+                </label>
+                <div class="field">
+                    <input type="text" value="<?=$item['name']?>" name="name" />
+                </div>
+                <small class="desc">
+                    Enter this person's complete name, including first and last name.
+                </small>
+            </p>
+            <p>
+            	<label>
+                    E-mail: 
+                </label>
+                <div class="field">
+                    <input type="text" value="<?=$item['email']?>" name="email" />
+                </div>
+                <small class="desc">
+                    Enter this person's e-mail address, you most enter the right e-mail address as it could be used to send and receive notifications from the system.
+                </small>
+            </p>
+            <p>
+            	<label>
+                    Password: 
+                </label>
+                <div class="field">
+                    <input type="text" value="" name="pwd" />
+                </div>
+                <small class="desc">
+                    Make sure the password is secure enough, weak passwords are the main reason of hack attacks and this can result in the lost of all system data.
+                </small>
+            </p>
+            <p>
+            	<label>
+                    Confirm password: 
+                </label>
+                <div class="field">
+                    <input type="text" value="" name="pwd2" />
+                </div>
+                <small class="desc">
+                    <?if(!empty($item['aid'])) {?>
+                        Type the password twice to change the actual one for <?=$item['aid']?>.
+                    <?} else {?>
+                        Re-enter the above password.
+                    <?}?>
+                </small>
+            </p>
+            <p>
+                <label>
+                    About: 
+                </label>
+                <div class="field">
+                    <textarea name="about" id="" cols="30" rows="10"><?=$item['about']?></textarea>
+                </div>
+                <small class="desc">
+                    This will be the about the Author in the Blog.
+                </small>
+            </p>            
+            <p>
+                <label>
+                    Avatar Image: 
+                </label>
+                <div class="field">
+                    <div id="img-holder" class="avatar-img" style="float: left; background-image: url(<?=(!empty($item['media']['image'])) ? _SITE_PATH. '/uploads/staff/' . md5((string) $item['aid']). '/small-' . $item['media']['image'] : 'images/no-image-60x60.jpg'?>);">
+                        <img src="images/blank.gif" alt="<?=$item['full_name']?>">
+                        <input type="file" name="Filedata" id="upload_field" accept="image/*" />
+                    </div>
+                    <br clear="all" />
+                    <div id="progress_report">
+                        <div id="progress_report_name"></div>
+                        <div id="progress_report_status" style="font-style: italic;"></div>
+                        <div id="progress_report_bar_container" style="width: 90%; height: 5px;">
+                            <div id="progress_report_bar" style="background-color: blue; width: 0; height: 100%;"></div>
+                        </div>
+                    </div>
+                </div>
+            </p>
+        </div>
+        <div id="permissions" class="subcontent" style="display: none;">
+            <br clear="all" />
+            <p>Select the areas this person will have access to, in case you want this person to have your same permissions select 'Global Administrator'.</p>
+            <div class="row-fluid">
+                <?foreach($available_plugins as $admin_plugin) {?>
+                    <?if($helper->has_admin($admin_plugin['name'])) {?>
+                    <div style="width: 20%; float: left;">
+                        <label style="text-align: left;">
+                            <input type="checkbox" name="admin_plugins[]" value="<?=$admin_plugin['id']?>"<?if(isset($item['aid']) && strstr($admin_plugin['admins'], $item['aid'].',')) echo ' checked="checked"';?> /> 
+                            <?=ucwords($admin_plugin['name'])?>
+                        </label>
+                    </div>
+                    <?}?>
+                <?}?>
+            </div>
+            <br clear="all" />
+            <div class="divider clearfix">
+                <label style="text-align: left; width: 100%;">
+                    <input type="checkbox" name="radminsuper" value="1"<? if(!empty($item['radminsuper'])) echo ' checked="checked"'; ?> /> 
+                    <b>Global Administrator</b>
+                    <small class="desc" style="margin: 0; padding: 0;">
+                    <b style="color: red;">WARNING:</b> If Global Administrator is checked, this person will have full access to the back-end!
+                </small>
+                </label>
+            </div>
+        </div>
+    </div>
+</form>
+<script type="text/javascript" src="js/plugins/jquery.html5_upload.js"></script>
+<script type="text/javascript"> 
+    jQuery(function() {
+        jQuery("#upload_field").html5_upload({
+            extraFields: {
+                'op'            : 'single',
+                'id'            : '<?=$item['aid']?>',
+                'folder_name'   : 'staff',
+                'thumb_width'   : '95',
+                'thumb_height'  : '95',
+                'confirm_field' : '1'
+            },
+            url: 'uploads.php',
+            sendBoundary: window.FormData || jQuery.browser.mozilla,
+            onStart: function(event, total) {
+                jQuery('#progress_report').show();
+                return true;
+            },
+            setStatus: function(text) {
+                jQuery("#progress_report_status").text(text);
+            },
+            setProgress: function(val) {
+                jQuery("#progress_report_bar").css('width', Math.ceil(val*100)+"%");
+            },
+            onFinishOne: function(event, response, name, number, total) {
+                var data = JSON.parse(response);
+                jQuery('#img-holder').css('background-image','url(<?=_SITE_PATH?>/uploads/' + data.belongs + '/' + data.bid + '/small-' + data.file + ')');
+                jQuery('#progress_report').hide();
+            },
+            onError: function(event, name, error) {
+                alert('error while uploading file ' + name);
+            }
+        });
+    });
+</script>

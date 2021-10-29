@@ -1,0 +1,157 @@
+<?=(!empty($_seo_settings['breadcrumbs'] && is_object($breadcrumbs)) ? !empty($_seo_settings['display_breadcrumbs']) ? $breadcrumbs->get() : $breadcrumbs->schema() : '')?>
+<div class="separator "></div>
+<div class="payments-area">
+        <form action="index.php?plugin=payments" method="post" autocomplete="off" class="form-horizontal validate-form">
+            <input type="hidden" value="save" name="op" />
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-row">
+                        <div class="col-12 form-group">
+                            <strong><?=_FIRST_NAME?></strong>:<br />
+                            <small class="muted hidden-sm hidden-xs"><?=_FIRST_NAME_EXPLANATION?></small>
+                        </div>
+                        <div class="col-12 form-group">
+                            <input type="text" value="<?=(!empty($_SESSION['payments']['first_name'])) ? $_SESSION['payments']['first_name'] : $_SESSION['user_info']['first_name']?>" name="first_name" class="form-control input-lg required" <?=($_is_mobile ? ' placeholder="' . _FIRST_NAME . '"' : '')?> />
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-12 form-group">
+                            <strong><?=_LAST_NAME?></strong>:<br />
+                            <small class="muted hidden-sm hidden-xs"><?=_LAST_NAME_EXPLANATION?></small>
+                        </div>
+                        <div class="col-12 form-group">
+                            <input type="text" value="<?=(!empty($_SESSION['payments']['last_name'])) ? $_SESSION['payments']['last_name'] : $_SESSION['user_info']['last_name']?>" name="last_name" class="form-control input-lg required" <?=($_is_mobile ? ' placeholder="' . _LAST_NAME . '"' : '')?> />
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-12 form-group">
+                            <strong><?=_EMAIL?></strong>:<br />
+                            <small class="muted hidden-sm hidden-xs"><?=_EMAIL_EXPLANATION?></small>
+                        </div>
+                        <div class="col-12 form-group">
+                            <input type="email" value="<?=(!empty($_SESSION['payments']['email'])) ? $_SESSION['payments']['email'] : $_SESSION['user_info']['email']?>" name="email" class="form-control input-lg required email" <?=($_is_mobile ? ' placeholder="' . _EMAIL . '"' : '')?> />
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-12 form-group">
+                            <strong><?=_PHONE?></strong>:<br />
+                            <small class="muted hidden-sm hidden-xs"><?=_PHONE_EXPLANATION?></small>
+                        </div>
+                        <div class="col-12 form-group">
+                            <input type="tel" value="<?=(!empty($_SESSION['payments']['phone'])) ? $_SESSION['payments']['phone'] : $_SESSION['user_info']['phone']?>" name="phone" class="form-control input-lg required" <?=($_is_mobile ? ' placeholder="' . _PHONE . '"' : '')?> />
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-12 form-group">
+                            <strong><?=_ZIPCODE?></strong>:<br />
+                            <small class="muted hidden-sm hidden-xs"><?=_ZIPCODE_EXPLANATION?></small>
+                        </div>
+                        <div class="col-12">
+                            <input type="number" id="zipcode" name="zipcode" value="<?=$_SESSION['payments']['zipcode']?>" class=" form-control input-lg required" <?=($_is_mobile ? ' placeholder="' . _ZIPCODE . '"' : '')?> />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-1 text-center"></div>
+                <div class="col-md-5">
+                    <div class="separator d-block d-sm-none"></div>
+                    <div class="form-row">
+                        <div class="col-md-12 form-group">
+                            <strong><?=_AMOUNT?></strong>:<br />
+                            <small class="muted hidden-sm hidden-xs"><?=_AMOUNT_EXPLANATION?></small>
+                        </div>
+                        <div class="col-md-12 form-group">
+                            <input type="number" pattern="[0-9]*" value="<?=$_SESSION['payments']['subtotal']?>" name="subtotal" class="form-control input-lg amount required" placeholder="<?=_AMOUNT?>" />
+                        </div>
+                    </div>
+                    <div class="separator d-none b-sm-block"></div>
+                    <div class="text-right">
+                        <?=_WE_ACCEPT?>: 
+                        <?if(!empty($helper->config['we_accept_visa'])) {?>
+                        <span class="icon-cc-visa icon-2x" style="position: relative; top: 4px"></span>
+                        <?}?>
+                        <?if(!empty($helper->config['we_accept_mastercard'])) {?>
+                        <span class="icon-cc-mastercard icon-2x" style="position: relative; top: 4px"></span>
+                        <?}?>
+                        <?if(!empty($helper->config['we_accept_discover'])) {?>
+                        <span class="icon-cc-discover icon-2x" style="position: relative; top: 4px"></span>
+                        <?}?>
+                        <?if(!empty($helper->config['we_accept_amex'])) {?>
+                        <span class="icon-cc-amex icon-2x" style="position: relative; top: 4px"></span>
+                        <?}?>
+                    </div>
+                    <div class="separator sm"></div>
+                    <div class="form-row">
+                        <div class="col-md-12 form-group">
+                            <strong><?=_CARD_NUMBER?></strong>:<br />
+                            <small class="muted hidden-sm hidden-xs"><?=_CARD_NUMBER_EXPLANATION?></small>
+                        </div>
+                        <div class="col-md-12 form-group">
+                            <input type="number" id="cc_number" pattern="[0-9]*" maxlength="19" name="cc_number" value="<?=$_SESSION['payments']['cc_number']?>" class="form-control input-lg required cc" autocomplete="off" placeholder="<?=_CARD_NUMBER?>" />
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-12 form-group">
+                            <strong><?=_CARD_EXPDATE?></strong>:<br />
+                            <small class="muted hidden-sm hidden-xs">Month / Year</small>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-row">
+                                <div class="col-6 form-group">
+                                    <?=$credit_card->get_cc_exp_month('cc_month', $_SESSION['payments']['cc_month'], ['class' => 'form-control input-lg', 'placeholder' => 'Month'])?>
+                                </div>
+                                <div class="col-6 form-group">
+                                    <?=$credit_card->get_cc_exp_year('cc_year', $_SESSION['payments']['cc_year'], ['class' => 'form-control input-lg', 'placeholder' => 'Year'])?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-12 form-group">
+                            <strong><?=_CARD_CVV?></strong>:<br />
+                            <small class="muted hidden-sm hidden-xs"><?=_CARD_CVV_EXPLANATION?></small>
+                        </div>
+                        <div class="col-md-12 form-group">
+                            <div class="input-group">
+                                <input type="number" pattern="[0-9]*" maxlength="4" name="cc_cvv" value="<?=$_SESSION['payments']['cc_cvv']?>" class="form-control input-lg required cvc" placeholder="<?=_CARD_CVV?>" autocomplete="off" />
+                                <span class="input-group-addon">
+                                    <a href="data/validationhelp.html" class="popup">
+                                        <span class="icon-info"></span>
+                                    </a>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr />
+            <div class="form-row">
+                <div class="col-sm-8 form-group">
+                    <p>
+                        <label>
+                            <input type="checkbox" value="1" <?=(!empty($_SESSION['payments']['agree']) ? 'checked="checked"' : '')?> name="agree" class="required" /> <?=_CARD_TRANSACTION_AGREEMENT?>
+                        </label>
+                    </p>
+                </div>
+                <div class="col-sm-4 form-group text-right">
+                    <button type="submit" class="btn btn-primary btn-lg" autocomplete="off">
+                        <?=_SUBMIT?>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+<div class="separator"></div>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $(document).on('change', ':input', function() {
+            var input = $(this);
+            var element = input.prop('name');
+            $('#' + element).text(input.val());
+            $.get('index.php?plugin=payments&amp;op=set&amp;k=' + element +'&v=' + input.val(), function(a){
+                if(a != '' && element == 'cc_number'){
+                    input.removeClass('visa mastercard discover amex cirrus maestro creditcard unknown').addClass(a);
+                }
+            });
+        });
+    });
+</script>

@@ -1,0 +1,39 @@
+<style>
+#cboxContent #cboxClose {
+    display: none;
+}
+</style>
+<div class="window">
+	<form action="index.php?plugin=subscriptions&amp;op=save" method="post" class="validate-form">
+		<div class="head black-bg">
+			<div class="row">
+				<div class="col-sm-3 text-center">
+					<span class="icon-comments icon-4x white"></span>
+				</div>
+				<div class="col-sm-9">
+					<h4>Take advantage... Subscribe now!</h4>
+					<p><small>Take advantage of our specials and newsletters, all you need is to enter your information bellow and we will keep you up to date!</small></p>
+				</div>
+				
+			</div>
+		</div>
+		<div class="body">
+			<div class="separator xs"></div>
+			<div class="row">
+				<div class="col-md-6 col-sm-6">
+					<input type="text" value="<?=$_SESSION['subscription']['name']?>" name="name" class="required form-control name" placeholder="<?=_YOUR?> <?=_NAME?>"  />
+				</div>
+				<div class="col-md-6 col-sm-6">
+					<input type="email" value="<?=$_SESSION['subscription']['email']?>" name="email" class="required email form-control" placeholder="<?=_YOUR?> <?=_EMAIL?> <?=_ADDRESS?> " />
+				</div>
+			</div>
+			<p><small><?=_SUBSCRIPTIONS_TEXT?></small></p>
+		</div>
+		<div class="foot text-right">
+			<a href="#" class="cancel">Cancel</a>
+			<button class="btn btn-primary" type="submit">
+				 Enroll Now
+			</button>
+		</div>
+	</form>
+</div>

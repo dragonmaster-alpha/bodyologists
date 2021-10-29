@@ -1,0 +1,79 @@
+<?php
+
+// ===============================
+//     MEMBER DEALS LISTING
+// ===============================
+
+?>
+<?php
+use Plugins\Deals\Classes\Deals;
+
+$itemMeta = json_decode($item['meta'], true);
+$has_bogo = isset($itemMeta['bogo_price']) && !empty($itemMeta['bogo_price']);
+$has_free = isset($itemMeta['free_item']) && !empty($itemMeta['free_item']);
+?>
+<div class="col-md-4 deals-area">
+    <div class="card">
+        <div class="deals-head">
+            <div class="percentage-stiches">
+                <?php if ($has_bogo) { ?>BO<br>GO<?php } ?>
+                <?php if (!$has_bogo) { ?><?=$item['dicount_percentage']?>%<br> OFF<?php } ?>
+            </div>
+            <div class="actions float-left" style="left: 20px">
+                <a href="members/deals/add?id=<?=$item['id']?>" class="btn btn-info btn-sm">
+                    Edit
+                </a>
+                <a href="members/deals/delete?id=<?=$item['id']?>" class="btn btn-danger btn-sm">
+                    Delete
+                </a>
+            </div>
+            <div class="row data-display">
+                <div class="col-md-3">
+                    <?=$helper->show_user_avatar_only($item['owner_info'], false)?>
+                </div>
+                <div class="col-md-9" style="padding-top: 2rem !important;">
+                    <h5><?=$item['end_date']?></h5>
+                </div>
+            </div>
+            <img class="card-img-top" src="<?= Deals::getImageURL($item) ?>" alt="<?=$item['title'] ?? 'Default image'?>">
+        </div>
+
+        <div class="card-body">
+            <a href="<?=$item['url']?>"><?=$item['title']?></a>
+        </div>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+                <div class="location">
+                    <div class="row">
+                        <div class="col-md-12 text-center">
+                            <?=$item['city']?> <?=(!empty($item['state']) ? ', ' . $item['state'] : '')?>
+                            <i class="icon-star" <?=(time() >= (strtotime($item['end_date']) - 7*24*60*60) ? 'style="color: #FFB740"' : '')?>></i> <?=$item['category']?>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li class="list-group-item">
+                <div class="text">
+                    <?=$helper->reduce_text($item['text'], 120)?>
+                </div>
+            </li>
+            <li class="list-group-item">
+                <div class="prices" style="font-size: 1rem;">
+                    <div class="row" style="justify-content: space-between;">
+                        <div>
+                        <?php
+                        if ($has_bogo) { echo 'BOGO';}
+                        if ($has_bogo && $has_free) { echo ' + ';}
+                        if ($has_free) { echo 'FREE ITEM';}
+                        ?>
+                        </div>
+                        <div>
+                            <s>$<?=str_replace('.00', '', $item['reg_price'])?></s>
+                            <em>$<?=str_replace('.00', '', $item['discount'])?></em>
+                        </div>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>

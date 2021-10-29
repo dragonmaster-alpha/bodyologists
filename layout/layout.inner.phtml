@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en-US" xml:lang="en-US" prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb#">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=<?=_CHART_SET?>" />
+    <base href="//<?=$helper->site_domain() . _SITE_PATH?>/" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="apple-mobile-web-app-title" content="<?=$_seo_settings['sitename']?>">
+    <title><?=$_meta['title']?></title>
+    <?=(!empty($_meta['description']) ? '<meta name="description" content="' . $_meta['description'] . '" />' : '')?>
+    <?=(!empty($_meta['keywords']) ? '<meta name="keywords" content="' . $_meta['keywords'] . '" />' : '')?>
+    <meta name="page-type" content="document" />
+    <meta name="robots" content="<?=@implode(',', [$_seo_settings['metarobots'],$_seo_settings['noodp']])?>" />
+    <meta name="copyright" content="<?=$_seo_settings['metacopyright']?>" />
+    <meta property="og:title" content="<?=$_meta['title']?>" />
+    <meta property="og:description" content="<?=(!empty($_meta['description'])) ? $_meta['description'] : $_meta['title']?>" />
+    <meta property="og:url" content="//<?=$_seo_settings['url_syntax']?><?=$helper->site_domain() . _SITE_PATH . '/' . $_meta['canonical']?>" />
+    <meta property="og:site_name" content="<?=$_seo_settings['sitename']?>" />
+    <meta property="og:phone_number" content="<?=$helper->config['phone']?>" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="<?=$_meta['image']?>" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="<?=$_meta['title']?>" />
+    <meta name="twitter:description" content="<?=$_meta['description']?>" />
+    <meta name="twitter:site" content="//<?=$_seo_settings['url_syntax']?><?=$helper->site_domain() . _SITE_PATH?>" />
+    <meta name="twitter:url" content="//<?=$_seo_settings['url_syntax']?><?=$helper->site_domain() . _SITE_PATH . '/' . $_meta['canonical']?>" />
+    <meta name="twitter:image" content="<?=$_meta['image']?>" />
+    <?php if(is_dir($_SERVER['DOCUMENT_ROOT'] . _SITE_PATH . '/plugins/blog')) {?>
+        <link rel="alternate" type="application/rss+xml" title="<?=$_seo_settings['sitename']?> &raquo; Blog RSS Feed" href="//<?=$_seo_settings['url_syntax']?><?=$helper->site_domain() . _SITE_PATH?>/index.php?plugin=blog&amp;op=rss"/>
+        <link rel="alternate" type="application/rss+xml" title="<?=$_seo_settings['sitename']?> &raquo; Blog ATOM Feed" href="//<?=$_seo_settings['url_syntax']?><?=$helper->site_domain() . _SITE_PATH?>/index.php?plugin=blog&amp;op=atom"/>
+    <?php }?>
+    <?php if(is_dir($_SERVER['DOCUMENT_ROOT'] . _SITE_PATH . '/plugins/products')) {?>
+        <link rel="alternate" type="application/rss+xml" title="<?=$_seo_settings['sitename']?> &raquo; Products RSS Feed" href="//<?=$_seo_settings['url_syntax']?><?=$helper->site_domain() . _SITE_PATH?>/index.php?plugin=products&amp;op=rss"/>
+        <link rel="alternate" type="application/rss+xml" title="<?=$_seo_settings['sitename']?> &raquo; Products ATOM Feed" href="//<?=$_seo_settings['url_syntax']?><?=$helper->site_domain() . _SITE_PATH?>/index.php?plugin=products&amp;op=atom"/>
+    <?php }?>
+    <link rel="canonical" href="//<?=$_seo_settings['url_syntax']?><?=$helper->site_domain() . _SITE_PATH . '/' . $_meta['canonical']?>" />
+    <?=(!empty($_seo_settings['publisher']) ? '<link rel="publisher" href="' . $_seo_settings['publisher'] . '"/>': '')?>
+    <?php if(!empty($_website_schema)) {?>
+    <script type="application/ld+json"><?=$_website_schema?></script>
+    <?php }?>
+    <?php if(!empty($_company_schema)) {?>
+    <script type="application/ld+json"><?=$_company_schema?></script>
+    <?php }?>
+    <link rel="manifest" href="/manifesto.json"/>
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="images/ico/apple-touch-icon-152x152-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="120x120" href="images/ico/apple-touch-icon-120x120-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="76x76" href="images/ico/apple-touch-icon-76x76-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="images/ico/apple-touch-icon-57x57-precomposed.png">
+    <link rel="shortcut icon" href="images/ico/favicon.png">
+    <link type="text/css" rel="stylesheet" href="css/plugins/menu.css">
+    <link type="text/css" rel="stylesheet" href="css/default.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" type="text/css">
+    <script src="js/default.js" type="text/javascript"></script>
+
+    
+    
+    <!--[if lt IE 9]>
+    <script src="js/IE9.js"></script>
+    <![endif]-->
+</head>
+<body class="inner">
+<p id="back-top">
+    <a href="#top">
+        <span></span>
+    </a>
+</p>
+<header class="sticky-top">
+    <div class="container-fluid">
+        <div class="row no-gutters">
+            <div class="column-menu-left">
+                <nav id="cssmenu">
+                    <ul class="ul-menu">
+                        <div class="menu-items-desktop upper">
+                            <li>
+                                <a href="/">
+                                    <img src="images/logo.png" alt="<?=$_seo_settings['sitename']?>" style="max-height: 60px" />
+                                </a>
+                            </li>
+                            <?php $helper->list_from_array($menus)?>
+
+                            <?php if(!$members->is_user()) {?>
+                                <li class="menu-items-mobile">
+                                    <a href="members/dashboard">Log in</a>
+                                </li>
+                                <li class="menu-items-mobile">
+                                    <a href="members/register">Sign-Up</a>
+                                </li>
+                                <li class="menu-items-mobile">
+                                    <a href="members/getlisted">Get Listed</a>
+                                </li>
+                            <?php } else {?>
+                                <li class="menu-items-mobile">
+                                    <a href="members/dashboard">Account</a>
+                                </li>
+                                <li class="menu-items-mobile">
+                                    <a href="members/logout">Sign-out</a>
+                                </li>
+                                <li class="menu-items-mobile">
+                                    <a href="members/logout">Get Listed</a>
+                                </li>
+                            <?php }?>
+                        </div>
+                        <div class="menu-items-mobile">
+                            <li>
+                                <img src="images/name.png" alt="Bodyologists" class="img-menu" style="height: 25px;">
+                            </li>
+                            <li class="menu-items-mobile">
+                                <a class="no-padding" href="/"><button class="menu-button" >Home</button></a>
+                            </li>
+                            <?php $helper->list_from_array_mobile($menus)?>
+
+                            <?php if(!$members->is_user()) {?>
+                                <li class="menu-items-mobile">
+                                    <a class="no-padding" href="members/dashboard"><button class="menu-button" >Log in</button></a>
+                                </li>
+                                <li class="menu-items-mobile">
+                                    <a class="no-padding" href="members/register"><button class="menu-button" >Sign-Up</button></a>
+                                </li>
+                            <?php } else {?>
+                                <li class="menu-items-mobile">
+                                    <a class="no-padding"  href="members/dashboard"><button class="menu-button">Account</button></a>
+                                </li>
+                                <li class="menu-items-mobile">
+                                    <a class="no-padding"  href="members/logout"><button class="menu-button">Sign-out</button></a>
+                                </li>
+                            <?php }?>
+                        </div>
+                        <div class="separator sm no-separator-menu-xxl"></div>
+                    </ul>
+                </nav>
+            </div>
+            <div class="column-menu-right text-right menu-items-desktop" style="padding: 0;">
+                <div class="separator sm"></div>
+                <?php if(!$members->is_user()) {?>
+                <a href="members/dashboard" class="menu-link1">Log in</a> 
+                <a href="members/register" class="menu-link2">Sign-Up</a> 
+                <a href="members/getlisted" class="menu-link3">Get Listed</a> 
+                <?php } else {?>
+                <a href="members/dashboard" class="menu-link1">Account</a> 
+                <a href="members/logout" class="menu-link2">Sign-out</a>
+                <a href="members/logout" class="menu-link3">Get Listed</a>
+                <?php }?>
+            </div>
+        </div>
+    </div>
+</header>
+<div class="container menu-mobile">
+    <div class="separator"></div>
+    <?=$modcontent?>
+</div>    
+<div class="container menu-mobile">
+    <div class="separator"></div>
+    <div class="row">
+        <div class="col-6 col-md-3 text-center footer-blob-buttons">
+            <a href="search">
+                <img data-src="images/bodyologist-blob.png" alt="Find a Bodyologist" />
+            </a>
+        </div>
+        <div class="col-6 col-md-3 text-center footer-blob-buttons">
+            <a href="search/deals">
+                <img data-src="images/deals-blob.png" alt="Find Deals" />
+            </a>
+        </div>
+        <div class="col-6 col-md-3 text-center footer-blob-buttons">
+            <a href="search/events">
+                <img data-src="images/events-blob.png" alt="Find Events" />
+            </a>
+        </div>
+        <div class="col-6 col-md-3 text-center footer-blob-buttons">
+            <a href="blog">
+                <img data-src="images/blog-blob.png" alt="Blog" />
+            </a>
+        </div>
+    </div>
+    <div class="separator "></div>
+    <div class="row my-4">
+        <div class="col"></div>
+        <div class="col-md-3  text-center px-md-3 footer-seal-img">
+            <a href="#">
+                <img src="images/seal.png" class="img-fluid" alt="" />
+            </a>
+        </div>
+        <div class="col"></div>
+    </div>
+    <div class="separator xs"></div>
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <div class="social-networks-icons" rel="social-networks">
+                <em class="follow-us-footer">Follow Us </em> &nbsp;
+                <?php if(!empty($_seo_settings['twitter_address'])) {?>
+                    <a href="<?=$_seo_settings['twitter_address']?>" target="_blank" title="<?=_SOCIAL_FOLLOW_US_ON_TWITTER?>" data-sr="enter left, scale up 20%, over 1s, wait 0.2s"><img src="images/twitter-icon.png" width="50px" alt=""></a>
+                <?php }?>
+                <?php if(!empty($_seo_settings['facebook_address'])) {?>
+                    <a href="<?=$_seo_settings['facebook_address']?>" target="_blank" title="<?=_SOCIAL_FOLLOW_US_ON_FACEBOOK?>" data-sr="enter left, scale up 20%, over 1s, wait 0.1s"><img src="images/facebook-icon.png" width="50px" alt=""></a>
+                <?php }?>
+                <?php if(!empty($_seo_settings['instagram_address'])) {?>
+                    <a href="<?=$_seo_settings['instagram_address']?>" target="_blank" title="<?=_SOCIAL_FOLLOW_US_ON_INSTAGRAM?>" data-sr="enter left, scale up 20%, over 1s, wait 0.5s"><img src="images/instagram-icon.png" width="50px" alt=""></a>
+                <?php }?>
+                <?php if(!empty($_seo_settings['google_plus_address'])) {?>
+                    <a href="<?=$_seo_settings['google_plus_address']?>" target="_blank" title="<?=_SOCIAL_FOLLOW_US_ON_GOOGLE_PLUS?>" data-sr="enter left, scale up 20%, over 1s, wait 0.3s"><i class="icon-google-plus icon-fw"></i></a>
+                <?php }?>
+                <?php if(!empty($_seo_settings['pinterest_address'])) {?>
+                    <a href="<?=$_seo_settings['pinterest_address']?>" target="_blank" title="<?=_SOCIAL_FOLLOW_US_ON_PINTEREST?>" data-sr="enter left, scale up 20%, over 1s, wait 0.4s"><img src="images/pinterest-icon.png" width="50px" alt=""></a>
+                <?php }?>
+                <?php if(!empty($_seo_settings['linkedin_address'])) {?>
+                    <a href="<?=$_seo_settings['linkedin_address']?>" target="_blank" title="<?=_SOCIAL_FOLLOW_US_ON_LINKEDIN?>" data-sr="enter left, scale up 20%, over 1s, wait 0.6s"><i class="icon-linkedin icon-fw"></i></a>
+                <?php }?>
+                <?php if(!empty($_seo_settings['youtube_address'])) {?>
+                    <a href="<?=$_seo_settings['youtube_address']?>" target="_blank" title="<?=_SOCIAL_FOLLOW_US_ON_YOUTUBE?>" data-sr="enter left, scale up 20%, over 1s, wait 0.7s"><i class="icon-youtube icon-fw"></i></a>
+                <?php }?>
+                <?php if(!empty($_seo_settings['vimeo_address'])) {?>
+                    <a href="<?=$_seo_settings['vimeo_address']?>" target="_blank" title="<?=_SOCIAL_FOLLOW_US_ON_VIMEO?>" data-sr="enter left, scale up 20%, over 1s, wait 0.8s"><i class="icon-vimeo icon-fw"></i></a>
+                <?php }?>
+                <?php if(!empty($_seo_settings['rss_address'])) {?>
+                    <a href="<?=$_seo_settings['rss_address']?>" target="_blank" title="<?=_SOCIAL_FOLLOW_US_ON_RSS?>" data-sr="enter left, scale up 20%, over 1s, wait 0.9s"><i class="icon-rss icon-fw"></i></a>
+                <?php }?>
+            </div>
+        </div>
+    </div>
+</div>
+<footer style="display: grid; align-self: end;">
+    <div class="container-fluid">
+        <div class="row d-none d-lg-block">
+            <div class="col-12 text-center">
+                <ul class="flink">
+                    <li><a href="index" target="_self">Home</a></li>
+                    <li><a href="search" target="_self">Find a Bodyologist</a></li>
+                    <li><a href="search/deals" target="_self">Find Deals</a></li>
+                    <li><a href="search/events" target="_self">Find Events</a></li>
+                    <li><a href="about" target="_self">About</a></li>
+                    <li><a href="faqs" target="_self">FAQ's</a></li>
+                    <li><a href="blog" target="_self">Blog</a></li>
+                    <li><a href="terms">Terms and Conditions</a></li>
+                    <li><a href="privacy">Privacy Policy</a></li>
+                    <li><a href="contact" target="_self">Contact</a></li>
+                </ul>                
+            </div>
+        </div>
+        <div class="row d-block d-lg-none">
+            <div class="col-12 text-center">
+                <ul class="flink" style="padding: 0;">
+                    <li><a href="terms">Terms and Conditions</a></li>
+                    <li><a href="privacy">Privacy Policy</a></li>
+
+                </ul>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 text-center">
+                <div class="separator xs"></div>
+                <?php if(!$members->is_user()) {?>
+                <a href="members/dashboard" class="menu-link1">Log in</a> 
+                <a href="members/register" class="menu-link2">Sign-Up</a> 
+                <a href="members/getlisted" class="menu-link3">Get Listed</a> 
+                <?php } else {?>
+                <a href="members/dashboard" class="menu-link1">Account</a> 
+                <a href="members/logout" class="menu-link2">Sign-out</a>
+                <a href="members/logout" class="menu-link3">Get Listed</a>
+                <?php }?>
+            </div>
+        </div>
+    </div><div class="copyrights">
+        <div class="container menu-mobile">
+            <div class="row">
+                <div class="col-md-6 col-xs-12">
+                    &copy; <?=date('Y')?> <?=$_seo_settings['sitename']?>. All rights reserved.
+                </div>
+                <div class="col-md-6 hidden-sm text-right">
+                    <?=$JUgVIyicUI?>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<script src="js/bootstrap-datepicker.js" type="text/javascript"></script>
+<script src="js/ion.rangeSlider.js" type="text/javascript"></script>
+
+
+<link type="text/css" rel="stylesheet" href="css/plugins/bt.css">
+<link type="text/css" rel="stylesheet" href="css/plugins/alerts.css">
+<link type="text/css" rel="stylesheet" href="css/plugins/box.css">
+<link type="text/css" rel="stylesheet" href="css/plugins/share.css">
+<link type="text/css" rel="stylesheet" href="css/bootstrap-datepicker.standalone.css">
+<link type="text/css" rel="stylesheet" href="css/ion.rangeSlider.css">
+<link type="text/css" rel="stylesheet" href="css/custom.css">
+
+<style>
+    @media print {
+        <?php include($_SERVER['DOCUMENT_ROOT'] . _SITE_PATH . '/css/print.css') ?>
+    }
+    </style>
+<?=(!empty($code)) ? $code."\n" : ''?>
+<?php if(!empty($_seo_settings['snippet_codes'])) {?>
+    <?=$helper->filter($_seo_settings['snippet_codes'])?>
+<?php }?>
+<?php require_once ('app/security/class.csrf.php'); ?>
+<script type="text/javascript">
+    var lat_lng = '<?=$_SESSION['location']['latitude']?>, <?=$_SESSION['location']['longitude']?>';
+    var token = '<?= App\Security\Csrf::get_token('token') ?>';
+
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(showPosition);
+    }
+
+    function showPosition(position) {
+        var location_lat = position.coords.latitude;
+        var location_lng = position.coords.longitude;
+
+        jQuery('form').append('<input type="hidden" name="location_lat" value="' + location_lat + '" />');
+        jQuery('form').append('<input type="hidden" name="location_lng" value="' + location_lng + '" />');
+    }
+</script>
+
+
+</body>
+</html>

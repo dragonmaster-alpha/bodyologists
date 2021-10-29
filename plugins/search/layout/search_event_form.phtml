@@ -1,0 +1,169 @@
+<?php
+use App\Helper;
+?>
+<div class="row">
+    <div class="col-md-3 px-3-5 layout-form-input">
+        <select id="by_category" name="q" class="form-control form-control-lg select-field-text-category upper">
+            <option value="">Any Event</option>
+            <option value="Health Events" <?= $_GET['q'] === 'Health Events' ? 'selected=selected':''; ?>>Health Events</option>
+            <option value="Beauty Events" <?= $_GET['q'] === 'Beauty Events' ? 'selected=selected':''; ?>>Beauty Events</option>
+            <option value="Fitness Events" <?= $_GET['q'] === 'Fitness Events' ? 'selected=selected':''; ?>>Fitness Events</option>
+        </select>
+    </div>
+    <div class="col-md-3 px-3-5 layout-form-input">
+        <select name="date" class="form-control form-control-lg select-field-text-category upper" id="thistodo"> <!--onchange='checkvalue(this.value)'-->
+            <option value="">Any Date</option>
+            <option value="Today" <?= $_GET['date'] === 'Today' ? 'selected=selected':''; ?>>Today</option>
+            <option value="Tomorrow" <?= $_GET['date'] === 'Tomorrow' ? 'selected=selected':''; ?>>Tomorrow</option>
+            <option value="This week" <?= $_GET['date'] === 'This week' ? 'selected=selected':''; ?>>This week</option>
+            <option value="This weekend <?= $_GET['date'] === 'This weekend' ? 'selected=selected':''; ?>">This weekend </option>
+            <option value="This month" <?= $_GET['date'] === 'This month' ? 'selected=selected':''; ?>>This month</option>
+            <option value="Next month" <?= $_GET['date'] === 'Next month' ? 'selected=selected':''; ?>>Next Month</option>
+        <!--                <option value="pick">Pick a Date</option>-->
+        </select>
+        <!--            <input type="text"-->
+        <!--                   name="date"-->
+        <!--                   id="todo"-->
+        <!--                   placeholder="mm/dd/yyyy"-->
+        <!--                   class="datepicker form-control form-control-lg"-->
+        <!--                   style="display: none; ">-->
+    </div>
+    <div class="col-md-3 px-3-5 layout-form-input">
+        <input type="text" value="<?php echo Helper::encode($_GET['location']); ?>" name="location" class="form-control form-control-lg input-field-text upper" placeholder="City, Zip or State" />
+    </div>
+    <div class="col-md-3 px-3-5 form-submit-btn-container">
+        <button class="btn btn-danger btn-lg form-submit-btn" type="submit">
+            Search
+        </button>
+    </div>
+</div>
+
+<?php
+$advanced_fields = [
+    'main_category',
+    'price_range_enabled',
+    'distance_enabled',
+    'keyword',
+    'only_free',
+    'reset'
+];
+$is_advanced_search = (!empty(array_intersect(array_keys(array_filter($_GET)), $advanced_fields)));
+?>
+
+<div class="row">
+    <div class="col-md-6 offset-md-3 col-lg-4 offset-lg-4 mt-4 text-center">
+        <button class="btn btn-success mb-4 p-3" style="width: 80%; margin: 0 auto; font-size: 1.25rem;" data-toggle="collapse" data-target="#advanced_search" >
+            Advanced Filters <i class="icon-angle-down float-right"></i>
+        </button>
+    </div>
+</div>
+<div class="row">
+    <div class="col-1"></div>
+    <div class="col-10 px-5 layout-form-filters-container">
+        <div class="<?=$is_advanced_search ? 'collapse show':'collapse'?> bg-light py-3 mx-4 rounded" id="advanced_search">
+            <div class="row mb-3">
+                <div class="col-md-1"></div>
+                <div class="col-md-5 layout-form-filter-divider">
+                    <select name="main_category" class="form-control form-control-lg">
+                        <option value="">BY CATEGORY</option>
+                        <option value="Health Events" <?= $_GET['main_category'] === 'Health Events' ? 'selected=selected':''; ?>>Health Events</option>
+                        <option value="Beauty Events" <?= $_GET['main_category'] === 'Beauty Events' ? 'selected=selected':''; ?>>Beauty Events</option>
+                        <option value="Fitness Events" <?= $_GET['main_category'] === 'Fitness Events' ? 'selected=selected':''; ?>>Fitness Events</option>
+                    </select>
+
+                </div>
+                <div class="col-md-5">
+                    <button class="form-control form-control-lg text-left" type="button" id="dropPriceRange" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        PRICE RANGE
+                    </button>
+                    <div class="dropdown-menu p-3" aria-labelledby="dropPriceRange" style="width: 90%">
+                        <label class="checkbox-inline range-filters-label" style="padding-left: 5px; width: 90%;">
+                            ENABLE PRICE FILTERING
+                        </label>
+                        <input name="price_range_enabled" class="form-control checkbox-inline"
+                               type="checkbox"
+                               style="width: auto; box-shadow: none; float: left; margin-top: 5px;"
+                            <?= isset($_REQUEST['price_range_enabled']) ? 'checked' : '' ?>
+                        >
+                        <input type="text" class="js-range-slider" name="price_range" value="" />
+                    </div>
+
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-1"></div>
+                <!--                    <div class="col-md-5">-->
+                <!--                        <select name="to_do" class="form-control form-control-lg" id="thistodo" onchange='checkvalue(this.value)'>-->
+                <!--                            <option value="">THINGS TO DO</option>-->
+                <!--                            <option value="Today">Today</option>-->
+                <!--                            <option value="Tomorrow">Tomorrow</option>-->
+                <!--                            <option value="This week">This week</option>-->
+                <!--                            <option value="This weekend ">This weekend </option>-->
+                <!--                            <option value="This month">This month</option>-->
+                <!--                            <option value="Next Month">Next Month</option>-->
+                <!--                            <option value="pick">Pick a Date</option>-->
+                <!--                        </select>-->
+                <!--<!--                        <input type="text"-->
+                <!--<!--                               name="to_do"-->
+                <!--<!--                               placeholder="mm/dd/yyyy"-->
+                <!--<!--                               id="todo"-->
+                <!--<!--                               class="datepicker form-control form-control-lg"-->
+                <!--<!--                               style="display: none; ">-->
+                <!--                    </div>-->
+                <div class="col-md-5 layout-form-filter-divider">
+                    <button class="form-control form-control-lg text-left" type="button" id="dropDistance" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        DISTANCE
+                    </button>
+                    <div class="dropdown-menu p-3" aria-labelledby="dropDistance" style="width: 90%">
+                        <label class="checkbox-inline range-filters-label" style="padding-left: 5px; width: 90%;">
+                            ENABLE DISTANCE FILTERING
+                        </label>
+                        <input name="distance_enabled" class="form-control checkbox-inline"
+                               type="checkbox"
+                               style="width: auto; box-shadow: none; float: left; margin-top: 5px;"
+                            <?= isset($_GET['distance_enabled']) ? 'checked' : '' ?>
+                        >
+                        <input type="text" class="js-distance-slider" name="distance" value="" />
+                    </div>
+
+                </div>
+                <div class="col-md-5">
+                    <input type="text" name="keyword" value="<?php echo Helper::encode($_GET['keyword'] ?? '' );?>" placeholder="KEYWORD" class="form-control form-control-lg">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-1"></div>
+                <!--                    <div class="col-md-5">-->
+                <!--                        <input type="text" name="keyword" placeholder="KEYWORD" class="form-control form-control-lg">-->
+                <!--                    </div>-->
+                <div class="col-md-10 custom-checkbox" style="display: flex; align-items: center; justify-content: center">
+                    <label for="Free_events">
+                        FREE EVENTS ONLY <input type="checkbox" name="only_free" value="yes"  <?= $_GET['only_free'] === 'yes' ? 'checked=checked':''; ?> id="Free_events" class="">
+                    </label>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-1"></div>
+                <div class="col-md-5">
+                    <button type="button" class="btn btn-danger btn-lg advanced-form-reset-button">
+                        Reset
+                    </button>
+                </div>
+                <div class="col-md-5"></div>
+            </div>
+        </div>
+        <div class="separator"></div>
+    </div>
+</div>
+<script>
+    $(document).ready(function(){
+        $(".advanced-form-reset-button").click(function (e) {
+            var q = $('#event-search-form').find('select[name="q"]').val();
+            var date = $('#event-search-form').find('select[name="date"]').val();
+            var location = $('input[name = location]').val();
+
+            window.location.href = "search/events?q=" + q +"&location=" + location +"&date=" + date + "&reset=1";
+
+        });
+    });
+</script>

@@ -1,0 +1,55 @@
+<div class="separator "></div>
+<h1 class="text-center"><em class="find-events-title">Find Events</em></h1>
+<div class="separator no-separator-mobile"></div>
+<div class="separator no-separator-mobile"></div>
+
+<form id="event-search-form" action="search/events" method="get">
+    <?php include 'search_event_form.phtml'; ?>
+</form>
+
+<div class="separator "></div>
+<?php if(!empty($items_info))
+{?>
+        <div class="dropdown mb-4">
+            <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <?=_SORT_BY?> <?=$sort_type?> 
+            </button>
+            <?php
+            $hasQuery = false;
+            $queryString = '';
+            if(!empty($_SERVER['QUERY_STRING'])) {
+                if(strpos($_SERVER['QUERY_STRING'], 'q=') !== false) {
+                    $hasQuery = true;
+                    if(strpos($_SERVER['QUERY_STRING'], 'sb=') !== false){
+                        $queryString = 'search/events?' . substr($_SERVER['QUERY_STRING'], 0, strpos($_SERVER['QUERY_STRING'], "sb="));
+                    } else {
+                        $queryString = 'search/events?' . $_SERVER['QUERY_STRING'] . '&';
+                    }
+                } else {
+                    $hasQuery = false;
+                }
+            }
+            ?>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" href="<?=($hasQuery ? $queryString : 'search/events?')?>sb=d"><?=_SORT_BY?> <?=_DEFAULT?></a>
+                <a class="dropdown-item" href="<?=($hasQuery ? $queryString : 'search/events?')?>sb=new"><?=_SORT_BY?> <?=_NEWEST?></a>
+                <a class="dropdown-item" href="<?=($hasQuery ? $queryString : 'search/events?')?>sb=best"><?=_SORT_BY?> <?=_POPULAR?></a>
+                <a class="dropdown-item" href="<?=($hasQuery ? $queryString : 'search/events?')?>sb=down"><?=_SORT_BY?> <?=_PRICE_LOW_TO_HIGH?></a>
+                <a class="dropdown-item" href="<?=($hasQuery ? $queryString : 'search/events?')?>sb=up"><?=_SORT_BY?> <?=_PRICE_HIGH_TO_LOW?></a>
+                <a class="dropdown-item" href="<?=($hasQuery ? $queryString : 'search/events?')?>sb=az"><?=_SORT_BY?> <?=_TITLE_A_TO_Z?></a>
+                <a class="dropdown-item" href="<?=($hasQuery ? $queryString : 'search/events?')?>sb=za"><?=_SORT_BY?> <?=_TITLE_Z_TO_A?></a>
+            </div>
+        </div>    
+    <div class="row">
+        <?php foreach ($items_info as $item)
+	{
+		include($_SERVER["DOCUMENT_ROOT"] . _SITE_PATH . '/plugins/events/layout/layout.events.list.phtml');
+	}?>
+    </div>
+<?php
+}
+else {?>
+We are sorry but it look like there are not events configured yet, please try again later.
+<?php }?>
+
+

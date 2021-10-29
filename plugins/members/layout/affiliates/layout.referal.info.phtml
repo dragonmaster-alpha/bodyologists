@@ -1,0 +1,15 @@
+<div>
+    <?require_once($_SERVER["DOCUMENT_ROOT"] . _SITE_PATH . '/plugins/members/nav_menu.php')?>
+    <p>Hello <?=$_SESSION['user_info']['fisrt_name']?>, you can use the following information to send your referrals to our website. Our system will automatically identify you are the person referring this new customer and it will insert your commissions on the system to be paid on the next batch.</p>
+    <h3>There is two different ways for you to referral to our system</h3>
+        <p style="padding-left: 20px;"> 1. <strong>By inserting your Affiliate Code:</strong> this  takes effect on the registration page, when your referrals are registering on the site make sure they enter your Affiliate Code on the registration form field named "Referral Number".</p>
+        <p style="padding-left: 20px;"> 2. <strong>By URL:</strong> you can also send your referral URL link to your client via email, messenger, facebook, twitter or any other way, once they click on your link then will be driven to our website and our system will recognize this person as being sent by you, no matter how long your referral takes to register, we will store that information to link this referral to you.</p>
+    <div style="margin-bottom: 20px;">
+        <p>If there is something you don't understand or you consider not clear please <a href="contact.html">contact us</a>, it will be our pleasure to help you reach your goals.</p>
+    </div>
+    <h2><?=_REFERRAL_INFO?></h2>
+    <div>
+        <strong><?=_MY_REFERRAL_NO?></strong>: <?=$_SESSION['user_info']['id']?><br />
+        <strong><?=_MY_REFERRAL_URL?></strong>: <a href="http://<?=$frm->site_domain() . _SITE_PATH ?>/index.php?ref=<?=$_SESSION['user_info']['id']?>">http://<?=$frm->site_domain() . _SITE_PATH ?>/index.php?ref=<?=$_SESSION['user_info']['id']?></a>
+    </div>
+</div>

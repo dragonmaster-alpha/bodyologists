@@ -1,0 +1,68 @@
+<?php
+
+use App\Helper;
+use Plugins\Events\Classes\Events;
+use Plugins\Members\Classes\Wishlist;
+
+$color = Helper::getCategoryColor($item['category']);
+$user = $_SESSION['user_info'] ?? null;
+$wished = (new Wishlist())->getWished((int) $user['id']);
+$flagged = (new Events())->getFlagged((int) $user['id']);
+?>
+<div class="col-lg-6">
+    <div class="card deals-area">
+        <div class="deals-head">
+    <!-- PERCENT  -->
+            <div class="percentage-stiches">
+                <?=date('d', strtotime($item['start_date']))?><br>
+                <?=date('M', strtotime($item['start_date']))?>
+            </div>
+    <!--  main image -->
+            <?php $url = Events::getFirstImageURL((int) $item['id'])?>
+            <a href="<?=$item['url']?>">
+                <div class="deals-banner" style="background-image: url(<?= $url ?>)">
+<!--                <img class="card-img-top d-none" src="< ?=_SITE_PATH?>/uploads/events/< ?=$item['media']['bid']?>/< ?=$item['media']['image']?>" alt="< ?=$item['title']?>">-->
+                    <img class="card-img-top d-none" src="<?= $url ?>" alt="<?=$item['title']?>">
+                </div>
+            </a>
+        </div>
+
+        <div class="card-body text-center">
+            <a href="<?=$item['url']?>"><?=$item['title']?></a>
+        </div>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item border-0">
+                <div class="text-center">
+                    <?=date('M d, Y', strtotime($item['start_date']))?> <br>
+                    <?=date('hA', strtotime($item['start_time']))?>-<?=date('hA', strtotime($item['end_time']))?>
+                </div>
+            </li>
+            <li class="list-group-item border-0">
+                <div class="text-center city">
+                    <?= ucwords($item['city']) ?> <?=(!empty($item['state']) ? ', ' . ucwords($item['state']) : '')?> <br>
+<!--                    [DISTANCE] miles away-->
+                </div>
+
+            </li>
+            <li class="list-group-item border-0">
+                <div class="prices">
+                    <div class="row">
+                        <div class="col-7">
+
+                            <!-- [ WISH & FLAG ] -->
+                            <?php
+                            $is_wished = $user && (new Wishlist())->isWished((int) $item['id'], (int) $user['id'], 'event');
+                            $is_flagged = $user && (new Events())->isFlagged((int) $item['id'], (int) $user['id']);
+
+                            include 'layout.wish_report.event.phtml' ?>
+                        </div>
+
+                        <div class="col-5 text-right dealsprice">
+                            $<?=str_replace('.00', '', $item['price'])?>
+                        </div>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>

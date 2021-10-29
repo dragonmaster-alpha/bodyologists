@@ -1,0 +1,95 @@
+<?php if(isset($_SESSION['error'])) {?>
+    <div class="alert-error" title="Error">
+        <?=$_SESSION['error']?>
+    </div>
+    <?php
+    unset($_SESSION['error']);
+}
+?>
+
+<div class="pageheader">
+    <h1 class="head">
+        Plans Summary
+    </h1>
+</div>
+<br clear="all" />
+<div class="summary-bar">
+    <a href="#" class="reload tipS" title="Reload" onclick="window.location.href = window.location.href; return false;">
+        <span class="icon-redo"></span>
+    </a>
+    <a class="tipS" title="Add New" href="admin.php?plugin=members&amp;addon=packages&amp;op=edit">
+        <span class="icon-plus-2"></span>
+    </a>
+</div>
+<div id="contentwrapper" class="contentwrapper">    
+    <table cellpadding="0" cellspacing="0" border="0" class="stdtable">
+        <colgroup>
+            <col />
+            <col style="width: 120px;" />
+            <col style="width: 180px;" />
+            <col style="width: 160px;" />
+            <col style="width: 150px;" />
+            <col style="width: 10px;" />
+        </colgroup>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th class="hidden-phone">Price/Period</th>
+                <th class="hidden-phone">Information</th>
+                <th>Access</th>
+                <th class="hidden-phone">Created/Modified</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+        <?php
+            if(count($items_info)>0)
+            {
+            	foreach($items_info as $item)
+            	{?>
+            	<tr id="item_<?=$item['id']?>">
+            		<td>
+                        <a href="admin.php?plugin=members&amp;addon=packages&amp;op=edit&amp;id=<?=$item['id']?>"><h5><?=$helper->reduce_text($item['name'], 40)?></h5></a>
+            			<strong>Category:</strong> <?=(!empty($item['category']) ? $item['category'] : 'N/A')?>
+            		</td>
+                    <td class="hidden-phone">
+                        <strong>Price:</strong> $<?=$item['price']?><br />
+                        <strong>Period:</strong> <?=$item['period']?> days
+                    </td>
+                    <td class="hidden-phone">
+                        <strong>Times Sold:</strong> <?=$item['sold']?><br />
+                        <strong>Last Sold:</strong> <?=($item['last_sold'] != '0000-00-00 00:00:00' ? $helper->format_sort_date($item['last_sold']) : 'N/A')?>
+                    </td>
+            		<td>
+                        <a href="admin.php?plugin=members&amp;addon=packages&amp;op=manage_activation&amp;id=<?=$item['id']?>" class="toggle-menu tipS" title="Visible to all visitors.">
+                            <?=($item['active'] == 1) ? '<span class="icon-checkmark-green"></span>' : '<span class="icon-cancel-red"></span>'?> Active
+                        </a>
+                        <span class="tipS" title="Show to new clients only">
+                        	<?=($item['new_only'] == 1) ? '<span class="icon-checkmark-green"></span>' : '<span class="icon-cancel-red"></span>'?> New clients only
+                        </span>
+            		</td>
+            		<td class="no_sort hidden-phone">
+            			<?=$helper->format_sort_date($item['date'])?><br />
+            			<?=($item['modified'] != '0000-00-00 00:00:00' ? $helper->format_sort_date($item['modified']) : 'N/A')?>
+            		</td>
+                    <td>
+                        <div class="navbar">
+                            <ul class="nav pull-right">
+                                <li class="dropdown">
+                                    <a href="#" role="button" data-toggle="dropdown"><span class="icon-menu"></span></a>
+                                    <ul id="actions_<?=$item['id']?>" class="dropdown-menu orders-actions" role="menu">
+                                        <li><a href="admin.php?plugin=members&amp;addon=packages&amp;op=edit&amp;id=<?=$item['id']?>"><span class="icon-pencil-3 left"></span> Edit</a></li>
+                                        <li><a href="admin.php?plugin=members&amp;addon=packages&amp;op=delete&amp;id=<?=$item['id']?>" class="deletion" data-main-holder="main-area-for-<?=$item['id']?>"><span class="icon-remove-2 left"></span> Delete</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                    </td>
+            	</tr>
+                <?php
+                }
+            }
+            ?>
+        </tbody>
+    </table>
+</div>

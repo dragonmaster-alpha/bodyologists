@@ -1,0 +1,258 @@
+<?php
+
+use App\Helper;
+
+// ===============================
+//   MEMBER DEALS CREATE/EDIT
+// ===============================
+
+?>
+</div>
+</div>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-4 col-lg-2 memberside">
+            <div>
+                <?php
+                use Plugins\Deals\Classes\Deals;
+
+                require_once($_SERVER["DOCUMENT_ROOT"] . _SITE_PATH . '/plugins/members/nav_menu.php'); ?>
+            </div>
+        </div>
+        <div class="col-md-8 mb-md-4">
+            <div class="row deals-edit">
+                <div class="col-12 text-center">
+                    <div class="separator xs"></div>
+                    <h4 role="heading">Create Deal</h4>
+                </div>
+                <form action="members/deals/add" method="post" class="validate-form" enctype="multipart/form-data" style="width: 100%">
+                    <input type="hidden" value="<?php echo Helper::encode($item['id']); ?>" name="id" />
+                    <input type="hidden" value="<?php echo Helper::encode($item['url']); ?>" name="url" />
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="row mb-2">
+                                <div class="col-md-12">
+                                    <label>Title:</label>
+                                    <input type="text" value="<?php echo Helper::encode($item['title']);?>" name="title" class="required form-control " />
+                                </div>
+                            </div>
+                            <div class="separator sm"></div>
+                            <div class="row mb-2">
+                                <div class="col-12">
+                                    <label>Description:</label>
+                                    <textarea name="text" class="form-control" minlength="50" maxlength="1000" rows="8" placeholder="Describe your deal"><?=$item['text']?></textarea>
+                                </div>
+                            </div>
+                            <div class="separator sm"></div>
+                            <div class="row mb-2">
+                                <div class="col-md-6">
+                                    <label >Category: </label>
+                                    <select name="category" class="required form-control ">
+                                        <option value="">Select a Category</option>
+                                            <option <?=($item['category'] == 'Health') ? ' selected="selected"' : ''?> value="Health">
+                                                Health
+                                            </option>
+                                            <option <?=($item['category'] == 'Fitness') ? ' selected="selected"' : ''?> value="Fitness">
+                                                Fitness
+                                            </option>
+                                            <option <?=($item['category'] == 'Beauty') ? ' selected="selected"' : ''?> value="Beauty">
+                                                Beauty
+                                            </option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label>Expiration Date:  </label>
+                                    <input type="date" value="<?php echo Helper::encode($item['end_date']); ?>" name="end_date" class="datepick form-control required" />
+                                </div>
+                            </div>
+                            <div class="separator sm"></div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label>Regular Price:</label>
+                                    <input type="number" value="<?php echo Helper::encode($item['reg_price']); ?>" name="reg_price" class="form-control" placeholder="" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label>Discounted Price: <i class="icon-info" title="We'll calculate the difference"></i></label>
+                                    <input type="number" value="<?php echo Helper::encode($item['discount']); ?>" name="discount" class="form-control" placeholder="" />
+                                </div>
+                            </div>
+                            <div class="separator sm"></div>
+                            <?php
+                            $meta = isset($item['meta']) ? json_decode($item['meta'], true) : null;
+                            ?>
+                            <!-- BOGO -->
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label>Buy Item Price:</label>
+                                    <input type="number" min="1" step="any" value="<?php echo Helper::encode($meta['bogo_price'] ?? ''); ?>" name="meta[bogo_price]" class="form-control" placeholder="BOGO Deal - Add purchase price here" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label>Savings:</label>
+                                    <input type="number" min="1" step="any" value="<?php echo Helper::encode($meta['bogo_savings'] ?? ''); ?>" name="meta[bogo_savings]" class="form-control" placeholder="Add savings here from this BOGO deal" />
+                                </div>
+                            </div>
+                            <div class="separator sm"></div>
+
+                            <!-- FREE ITEM -->
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label>Free Item:</label>
+                                    <input type="text" value="<?php echo Helper::encode($meta['free_item'] ?? ''); ?>" name="meta[free_item]" class="form-control" placeholder="Type the free item here" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label>Savings:</label>
+                                    <input type="text" value="<?php echo Helper::encode($meta['free_item_price'] ?? ''); ?>" name="meta[free_item_price]" class="form-control" placeholder="Type the savings here (optional)" />
+                                </div>
+                            </div>
+                            <div class="separator sm"></div>
+
+                            <div class="row mb-2">
+                                <div class="col-md-12">
+                                    <label>URL for booking or purchase deal:</label>
+                                    <input type="url" value="<?php echo Helper::encode($item['purchase_link']); ?>" name="purchase_link" class="form-control" placeholder="e.g www.yoursite.com/special-offer" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="row mb-2">
+                                <div class="col-md-12">
+                                    <label>Business / Seller:</label>
+                                    <input type="text" value="<?php echo Helper::encode((!empty($item['seller'])) ? $item['seller'] : $_SESSION['user_info']['company']);?>" name="seller" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="separator sm"></div>
+                            <div class="row mb-2">
+                                <div class="col-12" id="upload-area">
+                                    <label>Deal Image:</label>
+                                    <div class="col-12" id="cropper-container" style="overflow: hidden">
+                                        <div id="cropContainerModal">
+                                            <div id="img-holder" class="avatar avatar-big" title="Please use a photo with light/clear background. Also, respect license/copyright."
+                                                 onclick="$('i.cropControlUpload').click();"
+                                                 style="background-image: url(<?= Deals::getImageURL($item) ?>); margin-top: 0px;">
+                                                <img src="images/blank.gif">
+                                            </div>
+                                        </div>
+
+                                        <!-- ==================================== -->
+                                        <!--      I M A G E   C R O P P E R       -->
+                                        <!-- ==================================== -->
+                                        <link rel="stylesheet" href="/croppic/croppic.css">
+                                        <style>
+                                            #img-holder, .croppedImg {
+                                                width: 100%;
+                                                height: 100%;
+                                                margin-top: 0px;
+                                            }
+
+                                            #cropContainerModal {
+                                                width: 720px;
+                                                height: 480px;
+                                                display: contents;
+                                            }
+
+                                            img {
+                                                /*max-height: none;
+                                                max-width: none;*/
+                                            }
+                                            .cropContainerModal_imgUploadForm {
+                                                display: none;
+                                            }
+                                        </style>
+                                        <script src="/croppic/croppic.js"></script>
+                                        <script>
+                                            const croppicContainerModalOptions = {
+                                                cropData: {
+                                                    'owner': '<?=$_SESSION['user_info']['id']?>',
+                                                    'folder_name': 'events',
+                                                    'id': '<?=$item['id']?>',
+                                                    'confirm_field': '1'
+                                                },
+                                                uploadUrl: 'uploads.php?op=cropImage',
+                                                cropUrl: 'uploads.php?op=saveDealImage',
+                                                modal: true,
+                                                imgEyecandyOpacity: 0.4,
+                                                defaultImg: '<?= Deals::getImageURL($item) ?>',
+                                                loaderHtml: '<div class="loader bubblingG"><span id="bubblingG_1"></span><span id="bubblingG_2"></span><span id="bubblingG_3"></span></div> ',
+                                                onAfterImgCrop: function () {
+                                                    $('#img-holder').attr('src', cropContainerModal.url);
+                                                },
+                                                onReset: function () {
+                                                    var container = $('#cropper-container');
+                                                    if (cropContainerModal) {
+                                                        cropContainerModal.destroy();
+                                                    }
+                                                    container.html(
+                                                        '<div id="cropContainerModal">' +
+                                                        '    <div id="img-holder" class="avatar avatar-big" ' +
+                                                        '        title="Click here to upload an image" onclick=\"$(\'i.cropControlUpload\').click()\" ' +
+                                                        '        style="background-image: url(\'<?= Deals::getImageURL($item) ?>\'); width: 200px; height: 120px">' +
+                                                        '        <img src="images/blank.gif">' +
+                                                        '    </div>' +
+                                                        '</div>'
+                                                    );
+                                                }
+                                            };
+                                            var cropContainerModal = new Croppic('cropContainerModal', croppicContainerModalOptions);
+                                            $('i.cropControlUpload').hide();
+                                        </script>
+                                        <!-- ==================================== -->
+                                        <!-- ==================================== -->
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-md-12">
+                                    <label>Policies / Fine Print</label>
+                                    <textarea name="policies" class="form-control " maxlength="1000" rows="4" placeholder=""><?=$item['policies']?></textarea>
+                                </div>
+                            </div>
+                            <div class="separator sm"></div>
+                            <div class="row mb-2">
+                                <div class="col-md-12">
+                                    <label>Location:</label>
+                                    <input type="text" value="<?php echo Helper::encode($item['city']); ?>" name="city" class="form-control " placeholder="Location" />
+                                </div>
+                            </div>
+                            <div class="separator sm"></div>
+                            <div class="row mb-2">
+                                <div class="col-md-12">
+                                    <label>Zipcode:</label>
+                                    <input type="text" value="<?php echo Helper::encode($item['zipcode']); ?>" name="zipcode" class="form-control " placeholder="Zip Code" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="separator "></div>
+                        <div class="col-md-3">
+                            <a href="members/deals" class="btn btn-success btn-lg">
+                                Cancel
+                            </a>
+                        </div>
+                        <div class="col-md-6"></div>
+                        <div class="col-md-3">
+                            <button class="btn btn-primary btn-lg" type="submit">
+                                Publish
+                            </button>
+                        </div>
+                    </div>
+                </form>
+                <script type="text/javascript" src="js/plugins/jquery.html5.upload.js"></script>
+            </div>
+        </div>
+        <div class="col-md-2 memberside d-none d-lg-block">
+            <div class="row">
+                <button class="btn bg-light p-2 right-profile-img" type="button" data-toggle="collapse" data-target="#collapse-1" aria-expanded="true" aria-controls="collapse-1">
+                    <div class="row">
+                        <div class="col-xl-5">
+                            <img src="<?=_SITE_PATH . '/uploads/avatar/' . md5((string) $_SESSION['user_info']['id']) . '/' . $_SESSION['user_info']['avatar']?>" alt="" class="rounded-circle" />
+                        </div>
+                        <div class="col-xl-7 pt-2 text-ellipsis">
+                            Hi, <?=$_SESSION['user_info']['first_name']?>
+                        </div>
+                    </div>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

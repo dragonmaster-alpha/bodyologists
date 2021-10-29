@@ -1,0 +1,25 @@
+<p>
+    <label>
+        Content Analysis:
+    </label>
+    <div class="field" id="content-analysis">
+        
+    </div>
+</p>
+<script type="text/javascript">
+    jQuery(function() {
+        setTimeout(function(){
+            jQuery('#seo_keyword').trigger('change');
+        }, 1500);
+        jQuery('input, textarea').change(function(){
+            jQuery.ajax({
+                url: 'system/seo/check',
+                type: 'post',
+                data: jQuery(this).closest("form").serialize(),
+                success: function(a) {
+                    jQuery('#content-analysis').html(a);
+                }
+            });
+        });
+    });
+</script>

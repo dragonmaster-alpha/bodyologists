@@ -1,0 +1,52 @@
+<?php if(isset($_SESSION['error'])) {?>
+    <div class="alert-error" title="Error">
+        <?=$_SESSION['error']?>
+    </div>
+    <?php
+    unset($_SESSION['error']);
+}
+?>
+    <div class="row-fluid">
+        <div class="span8">
+            <div class="pageheader">
+                <h1 class="head">
+                    Albums
+                </h1>
+            </div>
+        </div>
+        <div class="span4">
+            <div class="submit-top">
+                <div style="text-align: right; margin: 10px;">
+                    <a class="btn btn-success promp-alert tipE" title="Create Album" data-desc="Album Name:" href="admin.php?plugin=pages&amp;addon=gallery&amp;op=create_album">
+                        <span class="icon-pictures-2 font20"></span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+<br clear="all" />
+<div id="contentwrapper" class="contentwrapper">
+    <?php if(count($items_info)>0) {?>
+    <ul class="listfile">
+        <?php foreach($items_info as $item) {?>
+        <li data-main_parent="album-<?=$item['id']?>" id="album-<?=$item['id']?>">
+            <div class="img" style="background: url(<?=_SITE_PATH?>/uploads/gallery/<?=md5((string) $item['id'])?>/thumb-<?=$item['album_cover']?>) no-repeat center center;  background-size: cover;">
+            	<a href="pages/gallery/?album=<?=$item['id']?>">
+                	<span class="img">
+                        <img src="images/blank.gif" alt="<?=$item['name']?>" />
+                    </span>
+                 </a>
+             </div>
+            <div class="row-fluid fileinfo">
+                <a class="deletion tipS" title="Delete Album" href="admin.php?plugin=pages&amp;addon=gallery&amp;op=delete_album&amp;id=<?=$item['id']?>">
+                    <span class="icon-remove-2"></span>
+                </a> - (<?=(int)$item['count']?>) image<?=($item['count'] != 1) ? 's' : ''?>
+            </div>
+            <div class="filename">
+                <?=$item['name']?>
+            </div>
+        </li>
+        <?php }?>
+    </ul>
+    <?php }?>
+</div>

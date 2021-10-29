@@ -1,0 +1,16 @@
+<div class="innerPage">
+	<div class="menu">
+		<h1 style="color: white;"><?=$config['sitename']?> available pages</h1>
+	</div>
+	<div style="padding: 20px 0 200px 0;">
+	   <?if(count($items_data)>0) {?>
+			<?foreach($items_data as $page) {?>
+				<div style="margin: 10px;">
+					<img src="plugins/Pages/images/catsIcon.gif" /> <a href="?plugin=Pages&amp;op=catContent&amp;id=<?=$page['id']?>&amp;title=<?=$page['link']?>" title="<?=$page['name']?>"><?=$page['name']?></a>
+				</div>
+			<?}?>
+		<?} else {?>
+            <?=_PAGES_NO_RESULT?>
+        <?}?>
+	</div>
+</div>

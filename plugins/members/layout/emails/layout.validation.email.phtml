@@ -1,0 +1,26 @@
+<html>
+
+<?php
+    $title = "Welcome to {$config('sitename')}";
+
+    include 'header.email.phtml';
+?>
+
+    <body>
+
+        <?php include 'logo_header.email.phtml'; ?>
+
+        <p><b><?=_MEMBERS_EMAIL_VALIDATION_WELCOME?> <?= $config('sitename') ?></b></p>
+        <p><?=_MEMBERS_EMAIL_VALIDATION_TEXT_TOP?> <?= $name ?></p>
+        <p><?=_MEMBERS_EMAIL_VALIDATION_BODY_TOP?></p>
+        <p><a href="<?= $activation_link ?>" target="_blank">Click here to activate your account</a></p>
+        <p><?=_MEMBERS_EMAIL_VALIDATION_BODY_MIDDLE?></p>
+        <p><?=_MEMBERS_EMAIL_VALIDATION_BODY_BOTTOM?></p>
+
+        <?php
+            include 'social_links.email.phtml';
+
+            include 'disclaimer.email.phtml';
+        ?>
+    </body>
+</html>

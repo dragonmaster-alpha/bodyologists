@@ -1,0 +1,86 @@
+<!-- WISH -->
+<a role="link" class="links-event-mobile" style="text-decoration: none; color: #f7a08b !important; cursor: pointer"
+<?php if ($is_wished) { ?>
+
+   href="/members/wishlist"
+   title="Already wished! - Go to my wishlist"
+
+<?php } elseif ($user) { ?>
+
+    onclick="addToWishlist(<?=$item['id']?>)"
+    title="<?=_ADD_TO_WISH_LIST?>"
+
+<?php } else { ?>
+
+    href="/members/dashboard"
+    title="Please login to add this event to your wishlist"
+
+<?php } ?>
+> <!--closing 'a' element-->
+    <i class="<?= $is_wished ? 'icon-heart' : 'icon-heart-o'; ?>" id="wished-<?=$item['id']?>"></i>
+</a>
+
+<!-- FLAG -->
+<a role="link" class="links-event-mobile" style="padding-left: 20px; text-decoration: none; color: #f7a08b !important; cursor: pointer"
+    <?php if ($is_flagged) { ?>
+
+        title="Already flagged. Remove flag?"
+        onclick="removeFlag(<?=$item['id']?>)"
+
+    <?php } elseif ($user) { ?>
+
+        title="Flag as inapropiate"
+        onclick="flagEvent(<?=$item['id']?>)"
+
+    <?php } else {  ?>
+
+        title="Please login to report this event as inappropriate"
+        href="members/dashboard"
+
+    <?php } ?>
+> <!--closing 'a' element-->
+    <i class="<?= $is_flagged ? 'icon-flag' : 'icon-flag-o'; ?>" id="flagged-<?=$item['id']?>"></i>
+</a>
+
+<script type="text/javascript">
+<?php if ($user) { ?>
+    function addToWishlist(item_id) {
+        let el = $("#wished-"+item_id);
+        $.post("members/wishlist/addevent",{
+            "uid":<?= $user['id'] ?>,
+            "iid":item_id})
+        .done(function() {
+            alert({ title: 'Success', html: true, timer: 3000, text: 'The event was added to your Wishlist.'});
+            el.removeClass('icon-heart-o').addClass('icon-heart');
+            el.parent().attr('href','/members/wishlist');
+            el.parent().removeAttrs('onclick');
+            el.parent().html('<i class="icon-heart"></i>');
+        })
+        .error(alert('There was a problem.'));
+    }
+<?php } ?>
+
+    function flagEvent(item_id) {
+        $.post("events/flagevent",{
+            "uid":<?= $user['id'] ?? 'null' ?>,
+            "iid":item_id})
+        .done(function() {
+            alert({ title: 'Success', html: true, timer: 3000, text: 'We recorded your flag. Thanks for your feedback.'});
+            $("#flagged-"+item_id).removeClass('icon-flag-o').addClass('icon-flag');
+            $("#flagged-"+item_id).parent().attr('onclick', 'removeFlag('+item_id+')');
+        })
+        .error(alert('There was a problem.'));
+    }
+
+    function removeFlag(item_id) {
+        $.post("events/removeflag",{
+            "uid":<?= $user['id'] ?? 'null' ?>,
+            "iid":item_id})
+        .done(function() {
+            alert({ title: 'Success!', html: true, timer: 3000, text: 'Flag removed. Thanks for your feedback.'});
+            $("#flagged-"+item_id).removeClass('icon-flag').addClass('icon-flag-o');
+            $("#flagged-"+item_id).parent().attr('onclick', 'flagEvent('+item_id+')');
+        })
+        .error(alert('There was a problem.'));
+    }
+</script>

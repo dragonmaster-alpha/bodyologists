@@ -1,0 +1,217 @@
+<form action="admin.php?plugin=pages" method="post" class="stdform">
+    <input type="hidden" value="save" name="op" />
+    <input type="hidden" value="0" id="save_and" name="save_and" />
+    <?php if(isset($item['id'])) {?>
+        <input type="hidden" value="<?=$item['id']?>" name="id" />
+    <?php }?>
+    <div class="row-fluid">
+        <div class="span9">
+            <div class="pageheader">
+                <h1 class="head">
+                    Page Management
+                </h1>
+            </div>
+        </div>
+        <div class="span3">
+            <div class="submit-top">
+                <div style="text-align: right; margin-right: 40px;">
+                    <div style="position: relative; display: inline-block;">
+                        <div class="navbar">
+                            <ul class="nav pull-right">
+                                <li class="dropdown">
+                                    <button class="btn btn-success tipS" type="button" style="padding: 5px 10px 6px 10px;" data-toggle="dropdown" title="Save Changes" >
+                                        <span class="btn-icon icon-disk"></span>
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu orders-actions" role="menu">
+                                        <li><a href="javascript:jQuery('.stdform').submit();"><span class="icon-disk"></span> Save</a></li>
+                                        <li><a href="javascript:jQuery('.stdform').submit();" onclick="jQuery('#save_and').val(1);"><span class="icon-file"></span> Save &amp; New</a></li>
+                                        <li><a href="javascript:jQuery('.stdform').submit();" onclick="jQuery('#save_and').val(2);"><span class="icon-pencil-3"></span> Save &amp; Edit</a></li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <button class="btn btn-warning tipS" type="reset" style="padding: 6px 10px; margin-left: 5px;" title="Undo Changes">
+                                        <span class="font20 icon-history"></span> 
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="contentwrapper" class="contentwrapper">
+        <div id="default" class="subcontent">
+            <p>
+            	<label>
+                    This Page Will: 
+                </label>
+                <div class="field">
+                    <div class="row-fluid">
+                        <div class="span3">
+                            <label>
+                                <input type="radio" value="1" onclick="jQuery('.to_hide').show();" id="content-area" name="page_type"<?php if(!isset($item['page_type']) || $item['page_type'] == 1) echo ' checked="checked"';?> /> Contain the following...
+                            </label>
+                        </div>
+                        <div class="span4">
+                            <label style="padding-left: 40px;" class="formText">
+                                <input type="radio" value="2" onclick="jQuery('.to_hide').hide();" name="page_type"<?php if($item['page_type'] == 2) echo ' checked="checked"';?> /> Link to another page or website
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <small class="desc">
+                    Select the type of page you want to create.
+                </small>
+            </p>
+            <hr />
+            <p>
+                <label>
+                    Name: 
+                </label>
+                <div class="field">
+                    <input type="text" <?=(empty($item['id'])) ? 'id="title-area"' : ''?> value="<?=$item['name']?>" name="name" />
+                </div>
+                <small class="desc">
+                    Enter this page name, name will be used to refer to this page and will be the name displayed into breadcrumbs, it should be unique within the website.
+                </small>
+            </p>
+            <hr />
+            <?php if(count($available_languages)>1) {?>
+            <p>
+            	<label>
+                    Language: 
+                </label>
+                <div class="field">
+                    <select name="lang" class="uniformselect">
+                        <?php foreach($available_languages as $lang) {?>
+                            <option value="<?=$lang['language']?>"<?php if($lang['language'] == $item['lang']) echo ' selected="selected"';?>><?=ucfirst($lang['language'])?></option>
+                        <?php }?>
+    				</select>
+                </div>
+                <small class="desc">
+                    Select the language this page will be displayed in.
+                </small>
+            </p>
+            <?php } else {?>
+    			<input type="hidden" value="english" name="lang" />
+            <?php }?>
+            <p>
+                <div class="field">
+                    <div class="row-fluid">
+                        <div class="span6">
+                            Parent Page:<br />
+                            <select name="parent" class="uniformselect" size="5">
+                                <option value="0"<?=(empty($item['parent'])) ? ' selected="selected"' : ''?>> -- No Parent Page --</option>
+                                <?php
+                                if(count($items_list)>0) 
+                                {
+                                    $helper->select_from_array($items_list, $item['parent']);
+                                }
+                                ?>
+                            </select>
+                        </div>
+                        <div class="span6">
+                            Configuration: <br />
+                            <label>
+                                <input type="checkbox" value="1" name="active" <?=($item['active'] == 1) ? ' checked="checked"' : ''?> /> Visible and accessible to all visitors.
+                            </label>
+                            <label>
+                                <input type="checkbox" value="1" name="in_menu" <?=(!empty($item['in_menu'])) ? 'checked="checked"' : ''?> /> Display in menu.
+                            </label>
+                            <?php if(is_dir('../plugins/members')) {?>
+                                <label>
+                                    <input type="checkbox" value="1" name="only_members" <?=(!empty($item['only_members'])) ? 'checked="checked"' : ''?> /> Accessible by members only.
+                                </label>
+                            <?php }?>
+                        </div>
+                    </div>
+                </div>
+            </p>
+            <p>
+            	<label>
+                    
+                </label>
+                <div class="field">
+                    
+                </div>
+                <small class="desc">
+                    Configure how this page will behave to visitors.
+                </small>
+            </p>
+            <hr />
+            <div class="to_hide"<?=($item['page_type'] == 2) ? ' style="display: none"' : ''?>>
+                <textarea name="text" class="mce"><?=htmlentities($item['text'])?></textarea>
+            </div>
+            <hr class="to_hide" />
+            <div class="to_hide">
+                <h4>Search Engine Listing Preview:</h4>
+                <div class="row-fluid" style="margin-top: 10px;">
+                    <div class="span10">
+                        <div class="google-title"><?=$item['title']?></div>
+                        <div>http<?=(!empty($helper->config['force_https'])) ? 's' : ''?>://<?=$helper->site_domain() . _SITE_PATH?>/<span class="google-url"><?=str_replace('', '', $item['url'])?></span></div>
+                        <div class="google-text"><?=$item['meta_description']?></div>
+                    </div>
+                    <div class="span2 text-right">
+                        <a href="#" onclick="jQuery('#seo-options').slideDown(); jQuery('body').animate({scrollTop:jQuery('div#seo-options').offset().top},200); return false;">
+                            Edit SEO
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <hr class="to_hide" />
+            <div class="to_hide">
+                <p>
+                    <label>
+                        Title: 
+                    </label>
+                    <div class="field">
+                        <input type="text" id="page-title-area" maxlength="<?=$_seo_settings['title_length']?>" value="<?=$item['title']?>" name="title" data-mirror="entrance" data-image="google-title" class="required" />
+                    </div>
+                    <small class="desc">
+                        Enter this page title, the title is a very important aspect of the page and play a very important role for your SEO strategy.
+                    </small>
+                </p>
+            </div>
+            <p>
+                <label>
+                    URL: 
+                </label>
+                <div class="field">
+                    <script type="text/javascript">var table = 'pages';</script>
+                    <div class="fake-input">
+                        <span class="to_hide"><?=(!empty($frm->config['force_https'])) ? 'https' : 'http'?>://<?=$frm->site_domain() . _SITE_PATH?>/</span>
+                        <input type="text" <?=(empty($item['url'])) ? 'id="url-area"' : ''?> value="<?=str_replace('', '', $item['url'])?>" maxlength="55" name="url" data-mirror="entrance" data-image="google-url" placeholder="<?=str_replace('', '', $item['url'])?>" /> 
+                    </div>
+                    <span class="help-block" id="url-check-area"></span>
+                </div>
+                <small class="desc">
+                    Enter this page URL, URL is the most important aspect of the page and play a very important role for your SEO strategy, make is as simple and easy to remember as possible.
+                </small>
+            </p>
+            <div class="to_hide">
+                <p>
+                    <label>
+                        Meta Description: 
+                    </label>
+                    <div class="field">
+                        <textarea maxlength="<?=$_seo_settings['description_length']?>" id="meta_description" name="meta_description" data-mirror="entrance" data-image="google-text"><?=$item['meta_description']?></textarea>
+                    </div>
+                    <small class="desc">
+                        Enter this page meta description, the meta description is a very important aspect of the page and play a very important role for your SEO strategy.
+                    </small>
+                </p>
+            </div>
+        </div>
+    </div>
+</form>
+<script type="text/javascript">
+    jQuery(function() {
+        <?php if($item['page_type'] == 2) {?>
+            jQuery('.to_hide').hide();
+        <?php } else { ?>
+            jQuery('.to_hide').show();
+        <?php } ?>
+    });
+</script>

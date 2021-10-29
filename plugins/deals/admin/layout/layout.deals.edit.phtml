@@ -1,0 +1,177 @@
+<?php if(isset($_SESSION['error'])) {?>
+    <div class="alert-error" title="Error">
+        <?=$_SESSION['error']?>
+    </div>
+    <?php
+    unset($_SESSION['error']);
+}
+?>
+<form action="admin.php?plugin=deals" method="post" class="stdform validate-form">
+    <input type="hidden" value="save" name="op" />
+    <input type="hidden" value="0" id="save_and" name="save_and" />
+    <input type="hidden" value="<?=$item['id']?>" name="id" />
+    <div class="row-fluid">
+        <div class="span9">
+            <div class="pageheader">
+                <h1 class="head">
+                    Deals Management
+                </h1>
+            </div>
+        </div>
+        <div class="span3">
+            <div class="submit-top">
+                <div style="text-align: right; margin-right: 40px;">
+                    <div style="position: relative; display: inline-block;">
+                        <div class="navbar">
+                            <ul class="nav pull-right">
+                                <li class="dropdown">
+                                    <button class="btn btn-success tipS" type="button" style="padding: 5px 10px 6px 10px;" data-toggle="dropdown" title="Save Changes" >
+                                        <span class="btn-icon icon-disk"></span>
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu orders-actions" role="menu">
+                                        <li><a href="javascript:jQuery('.stdform').submit();"><span class="icon-disk"></span> Save</a></li>
+                                        <li><a href="javascript:jQuery('.stdform').submit();" onclick="jQuery('#save_and').val(1);"><span class="icon-file"></span> Save &amp; New</a></li>
+                                        <li><a href="javascript:jQuery('.stdform').submit();" onclick="jQuery('#save_and').val(2);"><span class="icon-pencil-3"></span> Save &amp; Edit</a></li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <button class="btn btn-warning tipS" type="reset" style="padding: 6px 10px; margin-left: 5px;" title="Undo Changes">
+                                        <span class="font20 icon-history"></span> 
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <ul class="hornav">
+        <li class="current">
+            <a href="#default" class="current">Article</a>
+        </li>
+        <li>
+            <a href="#images">Images</a>
+        </li>
+    </ul>    
+    <div id="contentwrapper" class="contentwrapper">
+        <div id="default" class="subcontent">
+            <p>
+                <label>
+                    Title: 
+                </label>
+                <div class="field">
+                    <input type="text" value="<?=$item['title']?>" name="title" class="required" />
+                </div>
+                <small class="desc">
+                    Enter the event name. This name will be used in on the site for SEO purposes.
+                </small>
+            </p>
+            <hr />
+            <p>
+                <label>
+                    Start Date: 
+                </label>
+                <div class="field">
+                    <div class="row-fluid">
+                        <div class="span5">
+                            <input type="text" value="<?=(!empty($item['start_date']) ? date('m/d/Y', strtotime($item['start_date'])) : date('m/d/Y'))?>" name="start_date" class="datepick hasDatepicker" />
+                            <input type="text" value="<?=date('g:i A', strtotime($item['start_time']))?>" data-default-time="<?=date('g:i A', strtotime($item['start_time']))?>" name="start_time" class="timepick hasTimepicker" />
+                        </div>
+                        <div class="span5">
+                            <span class="title">End Date:</span> 
+                            <input type="text" value="<?=(!empty($item['end_date']) ? date('m/d/Y', strtotime($item['end_date'])) : date('m/d/Y'))?>" name="end_date" class="datepick hasDatepicker" />
+                            <input type="text" value="<?=date('g:i A', strtotime($item['end_time']))?>" data-default-time="<?=date('g:i A', strtotime($item['end_time']))?>" name="end_time" class="timepick hasTimepicker" />
+                        </div>
+                    </div>
+                </div>
+            </p>
+            <hr />
+            <p>
+                <label>
+                    Configuration: 
+                </label>
+                <div class="field">
+                    <div class="row-fluid">
+                        <div class="span4">
+                            <label>
+                                <input type="checkbox" value="1" name="active"<?php if($item['active'] == 1) echo ' checked="checked"'; ?> /> Visible and accessible to all visitors.
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </p>
+            <div>
+                <textarea name="text" class="mce"><?=htmlentities($item['text'])?></textarea>
+            </div>
+		</div>
+        <div id="images" class="subcontent" style="display: none;">
+            <div class="row-fluid">
+                <div class="span3">
+                    <div class="avatar-img" style="float: left; background-image: url(images/no-image-60x60.jpg)"> 
+                        <img src="images/blank.gif" alt="Upload Images" />
+                        <input type="file" name="Filedata" id="upload_field" multiple="multiple" accept="image/*" />
+                    </div>
+                </div>
+                <div class="span9">
+                    <div id="progress_report">
+                        <div id="progress_report_name"></div>
+                        <div id="progress_report_status" style="font-style: italic;"></div>
+                        <div id="progress_report_bar_container" style="width: 90%; height: 5px;">
+                            <div id="progress_report_bar" style="background-color: blue; width: 0; height: 100%;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br clear="all" />
+            <div class="gallerywrapper">
+                <i>Remember: The first image will be the one shown to the public.</i>
+                <ul class="imagelist" id="img-holder">
+
+                <!-- IMAGES -->
+                <?php include 'layout.load_images.phtml'; ?>
+
+                </ul>
+            </div>
+        </div>
+	</div>
+</form>
+<script type="text/javascript" src="js/plugins/jquery.html5_upload.js"></script>
+<script type="text/javascript"> 
+    jQuery(function() {
+        jQuery("#upload_field").html5_upload({
+            extraFields: {
+                'id'            : '<?=$item['id']?>',
+                'folder_name'   : 'deals',
+                'op'            : 'photos',
+                'confirm_field' : '1'
+            },
+            url: 'uploads.php',
+            sendBoundary: window.FormData || jQuery.browser.mozilla,
+            onStart: function(event, total) {
+                jQuery('#progress_report').show();
+                return true;
+            },
+            setStatus: function(text) {
+                jQuery("#progress_report_status").text(text);
+            },
+            setProgress: function(val) {
+                jQuery("#progress_report_bar").css('width', Math.ceil(val*100)+"%");
+            },
+            onFinish: function(event) {
+                jQuery('#progress_report').hide();
+                jQuery('.avatar-img').css('background-image', 'url(images/no-image-60x60.jpg)');
+                jQuery.fn.colorbox.resize();
+            },
+            onFinishOne: function(event, response, name, number, total) {
+                jQuery.get('admin.php?plugin=deals&amp;op=load_images&amp;id=<?=$item['id']?>', function(data){
+                    jQuery('#img-holder').html(data);
+                });
+            },
+            onError: function(event, name, error) {
+                alert('error while uploading file ' + name);
+            }
+        });
+    });
+</script>

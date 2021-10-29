@@ -1,0 +1,45 @@
+<html>
+
+<?php
+$title = "New professional request to get listed at {$config('sitename')}";
+
+include 'header.email.phtml';
+?>
+
+    <body>
+
+        <?php include 'logo_header.email.phtml'; ?>
+
+        <p><h2><?= $args['first_name'] ?> wants to get listed at <?= $config('sitename') ?>!</h2></p>
+        <?php
+        echo '<h3>Member Profile</h3>';
+        foreach ($args['profile'] as $key => $value) {
+            echo "<p><b>{$key}</b> {$value}</p>";
+        }
+        echo '<hr>';
+
+        echo '<h3>Certifications</h3>';
+
+        if (count($args['certifications']) === 0) {
+            echo 'No certifications were uploaded.';
+        } else {
+            echo '<ul>';
+            foreach ($args['certifications'] as $file) {
+                echo "<li><a href='{$file['access_link']}' target='_blank'>{$file['name']}</a></li>";
+            }
+            echo '</ul>';
+        }
+        ?>
+
+        <hr>;
+
+        Once you review the information and certifications (if any) you can:
+        <b><a href="<?= $args['links']['approve'] ?>" target="_blank">Approve profile</a></b> or
+        <b><a href="<?= $args['links']['reject'] ?>" target="_blank">Reject it</a></b>
+        and an email will be sent to the user to let her/him know about the decision.
+
+        <br>
+        <br>
+        <br>
+    </body>
+</html>

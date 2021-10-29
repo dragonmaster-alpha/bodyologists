@@ -1,0 +1,170 @@
+</div>
+</div>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-4 col-lg-2 memberside">
+            <div>
+                <?php require_once($_SERVER["DOCUMENT_ROOT"] . _SITE_PATH . '/plugins/members/nav_menu.php'); ?>
+            </div>
+        </div>
+        <div class="col-md-8 ">
+           <div class="row">
+                <div class="col-12 text-center">
+                    <div class="separator xs"></div>
+                    <h4 role="heading">Create Article</h4>
+                </div>
+            </div> 
+            <form action="members/articles/add" method="post" id="articleform">
+                <input type="hidden" value="<?php echo App\Helper::encode($item['id']);?>" name="id" />
+                <input type="hidden" value="<?php echo App\Helper::encode($_SESSION['user_info']['id']); ?>" name="poster" />
+                <input type="hidden" value="article-<?php echo App\Helper::encode($item['id']);?>" name="url" />
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="row mb-2">
+                            <div class="col-md-12">
+                                <label>Title:</label>
+                                <input type="text" value="<?php echo App\Helper::encode($item['title']);?>" name="title" class="required form-control " />
+                            </div>
+                        </div>
+                        <div class="separator sm"></div>
+                        <div class="row mb-2">
+                            <div class="col-12">
+                                <label>Description:</label>
+                                <!-- <textarea name="text" class="form-control " rows="20"><?=$item['text']?></textarea> -->
+                                <input type="hidden" name="text">
+                                <div id="editor" class="bg-white d-block" style="height: 500px; overflow: hidden">
+                                    <?=$item['text']?>
+                                </div>                
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="row mb-2">
+                            <div class="col-md-12">
+                                <label>Category: </label>
+                                <select name="category" class="required form-control form-control-lg">
+                                    <option value="">Select a Category</option>
+                                    <option <?=($item['category'] == 'Health') ? ' selected="selected"' : ''?> value="Health">
+                                        Health
+                                    </option>
+                                    <option <?=($item['category'] == 'Fitness') ? ' selected="selected"' : ''?> value="Fitness">
+                                        Fitness
+                                    </option>
+                                    <option <?=($item['category'] == 'Beauty') ? ' selected="selected"' : ''?> value="Beauty">
+                                        Beauty
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="separator sm"></div>
+                        <div class="row mb-2">
+                            <div class="col-12" id="upload-area">
+                                <label>Article Image:</label>
+                                <div class="long-upload-images bg-light "> 
+                                    <i class="icon-cloud-upload icon-3x"></i>
+                                    <input type="file" name="Filedata" id="upload_field" multiple="multiple" accept="image/*" /> Upload Image
+                                </div>
+                            </div>
+                        </div>
+                        <?php if(!empty($item['media'])) {?>
+                            <div class="row">
+                                <div class="col-12">
+                                    <label>Current Image:</label>
+                                    <div class="thumbs-area" id="image-<?=$item['media']['id']?>">
+                                        <a href="members/delete_image/?id=<?=$item['media']['id']?>" class="deletion" data-main-parent="image-<?=$item['media']['id']?>">
+                                            <img src="<?=_SITE_PATH?>/uploads/blog/<?=$item['media']['bid']?>/<?=$item['media']['image']?>" />
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php }?>
+                        <div class="separator sm"></div>
+                        <div class="row mb-2">
+                            <div class="col-md-12">
+                                <label>Tags:</label>
+                                <textarea name="tags" class="form-control" rows="10" placeholder="List tags separated by commas"></textarea>
+                            </div>
+                        </div>
+                    </div>    
+                </div>
+                <div class="row mb-4">
+                    <div class="separator "></div>
+                    <div class="col-md-3">
+                        <a href="members/articles" class="btn btn-success btn-lg">
+                            Cancel 
+                        </a>
+                    </div>
+                    <div class="col-md-6"></div>
+                    <div class="col-md-3">
+                        <button class="btn btn-primary btn-lg" type="submit">
+                            Publish
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <script type="text/javascript" src="js/plugins/jquery.html5.upload.js"></script>
+        <script type="text/javascript"> 
+            $(function() {
+                $('#upload_field').html5_upload({
+                    extraFields: {
+                        'op': 'photos',
+                        'owner': '<?=$_SESSION['user_info']['id']?>',
+                        'folder_name': 'blog',
+                        'id': '<?=$item['id']?>',
+                        'confirm_field': '1'
+                    },
+                    url: 'uploads.php',
+                    sendBoundary: window.FormData || $.browser.mozilla,
+                    onStart: function(event, total) {
+                        $('.long-upload-images i').removeClass('icon-cloud-upload').addClass('icon-spinner').addClass('icon-spin');
+                        return true;
+                    },
+                    onFinish: function(event) {
+                        $('.long-upload-images i').removeClass('icon-spinner').removeClass('icon-spin').addClass('icon-cloud-upload');
+                    },
+                    onFinishOne: function(event, response, name, number, total) {
+                        var data = JSON.parse(response);
+                        $('#upload-area').append('<div class="thumbs-area"><img src="' + data.url + '" /></div>');
+                    },
+                    onError: function(event, name, error) {
+                        alert('error while uploading file ' + name );
+                    }
+                });
+                
+            });
+        </script>        
+        <div class="col-md-2 memberside  d-none d-lg-block" style="padding: 0;">
+            <div>
+                <button class="btn bg-light p-2 right-profile-img" type="button" data-toggle="collapse" data-target="#collapse-1" aria-expanded="true" aria-controls="collapse-1">
+                    <div class="row">
+                        <div class="col-xl-5">
+                            <img src="<?=_SITE_PATH . '/uploads/avatar/' . md5((string) $_SESSION['user_info']['id']) . '/' . $_SESSION['user_info']['avatar']?>" alt="" class="rounded-circle" />
+                        </div>
+                        <div class="col-xl-7 pt-2">
+                            Hi, <?=$_SESSION['user_info']['first_name']?>
+                        </div>
+                    </div>
+
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<link href="css/quill.snow.css" rel="stylesheet">
+<script src="js/quill.js"></script>
+
+<!-- Initialize Quill editor -->
+<script>
+var quill = new Quill('#editor', {
+  modules: {
+    toolbar: [
+      ['bold', 'italic'],
+      ['link', 'blockquote'],
+      [{ list: 'ordered' }, { list: 'bullet' }]
+    ]
+  },
+  theme: 'snow'
+});
+
+</script>

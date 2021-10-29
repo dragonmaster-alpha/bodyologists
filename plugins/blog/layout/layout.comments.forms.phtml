@@ -1,0 +1,37 @@
+<div class="clearfix">
+	<a name="enter_comment"></a>
+	<h3><?=_BLOG_LEAVE_YOUR_COMMENTS?></h3>
+    <hr />
+	<form action="blog/add_comment" method="post"  class="form-horizontal validate-form">
+        <?php if($members->is_user()) {?>
+            <input type="hidden" value="<?=$_SESSION['user_info']['full_name']?>" name="name" />
+            <input type="hidden" value="<?=$_SESSION['user_info']['email']?>" name="email" />
+        <?php } else {?>
+            <div class="form-row">
+                <div class="col form-group">
+                <input type="text" value="<?=$_SESSION['comments']['name']?>" name="name" class="required form-control name" placeholder="<?=_NAME?>" />
+            </div>
+            </div>
+            <div class="form-row">
+                <div class="col form-group">
+                <input type="email" value="<?=$_SESSION['comments']['email']?>" name="email" class="required form-control" placeholder="<?=_EMAIL?> (<?=_WILL_KEEP_PRIVATE?>)" /> 
+            </div>
+            </div>
+        <?php }?>
+        <div class="form-row">
+            <div class="col form-group">
+                <textarea name="text" class="required form-control" placeholder="<?=_YOUR_COMMENT?>"><?=$_SESSION['comments']['text']?></textarea>
+            </div>
+        </div>
+        <?php if(!empty($blog_settings['use_captcha'])) {
+            $helper->display_catpcha();
+        }?>
+        <hr />
+        <div class="text-right">
+			<input type="hidden" value="<?=$item['id']?>" name="id" />
+			<button class="btn btn-lg btn-primary" type="submit">
+				<?=_SUBMIT?> <?=_COMMENT?>
+			</button>
+		</div>
+	</form>
+</div>

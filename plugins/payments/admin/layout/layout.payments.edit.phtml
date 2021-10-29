@@ -1,0 +1,64 @@
+<div id="contentwrapper" class="contentwrapper" style="width: 800px;">
+    <div class="row-fluid">
+        <div class="span6">
+            <h4><strong>No</strong>: <?=$item['trans']?></h4>
+        </div>
+        <div class="span6">
+            <h4><strong>Date</strong>: <?=date('M jS, Y g:i:A', strtotime($item['date']))?></h4>
+        </div>
+    </div>
+    <hr />
+    <div class="row-fluid">
+        <div class="span3">
+            <h4>Client Info:</h4>
+            <?=$item['first_name']?> <?=$item['last_name']?><br />
+            <strong>Phone</strong>: <a href="tel:<?=$item['phone']?>"><?=$item['phone']?></a><br />
+            <strong>Email</strong>: <a href="admin.php?plugin=system&amp;file=messages&amp;op=send_message&amp;email=<?=$item['email']?>&amp;name=<?=urlencode($item['first_name'])?>+<?=urlencode($item['last_name'])?>&amp;subject=<?=urlencode('Contact from ' . $frm->config['sitename'])?>" class="send-message"><?=$item['email']?> <span class="icon-mail-send"></span></a>
+        </div>
+        <div class="span3">
+            <h4>Paid Amount:</h4>
+            <strong>Subtotal</strong>: $<?=$item['subtotal']?><br />
+            <strong>Tax</strong>: $<?=$item['taxes']?><br />
+            <strong>Total</strong>: $<?=$item['total']?>
+        </div>
+        <div class="span3">
+            <h4>Billing Address:</h4>
+            <?if(!empty($item['extras'])) {?>
+                <?foreach ($item['extras'] as $key => $value) {?>
+                <strong><?=ucwords(str_replace('_', ' ', $key))?></strong>: <?=$value?><br />
+                <?}?>
+            <?}?>
+            <?if(!empty($item['address'])) {?>
+            <?=$item['address']?><?=(!empty($item['address2']) ? ', ' . $item['address2'] : '')?><br />
+            <?=$item['city']?><?=(!empty($item['state']) ? ', ' . $item['state'] : '')?> <?=$item['zipcode']?><br />
+            <?=(!empty($item['country']) ? $item['country'] : '')?>
+            <?} else {?>
+                <strong>Zip Code</strong>: <?=$item['zipcode']?>
+            <?}?>
+        </div>
+        <div class="span3">
+            <h4><?=$item['payment_method']?>:</h4>
+            <?if($item['payment_method'] == 'eCheck') {?>
+                <strong>Bank</strong>: <?=$item['payment_info']['bank_name']?><br />
+                <strong>Account Info:</strong>: <?=$item['payment_info']['account_type']?> / <?=$item['payment_info']['account_number']?><br />
+                <strong>Routing</strong>: <?=$item['payment_info']['routing_number']?>
+            <?} else {?>
+                <strong><?=strtoupper($item['payment_info']['card_type'])?></strong>: <?=$item['payment_info']['card_number']?><br />
+                <strong>Exp Date</strong>: <?=$item['payment_info']['card_date']?><br />
+                <strong>CVV</strong>: <?=$item['payment_info']['card_cvv']?>
+            <?}?>
+        </div>
+    </div>
+    <br clear="all" />
+    <?if(!empty($item['notes'])) {?>
+    <hr />
+    <div>
+        <h4>Notes:</h4>
+        <div class="widgetcontent userlistwidget nopadding" style="margin-top: 20px;">
+            <ul>
+                <?=$item['notes']?>
+            </ul>
+        </div>
+    </div>
+    <?}?>
+</div>

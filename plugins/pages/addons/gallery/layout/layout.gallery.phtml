@@ -1,0 +1,26 @@
+<?if(!empty($items_info)) {?>
+<div class="separator"></div>
+<h1><?=$album_info['name']?></h1>
+<ul class="gallery">
+    <?foreach ($items_info as $item) 
+    {?>
+    <li>
+        <?if($item['media'] != 'youtube') {?>
+        <a href="<?=_SITE_PATH . '/uploads/gallery/' . $item['bid'] . '/' . $item['image']?>" class="box" rel="box[gallery]">
+        <?} else {?>
+        <a href="https://www.youtube.com/embed/<?=$item['meta_info']['video_id']?>" class="youtube" rel="box[gallery]">
+        <?}?>
+            <img src="<?=($item['media'] != 'youtube' ? _SITE_PATH . '/uploads/gallery/' . $item['bid'] . '/' : '')?><?=$item['image']?>" alt="<?=(!empty($item['title']) ? $item['title'] : $album_info['name'])?>" />
+        </a>
+    </li>
+    <?}?>
+</ul>
+<?} else {?>
+    <h1>Empty Gallery</h1>
+    <p>The gallery you are trying to see is empty at this moment, please try again later.</p>
+<?}?>
+<script>
+    $(document).ready(function(){
+        $(".youtube").colorbox({iframe:true, innerWidth:640, innerHeight:390});
+    });
+</script>

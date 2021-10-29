@@ -1,0 +1,161 @@
+@charset "UTF-8"
+
+#colorbox, #cboxOverlay, #cboxWrapper
+    position: absolute
+    top: 0
+    left: 0
+    z-index: 9999 !important
+    overflow: hidden
+    outline: none
+
+#cboxOverlay
+    position: fixed
+    width: 100%
+    height: 100%
+    background-color: rgba(255, 255, 255, 0.9)
+
+#cboxMiddleLeft, #cboxBottomLeft
+    clear: left
+
+#cboxContent
+    position: relative
+
+#cboxLoadedContent
+    overflow: auto
+
+    hr
+        margin: 10px -30px
+
+#cboxLoadingOverlay, #cboxLoadingGraphic
+    position: absolute
+    top: 0
+    left: 0
+    width: 100%
+    height: 100%
+
+#cboxPrevious, #cboxNext, #cboxClose, #cboxSlideshow
+    cursor: pointer
+
+.cboxPhoto
+    float: left
+    margin: auto
+    border: 0
+    display: block
+    max-width: none
+
+.cboxIframe
+    width: 100%
+    height: 100%
+    display: block
+    border: 0
+
+#colorbox, #cboxContent, #cboxLoadedContent
+    box-sizing: content-box
+    -moz-box-sizing: content-box
+    -webkit-box-sizing: content-box
+
+#cboxContent
+    background: #fff
+    overflow: hidden
+
+.cboxIframe
+    background: #fff
+
+#cboxError
+    padding: 50px
+    border: 1px solid #ccc
+
+#cboxTitle, #cboxCurrent
+    display: none
+
+#cboxSlideshow
+    position: absolute
+    bottom: 0px
+    right: 42px
+    color: #444
+
+#cboxPrevious
+    display: none
+    position: absolute
+    opacity: 0
+    top: 49%
+    left: -40px
+    color: #444
+    font-size: 80px
+    speak: none
+    font-weight: 300
+    -webkit-font-smoothing: antialiased
+    background: none
+    border: 0
+    text-shadow: 0 0 1px #fff, 0 0 10px #999
+
+    &:hover
+        opacity: 1
+
+    &:focus
+        outline: 0
+
+    &:before
+        content: "〈"
+
+#cboxNext
+    display: none
+    position: absolute
+    opacity: 0
+    top: 49%
+    right: -40px
+    color: #444
+    font-size: 80px
+    speak: none
+    font-weight: 300
+    -webkit-font-smoothing: antialiased
+    background: none
+    border: 0
+    text-shadow: 0 0 1px #fff, 0 0 10px #999
+
+    &:hover
+        opacity: 1
+
+    &:focus
+        outline: 0
+
+    &:before
+        content: "〉"
+
+#cboxLoadingOverlay
+    position: absolute
+    top: 35%
+    left: 40%
+    background: #fff url(../../images/big-loading.gif) no-repeat 5px 5px
+
+#cboxClose
+    position: absolute
+    right: 20px
+    top: 20px
+    width: 20px
+    height: 20px
+    opacity: 0.6
+    border: 0
+    background: url(../../images/uploadify-cancel.png) no-repeat center center
+    text-indent: -9999px
+
+    &:hover
+        opacity: 1
+
+#colorbox
+    box-shadow: 0 0 30px #cdcdcd
+
+    a.cancel
+        margin-right: 20px
+
+    &:hover
+        text-decoration: none
+
+    &:hover
+        #cboxPrevious, #cboxNext
+            opacity: 1
+
+@media all and (max-width: 768px)
+    #colorbox:hover
+        #cboxPrevious, #cboxNext
+            opacity: 0

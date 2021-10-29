@@ -1,0 +1,20 @@
+<?php if(!empty($items_info)) {?>
+    <ul class="albums">
+        <?php
+        foreach($items_info as $item) 
+        {
+        ?>
+        <li>
+            <div class="image" style="background-image: url(<?=_SITE_PATH?>/uploads/gallery/<?=md5((string) $item['id'])?>/thumb-<?=$item['album_cover']?>)">
+                <a href="pages/gallery/<?=$item['id']?>">
+                    <img src="images/blank.gif" alt="<?=$item['name']?>" />
+                 </a>
+             </div>
+            <h3><?=$item['name']?></h3>
+        </li>
+        <?php }?>
+    </ul>
+<?php } else {?>
+    <h1>Empty Gallery</h1>
+    <p>There is no galleries set at this time, please try again later...</p>
+<?php }?>

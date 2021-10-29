@@ -1,0 +1,30 @@
+<?if(!empty($comments_list)) {?>
+    <h3><?=_COMMENTS?></h3>
+	<ul class="comments">
+		<?foreach($comments_list as $comment) {?>
+        <li itemprop="review" itemscope itemtype="http://schema.org/Review">
+            <a name="comment_<?=$comment['id']?>"></a>
+            <?if(!empty($comment['owner'])) {?>
+            <div class="avatar" style="background-image: url(<?=_SITE_PATH?>/uploads/avatar/<?=md5((string) $comment['owner'])?>/small-<?=$comment['avatar']?>);">
+                <img src="images/blank.gif" />
+            </div>
+            <?} else {?>
+            <div class="avatar">
+                <?=$comment['name'][0]?>
+            </div>
+            <?}?>
+            <div class="content">
+                <a class="author" itemprop="author">
+                    <?=$comment['name']?>
+                </a>
+                <div class="metadata" itemprop="datePublished">
+                    <?=_ON?> <?=$frm->format_sort_date($comment['date'])?></em>
+                </div>
+                <div class="text" itemprop="description">
+                    <?=$comment['text']?>
+                </div>
+            </div>
+        </li>
+		<?}?>
+	</ul>
+<?}?>

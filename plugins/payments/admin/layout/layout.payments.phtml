@@ -1,0 +1,72 @@
+<?php if(isset($_SESSION['error'])) {?>
+    <div class="alert-error" title="Error">
+        <?=$_SESSION['error']['message']?>
+    </div>
+    <?php
+    unset($_SESSION['error']);
+}
+?>
+<?php if(isset($_SESSION['success'])) {?>
+    <div class="alert-error" title="System Message">
+        <?=$_SESSION['success']['message']?>
+    </div>
+    <?php
+    unset($_SESSION['success']);
+}
+?>
+<div class="pageheader">
+    <h1 class="head">
+        <?=$meta['title']?>
+    </h1>
+</div>
+<br clear="all" />
+<div class="summary-bar">
+    <a href="#" class="reload tipS" title="Reload" onclick="window.location.href = window.location.href; return false;">
+        <span class="icon-redo"></span>
+    </a>
+    <a class="tipS" title="New Transaction" href="admin.php?plugin=payments&amp;op=new">
+        <span class="icon-plus-2"></span>
+    </a>
+    <a class="tipS" title="Export" href="admin.php?plugin=payments&amp;op=export">
+        <span class="icon-download-2"></span>
+    </a>
+</div>
+<div class="search-area">
+    <form action="#">
+        <input type="text" id="search-area" data-url="index.php?plugin=payments" value="" name="q" placeholder="Search..." />
+    </form>
+</div>
+<div id="contentwrapper" class="contentwrapper">    
+    <table cellpadding="0" cellspacing="0" border="0" class="stdtable">
+        <colgroup>
+            <col />
+            <col style="width: 180px;" />
+            <col style="width: 180px;" />
+            <col style="width: 150px;" />
+            <col style="width: 10px;" />
+        </colgroup>
+        <thead>
+            <tr>
+                <th>Transaction</th>
+                <th>Bill to</th>
+                <th>Total</th>
+                <th>Date</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+        <?php
+            if(!$frm->empty_array($items_info))
+            {
+            	foreach($items_info as $item)
+            	{
+                    include($_SERVER['DOCUMENT_ROOT'] . _SITE_PATH . '/plugins/payments/admin/layout/layout.payments.list.phtml');
+                }
+            }
+            ?>
+        </tbody>
+    </table>
+</div>
+<div id="ajax-load-more-content" class="well hide" data-url="admin.php?plugin=payments&amp;op=more<?=(!empty($status) ? '&amp;status=' . $status : '')?>">
+    <img src="images/loaders/loader6.gif" alt="Loading" />
+</div>

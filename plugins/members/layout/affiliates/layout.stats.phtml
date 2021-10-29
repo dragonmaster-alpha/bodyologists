@@ -1,0 +1,105 @@
+<?
+require_once($_SERVER["DOCUMENT_ROOT"] . _SITE_PATH . '/plugins/members/nav_menu.php');
+?>
+<form action="" method="get">
+    <h2><?=_STATS_SORT?></h2>
+    <table style="width: 100%;">
+        <colgroup span="2">
+            <col style="width: 33%;" />
+            <col style="width: 33%;" />
+            <col style="width: 33%;" />
+        </colgroup>
+        <tr>
+            <td style="text-align: center;">
+                <?=_TYPE?>: 
+                <select name="type" onchange="this.form.submit();">
+                    <option value="sale" <?=($selected_type == 'sale')  ? ' selected="selected"' : ''?>><?=_SALES?></option>
+                    <option value="reg" <?=($selected_type == 'reg')    ? ' selected="selected"' : ''?>><?=_TRAINING_REGISTRATION?></option>
+                </select>
+            </td>
+            <td style="text-align: center;">
+                <?=_MONTH?>:
+                <select name="month" onchange="this.form.submit();">
+                    <option></option>
+                    <option value="01" <?=($selected_month == '01') ? ' selected="selected"' : ''?>><?=_JANUARY?></option>
+                    <option value="02" <?=($selected_month == '02') ? ' selected="selected"' : ''?>><?=_FEBRUARY?></option>
+                    <option value="03" <?=($selected_month == '03') ? ' selected="selected"' : ''?>><?=_MARCH?></option>
+                    <option value="04" <?=($selected_month == '04') ? ' selected="selected"' : ''?>><?=_APRIL?></option>
+                    <option value="05" <?=($selected_month == '05') ? ' selected="selected"' : ''?>><?=_MAY?></option>
+                    <option value="06" <?=($selected_month == '06') ? ' selected="selected"' : ''?>><?=_JUNE?></option>
+                    <option value="07" <?=($selected_month == '07') ? ' selected="selected"' : ''?>><?=_JULY?></option>
+                    <option value="08" <?=($selected_month == '08') ? ' selected="selected"' : ''?>><?=_AUGUST?></option>
+                    <option value="09" <?=($selected_month == '09') ? ' selected="selected"' : ''?>><?=_SEPTEMBER?></option>
+                    <option value="10" <?=($selected_month == '10') ? ' selected="selected"' : ''?>><?=_ORTOBER?></option>
+                    <option value="11" <?=($selected_month == '11') ? ' selected="selected"' : ''?>><?=_NOVEMBER?></option>
+                    <option value="12" <?=($selected_month == '12') ? ' selected="selected"' : ''?>><?=_DECEMBER?></option>
+                </select>
+            </td>
+            <td style="text-align: center;">
+                <?=_YEAR?>:
+                <select name="year" onchange="this.form.submit();">
+                <?
+                $thisYear                                             = date('Y');
+                for ($y= $thisYear; $y > $thisYear-10; $y--) {?>
+                    <option value="<?=$y?>" <?=($selected_year == $y)    ? ' selected="selected"' : ''?>><?=$y?></option>
+                <?}?>
+                </select>
+            </td>
+        </tr>
+    </table>
+</form>
+<div style="height: 40px;"></div>
+<h2><?=_STATS_INFO?></h2>
+<table class="wde">
+    <colgroup span="6">
+        <col style="width: 70px;" />
+        <col style="width: 590px;" />
+        <col style="width: 100px;" />
+        <col style="width: 100px;" />
+        <col style="width: 140px;" />
+    </colgroup>
+    <tr>
+        <th>
+            <?=_PAID?>
+        </th>
+        <th>
+            <?=_DATE?>
+        </th>
+        <th>
+            <?=_ORDER_NUMBER?>
+        </th>
+        <th>
+            <?=_ORDER_TOTAL?>
+        </th>
+        <th>
+            Commission Earned
+        </th>
+    </tr>
+    <?if(!$frm->empty_array($grid_data)) {?>
+        <?foreach($grid_data as $grid_info) {?>
+        <tr>
+            <td style="text-align: center;">
+                <?=(!empty($grid_info['status'])) ? '<div class="icon-checkmark-3 tip" title="Paid"></div>' : '<div class="icon-x tip" title="Pending"></div>'?>
+            </td>
+            <td>
+                <?=$grid_info['date']?>
+            </td>
+            <td>
+                <?=$grid_info['order_no']?>
+            </td>
+            <td>
+                $<?=$grid_info['order_total']?>
+            </td>
+            <td>
+                $<?=$grid_info['amount']?>
+            </td>
+        </tr>
+        <?}?>
+    <?} else {?>
+    <tr>
+        <td colspan="5">
+            <?=_ERROR_NO_DATA_AVAILABLE?>
+        </td>
+    </tr>
+    <?}?>
+</table>

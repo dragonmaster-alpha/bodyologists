@@ -1,0 +1,27 @@
+<div>
+<?if(!empty($_GET['act'])) {?>
+	<h1><?=_SUBSCRIPTIONS_DONE?></h1>
+	<p><?=_SUBSCRIPTIONS_DONE_TEXT?></p>
+<?} else {?>
+	<h1><?=_SUBSCRIPTIONS_SYSTEM?></h1>
+	<p><?=_SUBSCRIPTIONS_TEXT?></p>
+	<hr />
+	<form action="index.php?plugin=subscriptions&amp;op=save" method="post" class="validate-form">
+		<div class="row">
+			<div class="col-md-6 col-sm-6">
+				<input type="text" value="<?=$_SESSION['subscription']['name']?>" name="name" class="required form-control name input-lg" placeholder="<?=_YOUR?> <?=_NAME?>"  />
+			</div>
+			<div class="col-md-6 col-sm-6">
+				<input type="email" value="<?=$_SESSION['subscription']['email']?>" name="email" class="required email form-control input-lg" placeholder="<?=_YOUR?> <?=_EMAIL?> <?=_ADDRESS?> " />
+			</div>
+		</div>
+		<hr />
+		<div class="text-right">
+			<button class="btn btn-lg btn-primary" type="submit">
+				 <?=_SUBMIT?>
+			</button>
+		</div>
+	</form>
+<?}?>
+</div>
+<div class="separator"></div>

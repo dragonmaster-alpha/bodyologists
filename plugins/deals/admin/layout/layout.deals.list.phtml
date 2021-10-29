@@ -1,0 +1,50 @@
+<tr id="item_<?=$item['id']?>">
+	<td>
+		<h5>
+            <a href="admin.php?plugin=deals&amp;op=edit&amp;id=<?=$item['id']?>">
+                <?=$frm->reduce_text($item['title'], 40)?>
+            </a>
+        </h5>
+	</td>
+	<td class="no_sort hidden-phone">
+        <?php if($item['start_date'] != $item['end_date']) {?>
+		<?=date('M jS', strtotime($item['start_date']))?> - <?=date('M jS', strtotime($item['end_date']))?>
+        <?php } else {?>
+        <?=date('M jS', strtotime($item['start_date']))?> - <?=$item['start_time']?> to <?=$item['end_time']?>
+        <?php }?>
+	</td>
+    <td>
+        <a href="admin.php?plugin=deals&amp;op=manage_activation&amp;id=<?=$item['id']?>" class="toggle-menu tipS" title="Article visible to all visitors.">
+            <?=($item['active'] == 1) ? '<span class="icon-checkmark-green"></span>' : '<span class="icon-cancel-red"></span>'?> Active
+        </a>
+    </td>
+    <td>
+        <?php
+        $count = $item['flag_count'];
+
+        if ($count === 0) {
+            echo 'No reports';
+        } elseif ($count > 1) {
+            echo number_format($count).'  times';
+        } else {
+            echo "{$count} time";
+        }
+        ?>
+    </td>
+	<td class="no_sort hidden-phone">
+		<?=$frm->format_sort_date($item['date'])?>
+	</td>
+    <td>
+        <div class="navbar">
+            <ul class="nav pull-right">
+                <li class="dropdown">
+                    <a href="#" role="button" data-toggle="dropdown"><span class="icon-menu"></span></a>
+                    <ul id="actions_<?=$item['id']?>" class="dropdown-menu orders-actions" role="menu">
+                        <li><a href="admin.php?plugin=deals&amp;op=edit&amp;id=<?=$item['id']?>"><span class="icon-pencil-3 left"></span> Edit</a></li>
+                        <li><a href="admin.php?plugin=deals&amp;op=delete&amp;id=<?=$item['id']?>" class="deletion" data-main-holder="main-area-for-<?=$item['id']?>"><span class="icon-remove-2 left"></span> Delete</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </td>
+</tr>

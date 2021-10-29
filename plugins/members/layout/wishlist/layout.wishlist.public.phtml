@@ -1,0 +1,38 @@
+<div>
+    <div class="row">
+        <div class="col-md-9">
+            <h3><?=$meta['title']?></h3>
+        </div>
+        <div class="col-md-3 text-right">
+            <?=_SHARE_WISH_LIST_ON?><br />
+            <div id="share-buttons"></div>
+        </div>
+    </div>
+    <hr />
+    <?if(!$frm->empty_array($items_info)) {?>
+        <div class="row">
+            
+            <ul class="multiple-items"> 
+                <?
+                $is_wishlist                = true;
+                $count_items                = 20;
+                foreach($items_info as $item_data) 
+                {
+                    $item                   = $item_data['products'];
+                    include($_SERVER['DOCUMENT_ROOT'] . _SITE_PATH . '/plugins/products/layout/layout.items.list.phtml');
+                    $count_items++;
+                }
+                ?>
+            </ul>
+        </div>
+    <?} else {?>
+        <div class="row">
+            <div class="col-1">
+                <span class="icon-gift gift"></span>
+            </div>
+            <div class="col-11 pt-1">
+                <?=_WISHLIST_EMPTY_TEXT?>    
+            </div>
+        </div>
+    <?}?>
+</div>

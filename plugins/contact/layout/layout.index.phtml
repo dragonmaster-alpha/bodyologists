@@ -1,0 +1,34 @@
+<?php
+use App\Helper;
+use App\Html;
+
+
+?>
+<div class="separator no-separator-mobile"></div>
+<h1 class="text-center"><em class="find-deals-title">CONTACT</em></h1>
+<div class="separator no-separator-mobile"></div>
+<div class="separator no-separator-mobile"></div>
+<div class="row">
+    <div class="col-md-12">
+        <h4 class="form-header contact-page-header">SEND US A MESSAGE</h4>
+        <p class="contact-page-text">To contact us online, please complete this form below. We will be in touch with you soon.</p>
+        <form action="sendMail.php" method="post">
+            <div class="form-group row">
+                <div class="col"><input type="text" name="name" placeholder="FULL NAME *" class="contact-page-input form-control required" /></div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-6"><input type="email" placeholder="YOUR EMAIL *" name="email" class=" contact-page-input form-control required" /></div>
+                <div class="form-group col-md-6"><input type="tel" placeholder="MOBILE PHONE *" name="phone" class="contact-page-input form-control required" /></div>
+            </div>
+            <div class="form-group"><textarea class="contact-page-input form-control required" placeholder="MESSAGE *" name="message" rows="5"></textarea></div>
+            <div class="col-lg-6 form-group" style="padding: 0;">
+                <?php if(!empty($members_settings['captcha_on_registration'])) {?>
+                    <?=$helper->display_catpcha("CAPTCHA *", "contact-page-input")?>
+                <?php }?>
+            </div>
+            <div class="row">
+                <div class="col-md-12" style="display: flex; justify-content: space-around;"><button type="submit" class="btn btn-danger btn-lg" style="width: 40%;">SUBMIT</button></div>
+            </div>
+        </form>
+    </div>
+</div>

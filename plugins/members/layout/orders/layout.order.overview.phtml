@@ -1,0 +1,209 @@
+<div>
+    <?
+    require_once($_SERVER["DOCUMENT_ROOT"] . _SITE_PATH . '/plugins/members/nav_menu.php');
+    if(!$frm->empty_array($item)) {?>
+    <div class="row">
+			<div class="col-md-6">
+				<b><?=_MEMBERS_ORDERS_TRANS_NO?></b> <?=$item['trans']?><br />
+				<b><?=_MEMBERS_ORDERS_OVERVEW_DATE_TIME?></b>: <?=date('M jS, Y', strtotime($item['date']))?><br />
+				<b><?=_ORDER_STATUS?>:</b> <?=$item['status_info']['name']?><br />
+                <?
+                if(!empty($item['order_updates'])) {
+	                $reverced_updates   = array_reverse($item['order_updates']);
+	                if(!empty($reverced_updates[0]['tracking_number'])) 
+	                {?>
+	                    <b><?=_SHIP_CARRIER?></b>: <?=$reverced_updates[0]['currier']?><br />
+	                    <b><?=_MEMBERS_MAIN_TRACKING_NUMBER?></b>: 
+	                    <?
+	                    if($reverced_updates[0]['currier'] == "USPS") 
+	                    {?>
+	                        <a href="http://trkcnfrm1.smi.usps.com/PTSInternetWeb/InterLabelInquiry.do?origTrackNum=<?=$reverced_updates[0]['tracking_number']?>" target="_blank"><?=$reverced_updates[0]['tracking_number']?></a>
+	                    <?
+	                	} 
+	                	else if($reverced_updates[0]['currier'] == "UPS") 
+	                	{?>
+	                        <a href="http://wwwapps.ups.com/etracking/tracking.cgi?tracknum=<?=$reverced_updates[0]['tracking_number']?>" target="_blank"><?=$reverced_updates[0]['tracking_number']?></a>
+	                    <?
+	                	} 
+	                	else if($reverced_updates[0]['currier'] == "FedEx") 
+	                	{?>
+	                        <a href="http://www.fedex.com/Tracking?tracknumbers=<?=$reverced_updates[0]['tracking_number']?>" target="_blank"><?=$reverced_updates[0]['tracking_number']?></a>
+	                    <?
+	                	} 
+	                	else if($reverced_updates[0]['currier'] == "DHL") 
+	                	{?>
+	                        <a href="http://track.dhl-usa.com/atrknav.asp?ShipmentNumber=<?=$reverced_updates[0]['tracking_number']?>" target="_blank"><?=$reverced_updates[0]['tracking_number']?></a>
+	                    <?}?>
+	                    <br />
+	                <?}
+	            }?>
+			</div>
+			<div class="col-md-6 text-right hidden-phone">
+				<a href="index.php?plugin=orders&amp;op=print&amp;ids=<?=$id?>" class="terminal_print_receipt">
+	                <?=_PRINT_RECEIPT?> <span class="icon-print"></span> 
+	            </a>
+			</div>
+    	</div>
+    	<hr />
+    	<div class="row">
+			<div class="col-md-4">
+				<h2><?=_MEMBERS_ORDERS_OVERVEW_SHIP_TO?></h2>
+				<hr class="hidden-desktop hidden-tablet" />
+				<div style="margin-top: 10px;">
+					<?=$item['ship_first_name']?> <?=$item['ship_last_name']?><br />
+					<?=$item['ship_address']?> <?=$item['ship_suite']?><br />
+					<?=$item['ship_city']?>, <?=$item['ship_state']?> <?=$item['ship_zipcode']?><br />
+					<?=$item['ship_phone']?>
+				</div>
+			</div>
+			<hr class="hidden-lg hidden-md hidden-sm" />
+			<div class="col-md-4">
+				<h2><?=_MEMBERS_ORDERS_BILL_TO?></h2>
+				<hr class="hidden-desktop hidden-tablet" />
+				<div style="margin-top: 10px;">
+					<?=$item['first_name']?> <?=$item['last_name']?><br />
+					<?=(!empty($item['address']) ? $item['address'] : '')?> <?=(!empty($item['suite']) ? $item['suite'] : '')?>
+					<?=(!empty($item['city']) ? '<br />' . $item['city'] : '')?><?=(!empty($item['state']) ? ', ' . $item['state'] : '')?> <?=(!empty($item['zipcode']) ? $item['zipcode'] : '')?> <?=($item['country'] != 'US') ? $item['country'] : ''?><br />
+					<?=$item['phone']?>
+				</div>
+
+			</div>
+			<hr class="hidden-lg hidden-md hidden-sm" />
+			<div class="col-md-4">
+				<h2><?=_MEMBERS_ORDERS_OVERVEW_PAY_WITH?></h2>
+				<hr class="hidden-desktop hidden-tablet" />
+				<div style="margin-top: 10px;">
+					<div style="padding-bottom: 10px;">
+						<?
+						if(!empty($item['payment_info']['card_type']))
+						{?>
+							<?=$item['payment_method']?>:  <?=strtoupper($item['payment_info']['card_type'])?> /<?=$item['payment_info']['card_number']?>
+						<?
+						} 
+						else 
+						{?>
+							<?=$item['payment_method']?>
+						<?}?>
+					</div>
+					<?=_MEMBERS_ORDERS_OVERVEW_EMAIL_RECEIPT_TO?>:<br />
+					<?=$item['email']?>
+				</div>
+			</div>
+    	</div>
+		<div style="width: 100%; padding-top: 20px;">
+	        <table style="width: 100%;">
+	        	<colgroup span="4">
+	        		<col />
+	        		<col style="width: 80px" />
+	        		<col style="width: 60px" />
+	        		<col style="width: 100px" />
+	        	</colgroup>
+	            <tr>
+	                <th style="text-align: left;">
+	                    <h4><?=_MEMBERS_ORDERS_OVERVEW_ITEMS?></h4>
+	                </th>
+	                <th class="text-right">
+	                    <?=_PRICE?>
+	                </th>
+	                <th class="text-right">
+	                    <?=_QTY?>
+	                </th>
+	                <th class="text-right">
+	                    <?=_TOTAL?>
+	                </th>
+	            </tr>
+	            <?
+	            foreach($item['order_items'] as $order_items) 
+	            {?>
+	                <tr>
+	                    <td style="border-top: 1px dotted #DEDEDE; padding: 10px 0;">
+	                    	<div class="row">
+	                    		<?if(file_exists($_SERVER['DOCUMENT_ROOT'] . $order_items['image'])) {?>
+								<div class="col-md-1" >
+									<a href="<?=$order_items['item_info']['url']?>">
+			                            <img src="<?=$order_items['image']?>" alt="<?=$order_items['item_info']['title']?>" class="d-sm-inline-block d-none" />
+			                        </a>
+								</div>
+								<?}?>
+								<div class="col-md-11">
+									<a href="<?=$order_items['item_info']['url']?>">
+			                            <?=(!empty($order_items['sku'])) ? $order_items['sku'] . ': ' : ''?><?=$order_items['item_info']['title']?>
+			                        </a>
+			                        <div>
+			                        	<small><?=$order_items['variation_text']?></small>
+			                        </div>
+								</div>
+	                    	</div>
+	                    </td>
+	                    <td style="border-top: 1px dotted #DEDEDE; padding: 10px 0; text-align: right;">
+	                        $<?=$order_items['price']?>
+	                    </td>
+	                    <td style="border-top: 1px dotted #DEDEDE; padding: 10px 0; text-align: right;" class="cell-text-center">
+	                        <?=$order_items['quantity']?>
+	                    </td>
+	                    <td style="border-top: 1px dotted #DEDEDE; padding: 10px 0; text-align: right;">
+	                        $<?=$order_items['total']?>
+	                    </td>
+	                </tr>
+	            <?}?>
+	        </table>		
+		</div>
+		<div style="margin-top: 0; padding: 20px 0; clear: both; border-top: 1px dotted #DEDEDE; text-align: right;">
+			<table style="width: 100%;">
+				<tr>
+					<td style="width: 90%; padding-top: 5px; text-align: right;">
+	                    <?=_MERCHANDISE_TOTAL?>: 
+	                </td>
+					<td style="padding-top: 5px; text-align: right;">
+	                    $<?=$item['subtotal']?>
+	                </td>
+				</tr>
+				<?if(!empty($item['used_coupon'])) {?>
+                <tr>
+                    <td style="width: 90%; padding-top: 5px; text-align: right;"><?=_USED?> <?=_COUPON?>:</td>
+                    <td style="padding-top: 5px; text-align: right;"><?=$item['used_coupon']?></td>
+                </tr>
+                <?}?>
+                <?if(!empty($item['discount']) && $item['discount'] != '0.00') {?>
+                <tr>
+                    <td style="width: 90%; padding-top: 5px; text-align: right;"><?=_DISCOUNT?>:</td>
+                    <td style="padding-top: 5px; text-align: right;">-$<?=$frm->number($item['discount'])?></td>
+                </tr>
+                <?}?>
+				<tr>
+					<td style="width: 90%; padding-top: 5px; text-align: right;">
+	                    <?=_SHIPPING_HANDLING?>: 
+	                </td>
+					<td style="padding-top: 5px; text-align: right;">
+	                    $<?=$item['shipping']?>
+	                </td>
+				</tr>
+	            <?
+	            if(!empty($item['tax']) && $item['tax'] != '0.00') 
+	            {?>
+				<tr>
+					<td style="width: 90%; padding-top: 5px; text-align: right;">
+	                    <?=_ESTIMATED_TAX?>: 
+	                </td>
+					<td style="padding-top: 5px; text-align: right;">
+	                    $<?=$item['tax']?>
+	                </td>
+				</tr>
+	            <?}?>
+				<tr>
+					<td style="width: 90%; padding-top: 15px; text-align: right; font-size: 16px">
+	                    <?=_TOTAL?>: 
+	                </td>
+					<td style="padding-top: 15px; text-align: right; font-size: 16px">
+	                    $<?=$item['total']?>
+	                </td>
+				</tr>
+			</table>
+		</div>
+	<?} else {?>
+	<div>
+		<h1><?=_MEMBERS_ORDERS_REQUEST_ERROR?></h1>
+		<p><?=_MEMBERS_ORDERS_REQUEST_ERROR_TEXT?></p>
+	</div>
+	<?}?>
+</div>

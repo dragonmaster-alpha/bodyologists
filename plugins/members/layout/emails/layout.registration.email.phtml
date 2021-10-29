@@ -1,0 +1,81 @@
+<html>
+    <head>
+    	<title>Welcome to <?=$frm->config['sitename']?></title>
+    	<style type="text/css">
+            body {
+                font-size: 12px;
+                font-family: "Lucida Grande", "Lucida Sans Unicode", Helvetica, Arial, Verdana, sans-serif;
+            }
+            h1 {
+                color: #000000;
+                font-size: 50px;
+                marign: 0;
+                padding: 0;
+                line-height: 50px;
+                text-transform: uppercase;
+            }
+            div.header { 
+                padding: 10px;
+                margin-bottom: 10px;
+            }
+            div.footer { 
+                padding: 10px;
+                margin-top: 10px;
+            }
+            div.disclaimer {
+                font-size: 11px;
+                margin-top: 10px;
+                padding-top: 10px;
+                border-top: 1px solid #ddd;
+            }
+    	</style>
+    </head>
+    <body>
+        <div class="header">
+            <?php if(file_exists($_SERVER['DOCUMENT_ROOT'] . _SITE_PATH . '/images/email-logo.png')) {?>
+            <a href="http://<?=$frm->site_domain() . _SITE_PATH?>">
+                <img src="http://<?=$frm->site_domain() . _SITE_PATH?>/images/email-logo.png" alt="<?=$frm->config['sitename']?>" />
+            </a>
+            <?php } else {?>
+                <h1><?=$frm->config['sitename']?></h1>
+            <?php }?>
+        </div>
+        <p><b><?=_MEMBERS_EMAIL_REGISTRATION_WELCOME?> <?=$frm->config['sitename']?></b></p>
+        <p><?=_MEMBERS_EMAIL_REGISTRATION_TEXT_TOP?> <?=$_SESSION['register']['first_name']?></p>
+        <p><?=_MEMBERS_EMAIL_REGISTRATION_BODY_TOP?></p>
+        <p>http://www.<?=$frm->site_domain() . _SITE_PATH?>/index.php?plugin=Members</p>
+        <p><?=_MEMBERS_EMAIL_REGISTRATION_BODY_MIDDLE?></p>
+        <p>http://www.<?=$frm->site_domain() . _SITE_PATH?>/index.php?plugin=Members&file=profile</p>
+        <p><?=_MEMBERS_EMAIL_REGISTRATION_BODY_BOTTOM?></p>
+        <?php if(!empty($frm->config['facebook_address']) || empty($frm->config['twitter_address']) || empty($frm->config['google_plus_address']) || empty($frm->config['pinterest_address']) || empty($frm->config['linkedin_address']) || empty($frm->config['youtube_address'])) {?>
+        <div class="footer">
+            <p><?=_MEMBERS_EMAIL_REGISTRATION_BODY_SOCIAL?></p>
+            <?php if(!empty($frm->config['facebook_address'])) {?>
+                <p>Facebook: <?=$frm->config['facebook_address']?></p>
+            <?php }?>
+            <?php if(!empty($frm->config['twitter_address'])) {?>
+                <p>Twitter: <?=$frm->config['twitter_address']?></p>
+            <?php }?>
+            <?php if(!empty($frm->config['google_plus_address'])) {?>
+                <p>Google+: <?=$frm->config['google_plus_address']?></p>
+            <?php }?>
+            <?php if(!empty($frm->config['pinterest_address'])) {?>
+                <p>Pintrest: <?=$frm->config['pinterest_address']?></p>
+            <?php }?>
+            <?php if(!empty($frm->config['linkedin_address'])) {?>
+                <p>Linked In: <?=$frm->config['linkedin_address']?></p>
+            <?php }?>
+            <?php if(!empty($frm->config['youtube_address'])) {?>
+                <p>YouTube: <?=$frm->config['youtube_address']?></p>
+            <?php }?>
+        </div>
+        <?php }?>
+        <div class="disclaimer">
+            <p>This email has been generated automatically from <?=$frm->config['sitename']?>. PLEASE DO NOT RESPOND TO THIS EMAIL. If you need help or more information about this or any other of our services please <a href="mailto:<?=$frm->config['contactemail']?>">click here</a> to contact our support team.</p>
+            <p><strong><?=$frm->config['sitename']?> Feedback</strong></p>
+            <p>We'll love to hear from you, please <a href="http://<?=$frm->site_domain() . _SITE_PATH?>/">click here</a> to leave us a feedback.</p>
+            <p>Copyright <?=date('Y')?> <?=$frm->config['sitename']?>. All rights reserved </p>
+            Sent from <?=$frm->config['sitename']?> on <?=date('l, F jS Y')?> to <?=$frm->api_data['email']?>
+        </div>
+    </body>
+</html>

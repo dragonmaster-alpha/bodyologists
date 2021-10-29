@@ -1,0 +1,51 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title><?=$meta['title']?> | Admin Console</title>
+<base href="//<?=$_SERVER["HTTP_HOST"] . _SITE_PATH . '/admin'?>/" />
+<link rel="apple-touch-icon-precomposed" sizes="114x114" href="images/ico/apple-touch-icon-114x114-precomposed.png">
+<link rel="apple-touch-icon-precomposed" sizes="72x72" href="images/ico/apple-touch-icon-72x72-precomposed.png">
+<link rel="apple-touch-icon-precomposed" href="images/ico/apple-touch-icon-57x57-precomposed.png">
+<link rel="shortcut icon" href="images/ico/favicon.png">
+<link rel="stylesheet" href="css/style.default.css" type="text/css" />
+<script type="text/javascript" src="js/plugins/jquery-1.7.min.js"></script>
+<script type="text/javascript" src="js/plugins/jquery-ui-1.8.16.custom.min.js"></script>
+<script type="text/javascript" src="js/plugins/jquery.cookie.js"></script>
+<script type="text/javascript" src="js/plugins/jquery.uniform.min.js"></script>
+<script type="text/javascript" src="js/custom/general.js"></script>
+<script type="text/javascript" src="js/custom/default.js"></script>
+<script type="text/javascript">
+<?
+    if(isset($_REQUEST['plugin'])) {?>
+    var plugin = '<?=$_REQUEST['plugin']?>';
+    <?}?>
+    <?if(isset($_REQUEST['addon'])) {?>
+    var plugin = '<?=$_REQUEST['addon']?>';
+    <?}?>
+    <?if(isset($_REQUEST['file'])) {?>
+    var plugin = '<?=$_REQUEST['file']?>';
+    <?}
+?>
+</script>
+<!--[if lte IE 7]>
+    <script language="javascript" type="text/javascript" src="js/custom/lte-ie7.js"></script>
+<![endif]-->
+<!--[if lte IE 8]>
+    <script language="javascript" type="text/javascript" src="js/plugins/excanvas.min.js"></script>
+<![endif]-->
+<!--[if IE 9]>
+    <link rel="stylesheet" media="screen" href="css/style.ie9.css"/>
+<![endif]-->
+<!--[if IE 8]>
+    <link rel="stylesheet" media="screen" href="css/style.ie8.css"/>
+<![endif]-->
+<!--[if lt IE 9]>
+	<script src="http://css3-mediaqueries-js.googlecode.com/svn/trunk/css3-mediaqueries.js"></script>
+<![endif]-->
+</head>
+<body>
+    <?=$layout?>
+    <br clear="all" />
+</body>
+</html>

@@ -1,0 +1,511 @@
+<?if(isset($_SESSION['error'])) {?>
+    <div class="alert-error" title="Error">
+        <?=$_SESSION['error']?>
+    </div>
+<?
+    unset($_SESSION['error']);
+}
+?>
+<?if(isset($_SESSION['message'])) {?>
+    <div class="alert-error" title="Message">
+        <?=$_SESSION['message']?>
+    </div>
+<?
+    unset($_SESSION['message']);
+}
+?>
+<form action="admin.php?plugin=system&amp;file=seo" method="post" class="stdform">
+    <input type="hidden" value="update" name="op" />
+    <div class="row-fluid">
+        <div class="span9">
+            <div class="pageheader">
+                <h1 class="head">
+                    Search Engine Optimization
+                </h1>
+            </div>
+        </div>
+        <div class="span3">
+            <div class="submit-top">
+                <div style="text-align: right; margin-right: 40px;">
+                    <div style="position: relative; display: inline-block;">
+                        <button class="btn btn-success tipN" style="margin-right: 10px;" type="submit" title="Save Changes">
+                            <span class="icon-disk"></span>
+                        </button>
+                        <button class="btn btn-warning tipN" type="reset" title="Undo Changes">
+                            <span class="font20 icon-history"></span> 
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <ul class="hornav">
+        <li class="current">
+            <a href="#default" class="current">Configuration</a>
+        </li>
+        <li>
+            <a href="#settings">SEO Settings</a>
+        </li>
+        <li>
+            <a href="#social">Social</a>
+        </li>
+        <li>
+            <a href="#xml">Sitemap XML</a>
+        </li>
+        <li>
+            <a href="#analytics">Google Analytics/Tags Manager</a>
+        </li>
+    </ul>
+    <div id="contentwrapper" class="contentwrapper">
+    	<div id="default" class="subcontent">
+            <div class="contenttitle2">
+                <h3>Website name</h3>
+            </div>
+            <p>
+                <label>
+                    Website Name:
+                </label>
+                <div class="field">
+                    <input type="text" value="<?=$items_info['sitename']?>" name="sitename" />
+                </div>
+            </p>
+            <p>
+                <label>
+                    Alternate Name:
+                </label>
+                <div class="field">
+                    <input type="text" value="<?=$items_info['alternative_name']?>" name="alternative_name" />
+                </div>
+                <small class="desc">
+                    Google shows your website's name in the search results, we will default to your site name but you can adapt it here. You can also provide an alternate website name you want Google to consider.
+                </small>
+            </p>
+            <p>
+                <label>
+                    Company or person:
+                </label>
+                <div class="field">
+                    <select name="company_type" class="uniformselect" onchange="jQuery('.company_type_info').hide(); jQuery('#' + jQuery(this).val() + '_area').slideToggle();">
+                        <option value="">Select whether this website is for a company or personal</option>
+                        <option value="company"<?=($items_info['company_type'] == "company") ? ' selected="selected"' : ''?>>Company</option>
+                        <option value="personal"<?=($items_info['company_type'] == "personal") ? ' selected="selected"' : ''?>>Personal</option>
+                    </select> 
+                    <div id="company_area" class="join merchants company_type_info" style="display: <?=($items_info['company_type'] == 'company') ? 'block' : 'none'?>;">
+                        <div class="node">
+                            <span class="join"></span>
+                        </div>
+                        <div class="data">
+                            <div class="span3">
+                                <div id="logo-holder" class="avatar-img" style="float: left; background-image: url(<?=$items_info['company_logo']?>);">
+                                    <input type="file" name="Filedata" id="upload_field" accept="image/*" />
+                                    <img src="images/blank.gif" alt="<?=$item['name']?>">
+                                </div>
+                                <span style="padding-top: 10px;" class="muted">
+                                    Upload Company Logo<br />Ideal size should be<br />150x150
+
+                                </span>
+                                <input type="hidden" id="logo-holder-input" value="<?=$items_info['company_logo']?>" name="company_logo" />
+                                <br clear="all" />
+                                <div id="progress_report">
+                                    <div id="progress_report_name"></div>
+                                    <div id="progress_report_status" style="font-style: italic;"></div>
+                                    <div id="progress_report_bar_container" style="width: 90%; height: 5px;">
+                                        <div id="progress_report_bar" style="background-color: blue; width: 0; height: 100%;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="personal_area" class="join merchants company_type_info" style="display: <?=($items_info['company_type'] == 'personal') ? 'block' : 'none'?>;">
+                        <div class="node">
+                            <span class="join"></span>
+                        </div>
+                        <div class="data">
+                            <input type="text" style="width: 150px;" value="<?=$items_info['person_name']?>" name="person_name" placeholder="Your Name" />
+                        </div>
+                    </div>
+                </div>
+                <small class="desc">
+                    This data is shown as metadata in your site. It is intended to appear in Google's Knowledge Graph. You can be either a company, or a person, choose either.
+                </small>
+            </p>
+            <div class="contenttitle2">
+                <h3>Permalinks</h3>
+            </div>
+            <p>
+                <label>
+                    Use Permalinks:  
+                </label>
+                <div class="field">
+                    <label>
+                        <input type="checkbox" value="1" <?=($items_info['use_mod_rewrite']) ? ' checked="checked"' : ''?> name="use_mod_rewrite" />
+                        Use permalink on your site to make your URLs look better for search engines and easier to remember for your clients.
+                    </label>
+                </div>
+                <small class="desc">
+                    This option is highly recommended as it will influence very positively in your SEO ranking, <strong>you should not uncheck this option it you don't have a very strong reason for it</strong>.
+                </small>
+            </p>
+            <div class="contenttitle2">
+                <h3>Google+ Publisher</h3>
+            </div>
+            <p>
+                <label>
+                    Google Publisher Page:
+                </label>
+                <div class="field">
+                    <input type="text" value="<?=$items_info['publisher']?>" name="publisher" placeholder="Google+ about page link" />
+                </div>
+                <small class="desc">
+                    It is highly recommended to have a Google+ page for your business as this improve your local SEO, add that URL here and link it on your Google+ about page.
+                </small>
+            </p>
+            <div class="contenttitle2">
+                <h3>Breadcrumbs</h3>
+            </div>
+            <p>
+                <label>
+                    Enable Breadcrumbs:
+                </label>
+                <div class="field">
+                    <label>
+                        <input type="checkbox" value="1" name="breadcrumbs" <?=(!empty($items_info['breadcrumbs']) ? 'checked="checked"' : '')?> /> Activate breadcrumbs
+                    </label>
+                </div>
+                <small class="desc">
+                    Breadcrumbs are used by Google to display your information into their pages and it can help to call the attention of future customers while looking for your products or services.
+                </small>
+            </p>
+            <p>
+                <label>
+                    Display Breadcrumbs:
+                </label>
+                <div class="field">
+                    <label>
+                        <input type="checkbox" value="1" name="display_breadcrumbs" <?=(!empty($items_info['display_breadcrumbs']) ? 'checked="checked"' : '')?> /> Show the breadcrumbs in pages
+                    </label>
+                </div>
+                <small class="desc">
+                    Breadcrumbs does not need to be visible to clients on the pages and sometimes this may not look to good with your design, you wont loose anything is they are displayed or not, it if just a cosmetic feature.
+                </small>
+            </p>
+            <div class="contenttitle2">
+                <h3>Crawlers Information</h3>
+            </div>
+            <p>
+                <label>
+                    Indexing Actions: 
+                </label>
+                <div class="field">
+                    <select name="metarobots" class="uniformselect">
+                        <option value="">Index content</option>
+                        <option value="noindex,follow" <?=($items_info['metarobots'] == "noindex,follow") ? ' selected="selected"' : ''?>>No index content</option>
+                    </select> 
+                </div>
+                <small class="desc">
+                    Select the way search engines robots or crawlers should be treated when visiting the website, by selecting anything but <strong>Index, Follow</strong> you may not get indexed into the search engines.
+                </small>
+            </p>
+            <p>
+                <label>
+                    Force noodp:
+                </label>
+                <div class="field">
+                    <input type="checkbox" value="noodp" name="noodp" <?=(!empty($items_info['noodp']) ? 'checked="checked"' : '')?> /> Activate Noodp
+                </div>
+                <small class="desc">
+                    Prevents search engines from using the DMOZ description in the search results for all pages on this site. Note: If you set a custom description for a page or post, it will have the noodp tag regardless of this setting.
+                </small>
+            </p>
+        </div>
+        <div id="settings" class="subcontent" style="display: none">
+            <div class="contenttitle2">
+                <h3>Tags Length</h3>
+            </div>
+            <p>
+                <label>
+                    Titles Length:   
+                </label>
+                <div class="field">
+                    <label>
+                        <input type="number" value="<?=(!empty($items_info['title_length']) ? $items_info['title_length'] : 60)?>" name="title_length" placeholde="Title Tags Length" />
+                    </label>
+                </div>
+                <small class="desc">
+                    It is always a good practice to keep the titles at a good length, Search engines only uses the first 70 characters to rank your pages.
+                </small>
+            </p>
+            <p>
+                <label>
+                    Meta Descriptions Length:   
+                </label>
+                <div class="field">
+                    <label>
+                        <input type="number" value="<?=(!empty($items_info['description_length']) ? $items_info['description_length'] : 60)?>" name="description_length" placeholde="Meta Descriptions Length" />
+                    </label>
+                </div>
+                <small class="desc">
+                    Meta descriptions are also called snippet by search engines and it is the section shown under your pages links, this is recommended to be kept under 160 characters and so search engines has space to add other relevant info into it.
+                </small>
+            </p>
+            <div class="contenttitle2">
+                <h3>URL Format</h3>
+            </div>
+            <p>
+                <label>
+                    Force site to use: 
+                </label>
+                <div class="field">
+                    <select name="url_syntax" class="uniformselect">
+                        <option value="">Select URL Format</option>
+                        <option value=""<?=($items_info['url_syntax'] == "plain") ? ' selected="selected"' : ''?>>http://</option>
+                        <option value="www."<?=($items_info['url_syntax'] == "www") ? ' selected="selected"' : ''?>>http://www.</option>
+                    </select> 
+                </div>
+                <small class="desc">
+                    Select the way your site URL will be shown to search engines, not setting this area correctly will cause the search engines to obtain duplicate content and that will damage your reputation with then to the point that your site could be penalized.
+                </small>
+            </p>
+            <div class="contenttitle2">
+                <h3>SEO Defaults</h3>
+            </div>
+            <small class="desc" style="margin: 0;">
+                This information will be used on any area on the site that the SEO has being left blank. Having duplicated information is not the best thing for SEO but it's always better that not having it.
+            </small>
+            <p>
+                <label>
+                    Site Title:
+                </label>
+                <div class="field">
+                    <input type="text" value="<?=$items_info['meta_title']?>" name="meta_title" />
+                </div>
+                <small class="desc">
+                    Enter the default title to be used on pages that does not have title configured, this is fundamental as any page should never be displayed without title.
+                </small>
+            </p>
+            <p>
+                <label>
+                    Meta Keywords: 
+                </label>
+                <div class="field">
+                    <textarea name="meta_keywords"><?=$items_info['meta_keywords']?></textarea> 
+                </div>
+                <small class="desc">
+                    Enter the default meta keywords to be used on pages that does not have keywords configured, this is fundamental as any page should never be displayed without keywords.
+                </small>
+            </p>
+            <p>
+                <label>
+                    Meta Description: 
+                </label>
+                <div class="field">
+                    <textarea name="meta_description"><?=$items_info['meta_description']?></textarea>
+                </div>
+                <small class="desc">
+                    Enter the default meta description to be used on pages that does not have description configured, this is fundamental as any page should never be displayed without description.
+                </small>
+            </p>
+        </div>
+        <div id="social" class="subcontent" style="display: none;">
+            <div class="contenttitle2">
+                <h3>Social Networks Information</h3>
+            </div>
+            <p>
+                <label>
+                    Facebook Address:    
+                </label>
+                <div class="field">
+                    <input type="text" value="<?=$items_info['facebook_address']?>" name="facebook_address" />
+                </div>
+                <small class="desc">
+                    If you have a facebook account enter it's address here.
+                </small>
+            </p>
+            <p>
+                <label>
+                    Twitter Address:   
+                </label>
+                <div class="field">
+                    <input type="text" value="<?=$items_info['twitter_address']?>" name="twitter_address" />
+                </div>
+                <small class="desc">
+                    If you have a twitter account enter it's address here.
+                </small>
+            </p>
+            <p>
+                <label>
+                    Google+ Address:     
+                </label>
+                <div class="field">
+                    <input type="text" value="<?=$items_info['google_plus_address']?>" name="google_plus_address" />
+                </div>
+                <small class="desc">
+                    If you have a Google plus account enter it's address here.
+                </small>
+            </p>
+            <p>
+                <label>
+                    Pinterest Address:    
+                </label>
+                <div class="field">
+                    <input type="text" value="<?=$items_info['pinterest_address']?>" name="pinterest_address" />
+                </div>
+                <small class="desc">
+                    If you have a pinterest account enter it's address here.
+                </small>
+            </p>
+            <p>
+                <label>
+                    Instagram Address:     
+                </label>
+                <div class="field">
+                    <input type="text" value="<?=$items_info['instagram_address']?>" name="instagram_address" />
+                </div>
+                <small class="desc">
+                    If you have a del.icio.us account enter it's address here.
+                </small>
+            </p>
+            <p>
+                <label>
+                    Linkedin Address:     
+                </label>
+                <div class="field">
+                    <input type="text" value="<?=$items_info['linkedin_address']?>" name="linkedin_address" />
+                </div>
+                <small class="desc">
+                    If you have a linked in account enter it's address here.
+                </small>
+            </p>
+            <p>
+                <label>
+                    YouTube Address:   
+                </label>
+                <div class="field">
+                    <input type="text" value="<?=$items_info['youtube_address']?>" name="youtube_address" />
+                </div>
+                <small class="desc">
+                    If you have a youtube account enter it's address here.
+                </small>
+            </p>
+            <p>
+                <label>
+                    Vimeo Address:  
+                </label>
+                <div class="field">
+                    <input type="text" value="<?=$items_info['vimeo_address']?>" name="vimeo_address" />
+                </div>
+                <small class="desc">
+                    If you have a vimeo account enter it's address here.
+                </small>
+            </p>
+        </div>
+        <div id="xml" class="subcontent" style="display: none">
+            <div class="contenttitle2">
+                <h3>Sitemap XML</h3>
+            </div>
+            <div style="margin-bottom: 60px;">
+                Activate this feature to create and maintain a sitemap XML file that Google Crawlers can collect information from. Sitemaps are a way to tell Google about pages on your site they might not otherwise discover. In its simplest terms, a XML Sitemap is a list of the pages on your website. Creating and submitting a Sitemap helps make sure that Google knows about all the pages on your site, including URLs that may not be discoverable by Google's normal crawling process.
+            </div>
+            <p>
+            	<label>
+                    Activate:   
+                </label>
+                <div class="field">
+                    <label>
+                        <input type="checkbox" value="1" <?=(!empty($items_info['createXMLSiteMap'])) ? ' checked="checked"' : ''?> name="createXMLSiteMap" /> 
+                        Activate this feature to create a sitemap for search engines.
+                    </label>
+                </div>
+            </p>
+            <p>
+            	<label></label>
+                <div class="field">
+                    <div style="font-size:  16px;">
+                        <span class="icon-file-xml left"></span>
+                        <? 
+                        if(file_exists("../sitemap.xml")) { 
+                            echo date("m/d/Y H:i:s.", filemtime("../sitemap.xml")); 
+                        } else { 
+                            echo "File doesn't exists"; 
+                        } 
+                        ?>
+                        <span style="padding-left: 20px;">
+                        <a class="btn btn-success" href="admin.php?plugin=system&amp;file=seo&amp;op=update_xml">
+                            <span class="icon-rotate-2 left"></span>
+                            Update Now
+                        </a>
+                        </span>
+                    </div>
+                </div>
+                <small class="desc">
+                    This date represent the last time the Sitemap XML file was updated.
+                </small>
+            </p>
+        </div>
+        <div id="analytics" class="subcontent" style="display: none;">
+            <div class="contenttitle2">
+                <h3>Google Analytics And Other Snippets</h3>
+            </div>
+            <div>
+                Enter the code given to you by Google Analytics, Tag Manager, Chats or any other snippet you need to add to the site.
+            </div>
+            <p>
+            	<label>
+                    Snippets Code:    
+                </label>
+                <div class="field">
+                    <textarea name="snippet_codes" style="height: 80px;"><?=$items_info['snippet_codes']?></textarea>
+                </div>
+                <small class="desc">
+                    This code will be presented to you when your Google Analitics account is created. in case you miss it <a href="#" class="alert-inline-button">click here</a> for references on how to find it.
+                </small>
+                <div class="alert-inline" title="Find the tracking code.">
+                    1. From any Analytics page, click Admin.<br />
+                    2. Select the property you want to track.<br />
+                    3. Check that the URL at the top matches the one for your website.<br />
+                    4. If the settings are showing the wrong web property, click the link in the breadcrumb trail for your account, and select the correct property from the list.<br />
+                    5. Click the Tracking Info tab.<br />
+                    6. You'll see something similar to the code snippet below, where XXXXX-Y indicates the property ID.<br />
+                    <div style="width: 580px; overflow: auto;">
+                        <img src="images/analytics-code.jpg" alt="Google Analytics Sample Code" />
+                    </div>
+                </div>
+            </p>
+        </div>
+    </div>
+</form>
+<script type="text/javascript" src="js/plugins/jquery.html5_upload.js"></script>
+<script type="text/javascript"> 
+    jQuery(function() {
+        jQuery("#upload_field").html5_upload({
+            extraFields: {
+                'op' : 'single',
+                'owner' : '1',
+                'folder_name' : 'logo',
+                'id' : '1',
+                'no_resize': 1
+            },
+            url: 'uploads.php',
+            sendBoundary: window.FormData || jQuery.browser.mozilla,
+            onStart: function(event, total) {
+                jQuery('#progress_report').show();
+                return true;
+            },
+            setStatus: function(text) {
+                jQuery("#progress_report_status").text(text);
+            },
+            setProgress: function(val) {
+                jQuery("#progress_report_bar").css('width', Math.ceil(val*100)+"%");
+            },
+            onFinishOne: function(event, response, name, number, total) {
+                var data = JSON.parse(response);
+                jQuery('#logo-holder').css('background-image','url(<?=_SITE_PATH?>/uploads/' + data.belongs + '/' + data.bid + '/' + data.file + ')');
+                jQuery('#logo-holder-input').val('<?=_SITE_PATH?>/uploads/' + data.belongs + '/' + data.bid + '/' + data.file);
+                jQuery('#progress_report').hide();
+            },
+            onError: function(event, name, error) {
+                alert('error while uploading file ' + name);
+            }
+        });
+    });
+</script>

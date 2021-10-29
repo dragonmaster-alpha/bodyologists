@@ -1,0 +1,42 @@
+<?php
+$finder = PhpCsFixer\Finder::create()
+    ->exclude(
+        [
+            '.github',
+            'bin',
+            'config',
+            'docs',
+            'temp',
+            'tests',
+            'app/vendor/*',
+            'cache',
+            'images',
+            'js'
+        ]
+    )
+    ->in(__DIR__);
+
+return PhpCsFixer\Config::create()
+    ->setRules(
+        [
+            '@PSR1' => true,
+            '@PSR2' => true,
+            'binary_operator_spaces' => ['default' => 'single_space'],
+            'cast_spaces' => ['space' => 'single'],
+            'concat_space' => ['spacing' => 'none'],
+            'declare_equal_normalize' => ['space' => 'single'],
+            'array_syntax' => ['syntax' => 'short'],
+            'combine_consecutive_unsets' => true,
+            'no_extra_blank_lines' => [
+                'extra'
+            ],
+            'no_useless_else' => true,
+            'no_useless_return' => true,
+            'ordered_class_elements' => true,
+            'ordered_imports' => true,
+            'phpdoc_add_missing_param_annotation' => true,
+            'phpdoc_order' => true,
+            'phpdoc_align' => false,
+        ]
+    )
+    ->setFinder($finder);

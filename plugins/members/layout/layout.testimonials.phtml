@@ -1,0 +1,94 @@
+<?require_once($_SERVER["DOCUMENT_ROOT"] . _SITE_PATH . '/plugins/properties/addons/agents/nav_menu.php')?>
+<?if(!empty($testimonails)) {?>
+
+<a name="testimonials"></a>
+	<?
+    $box_colors = ['success', 'warning', 'danger'];
+    foreach ($testimonails as $testimonial) {?>
+    <div class="box <?=$box_colors[array_rand($box_colors, 1)]?>" id="data-parent-<?=$testimonial['id']?>">
+        <div class="box-body side dark">
+        	<a class="erase confirm icon-cancel-4 tipE" data-parent="data-parent-<?=$testimonial['id']?>" title="Erase Testimonial" href="index.php?plugin=properties&amp;addon=agents&amp;op=delete_testimonial&amp;id=<?=$testimonial['id']?>"></a>
+            <p style="font-size: 12px;"><?=$testimonial['text']?></p>
+            <p><?=$testimonial['name']?> <?=(!empty($testimonial['review_url']) ? '- <cite title="Review"><a href="' . $testimonial['review_url'] . '" target="_blank" style="display: inline;">' . ucfirst(str_ireplace(array('www.', '.com', '.net', '.org', '.us', '.me', '.info'), '', parse_url($testimonial['review_url'], PHP_URL_HOST))) . ' Review</a></cite>' : '')?></p>
+        </div>
+    </div>
+    <?}?>
+<?}?>
+<a name="add_testimonials"></a>
+<div class="divider">Add Testimonial</div>
+<form action="index.php?plugin=properties&amp;addon=agents&amp;op=save_testimonial" method="post" class="form-horizontal">
+	<div class="row">
+	    <div class="col-sm-4">
+			<input type="text" value="<?=$_SESSION['testimonial']['name']?>" name="name" class="form-control name"  placeholder="Person Name" />
+	    </div>
+	    <div class="col-sm-4">
+			<input type="email" value="<?=$_SESSION['testimonial']['email']?>" name="email" class="form-control" placeholder="Person Email (will be kept private)" />
+	    </div>
+	    <div class="col-sm-4">
+			<input type="text" value="<?=$_SESSION['testimonial']['review_url']?>" name="review_url" class="form-control" placeholder="Review URL (if any)" />
+	    </div>
+	</div>
+	<div class="row">
+		<div class="col-sm-12">
+			<textarea name="text" placeholder="Testimonial content" class="form-control" style="height: 80px;"><?=$_SESSION['testimonial']['text']?></textarea>
+	    </div>
+	</div>
+	<div class="text-right" style="margin-top: 10px;">
+		<button type="submit" class="btn btn-success">
+			Save Testimonial
+		</button>
+	</div>
+</form>
+<script type="text/javascript" src="admin/js/plugins/tinymce/tinymce.min.js"></script>
+<script type="text/javascript" src="js/plugins/jquery.html5.upload.js"></script>
+<script type="text/javascript"> 
+    $(function() {
+        $("#upload_field").html5_upload({
+            extraFields: {
+                'op': 'single',
+                'owner': '<?=$_SESSION['agent_info']['id']?>',
+                'folder_name': 'agents',
+                'id': '<?=$_SESSION['agent_info']['id']?>'
+            },
+            url: 'uploads.php',
+            sendBoundary: window.FormData || $.browser.mozilla,
+            onStart: function(event, total) {
+                $('#progress_report').show();
+                return true;
+            },
+            setProgress: function(val) {
+                $("#progress_report_bar").css('width', Math.ceil(val*100)+"%");
+            },
+            onFinishOne: function(event, response, name, number, total) {
+            	var data = JSON.parse(response);
+                $('#img-holder').css('background-image','url(<?=_SITE_PATH?>/uploads/' + data.belongs + '/' + data.bid + '/' + data.file + ')');
+                $('#progress_report').hide();
+            },
+            onError: function(event, name, error) {
+                alert('error while uploading file ' + name);
+            }
+        });
+    });
+	tinymce.init({
+	    selector: "textarea.mce",
+	    theme: "modern",
+	    height: 200,
+	    browser_spellcheck : true,
+	    convert_fonts_to_spans : true,
+	    entity_encoding: 'raw',
+	    relative_urls: false,
+	    verify_html: false,
+	    setup: function(editor) {
+	        editor.on('blur', function(e) {
+	            var meta_description = editor.getContent().replace(/(<([^>]+)>)/ig, '').substring(0,160);
+	            $('#meta_description').val(meta_description);
+	            $('.google-text').text(meta_description);
+	        });
+	    },
+	    content_css: '<?=_SITE_PATH?>/css/imported.styles.css?' + new Date().getTime(),
+	    theme_advanced_font_sizes: "10px,12px,13px,14px,16px,18px,20px",
+	    font_size_style_values : "10px,12px,13px,14px,16px,18px,20px",
+	    plugins: ["autolink link lists charmap hr anchor pagebreak","searchreplace visualchars code insertdatetime nonbreaking","table contextmenu emoticons paste textcolor"],
+	    toolbar: "undo redo searchreplace | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent hr | link unlink anchor | forecolor backcolor | code ",
+	}); 
+</script>

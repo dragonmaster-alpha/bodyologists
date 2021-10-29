@@ -1,0 +1,67 @@
+<html>
+    <head>
+    	<title>Notifications from <?=$this->config['sitename']?></title>
+    	<style type="text/css">
+    		body {
+                font-size: 12px;
+                font-family: Helvetica, Arial, Verdana, sans-serif;
+            }
+            h1 {
+                color: #000000;
+                font-size: 50px;
+                marign: 0;
+                padding: 0;
+                line-height: 50px;
+                text-transform: uppercase;
+            }
+            div.header { 
+                padding: 10px;
+                margin-bottom: 10px;
+            }
+            div.footer { 
+                padding: 10px;
+                margin-top: 10px;
+            }
+            div.disclaimer {
+                font-size: 11px;
+                margin-top: 10px;
+                padding-top: 10px;
+                border-top: 1px solid #ddd;
+            }
+    	</style>
+    </head>
+    <body>
+        <div class="header">
+            <?if(file_exists($_SERVER['DOCUMENT_ROOT'] . _SITE_PATH . '/images/email-logo.png')) {?>
+            <a href="http://<?=$this->site_domain() . _SITE_PATH?>">
+                <img src="http://<?=$this->site_domain() . _SITE_PATH?>/images/email-logo.png" alt="<?=$this->config['sitename']?>" />
+            </a>
+            <?} else {?>
+                <h1><?=$this->config['sitename']?></h1>
+            <?}?>
+        </div>
+        <p>Hello <?=$notification['send_to_name']?></p>
+        <p>We just noticed changes on one of the items you are interested on from <?=$this->config['sitename']?>, the item in fact is:</p>
+        <p>
+        	<a href="http://www.<?=$this->site_domain() . _SITE_PATH?>/<?=$data['url']?>">
+        		<?=$data['title']?>
+        	</a>
+        </p>
+        <p>We found that this <?=$notification_desc?></p>
+        <p>To check the changes on this product just click in the following link:</p>
+        <p>
+	        <a href="http://www.<?=$this->site_domain() . _SITE_PATH?>/<?=$data['url']?>">
+	        	http://www.<?=$this->site_domain() . _SITE_PATH?>/<?=$data['url']?>
+	        </a>
+	    </p>
+	    <p>Or simply copy the above link and paste it into your browser address bar.</p>
+        <p>Best regards, <strong><?=$this->site_domain()?></strong></p>
+        <div class="disclaimer">
+            <p>This email has been generated automatically from <?=$this->config['sitename']?>. PLEASE DO NOT RESPOND TO THIS EMAIL. If you need help or more information about this or any other of our services please <a href="mailto:<?=$this->config['contactemail']?>">click here</a> to contact our support team.</p>
+            <p><strong><?=$this->config['sitename']?> Feedback</strong></p>
+            <p>We'll love to hear from you, please <a href="http://<?=$this->site_domain() . _SITE_PATH?>/">click here</a> to leave us a feedback.</p>
+            <p>Copyright <?=date('Y')?> <?=$this->config['sitename']?>. All rights reserved </p>
+            Sent from <?=$this->config['sitename']?> on <?=date('l, F jS Y')?> to <?=$this->api_data['email']?>
+        </div>
+    </body>
+</html>

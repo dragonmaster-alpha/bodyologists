@@ -1,0 +1,326 @@
+<?php
+
+// ==============================
+//   PUBLIC VIEW OF SINGLE DEAL
+// ==============================
+
+?>
+<?php
+use App\Helper;
+use Plugins\Deals\Classes\Deals;
+use Plugins\Members\Classes\Wishlist;
+
+$color = Helper::getCategoryColor($item['category']);
+$user = $_SESSION['user_info'];
+$is_wished = $user && (new Wishlist())->isWished((int) $item['id'], (int) $user['id'], 'deal');
+$is_flagged = $user && (new Deals())->isFlagged((int) $item['id'], (int) $user['id']);
+$itemMeta = json_decode($item['meta'], true);
+$has_bogo = isset($itemMeta['bogo_price']) && !empty($itemMeta['bogo_price']);
+?>
+
+<?=(!empty($_seo_settings['breadcrumbs'] && is_object($breadcrumbs)) ? !empty($_seo_settings['display_breadcrumbs']) ? $breadcrumbs->get() : $breadcrumbs->schema() : '')?>
+
+<div class="separator no-separator-mobile"></div>
+<h1 class="text-center"><em class="find-deals-title">Find Deals</em></h1>
+<div class="separator no-separator-mobile"></div>
+<div class="separator no-separator-mobile"></div>
+
+<form class="d-none d-lg-block" action="search/deals" method="get">
+    <?php include __DIR__.'/../../search/layout/search_deal_form.phtml' ?>
+</form>
+
+
+<div class="separator no-separator-mobile"></div>
+<article class="deal-info"> 
+    <div class="row">
+        <div class="col-lg-8 pr-lg-5">
+            <div class="percentage-stiches  mr-md-5" style="background-color: <?= $color ?> !important" >
+                <?php if ($has_bogo) { ?>BO<br>GO<?php } ?>
+                <?php if (!$has_bogo) { ?><?=$item['dicount_percentage']?>%<br> OFF<?php } ?>
+            </div>            
+            <a role="link"
+               href="<?= Deals::getImageURL($item) ?>"
+               class="popup"
+               id="main-image-link">
+                <img role="img" src="<?= Deals::getImageURL($item) ?>"
+                     alt="<?=$item['title']?>"
+                     id="main-image"
+                     style="border: solid 2px <?= $color ?> !important"
+                />
+            </a>
+            <?php if(count($item['images'])>1) {?>
+            <div class="separator sm"></div>
+            <div class="thumb-area">
+                <?php foreach($item['images'] as $image) {?>
+                <img role="img"
+                     data-src="<?= Deals::getImageURL($item) ?>"
+                     alt="<?=$item['title']?>"
+                     itemprop="image"
+                     class="thumb-image"
+                     style="border: solid 2px <?= $color ?> !important"
+                />
+                <?php }?>
+            </div>
+            <?php }?>
+        </div>
+        <div class="col-lg-4 deal-content pl-lg-5">
+            <div class="separator no-separator-mobile"></div>
+            <h1 class="text-center"><em class="mobile-details-page-title"><?=$item['title']?></em></h1>
+            <div class="text-center">
+                <a href="<?=$item['owner_info']['url']?>">
+                    <?=$item['owner_info']['company']?>
+                </a>
+            </div>
+            <div class="separator no-separator-mobile"></div>
+            <div class="text-center">
+            <?php
+                $buy_link = $item['purchase_link'] ?? null;
+                $id = $buy_link ? 'buy_link' : 'contact';
+            ?>
+                <a role="link" href="<?=$buy_link?>" id="<?=$id?>" class="btn btn-lg btn-primary mx-auto d-inline-block" target="_blank">
+                    Buy
+                </a>                
+            </div>
+            <div class="separator no-separator-mobile"></div>
+            <h5 role="heading" class="text-center" style="font-size: 2.1rem;">
+                <s>$<?=$item['reg_price']?></s>
+                <strong class="font-Fitness" style="color: <?= $color ?> !important;">$<?= $item['discount'] ?></strong>
+            </h5>
+
+            <?php
+            $itemMeta = isset($item['meta']) ? json_decode($item['meta'], true, 512, JSON_THROW_ON_ERROR) : null ;
+            ?>
+            <!-- BOGO info -->
+            <?php if ($itemMeta['bogo_price']) { ?>
+            <div class="separator"></div>
+            <div class="text-center"  style="font-size: 2.1rem;">
+                <h3><i>BOGO</i> offer!</b></h3>
+                Regular Price:
+                $ <?=$itemMeta['bogo_price']?><br>
+                Savings:
+                <strong class="font-Fitness" style="color: <?= $color ?> !important;">$ <?=$itemMeta['bogo_savings']?></strong>
+            </div>
+            <?php } ?>
+
+            <!-- FREE ITEM info -->
+            <?php if ($itemMeta['free_item']) { ?>
+            <div class="separator"></div>
+            <div class="text-center"  style="font-size: 2.1rem;">
+                <h3>Free item!</h3>
+                <b><?= ucwords($itemMeta['free_item']) ?></b>
+
+                <?php if ($itemMeta['free_item_price']) { ?>
+                <br> You save
+                    <strong class="font-Fitness" style="color: <?= $color ?> !important;">$ <?= $itemMeta['free_item_price'] ?></strong>
+                <?php } ?>
+            </div>
+            <?php } ?>
+
+        </div>
+    </div>
+    <div class="separator"></div>
+    <div class="row">
+        <div class="col-lg-8 big-text pr-lg-5">
+            <h1 class="text-center"><em class="mobile-details-page-title">Description</em></h1>
+            <div class="separator no-separator-mobile"></div>
+            <div class="text-left">
+                <?= nl2br($item['text'])?>
+            </div>
+            <div class="separator"></div>
+            <h1 class="text-center"><em class="mobile-details-page-title">Policies</em></h1>
+            <div class="text-left">
+                <?= nl2br($item['policies']) ?>
+            </div>
+        </div>
+        <div class="col-md-4 pl-md-5 sidebar d-none d-lg-block">
+            <h1 class="text-center">&nbsp;</h1>
+            
+            <div class="separator"></div>
+            <p class="mb-0">DEAL ENDS <br>
+            <span class="font-Fitness" style="color: <?= $color ?> !important;">
+                <?=date('M d Y', strtotime($item['end_date']))?>
+            </span> <br>
+            <div class="counter-area" data-countdown="<?=date('m/d/Y H:i:s', strtotime($item['end_date']))?>"></div>  
+            </p>
+            
+            <div class="separator"></div>
+            <p>LOCATION <br>
+            <?=$item['address']?> <br>
+            <?=$item['city']?>, <?=$item['state']?> <?=$item['zipcode']?></p>
+            
+            <?php
+            # Find if user didn't provide scheme
+            $url = $item['owner_info']['website'] ?? null;
+            if (empty($url)) {
+                $url = 'N/A';
+            } elseif (!parse_url($url)['host']) {
+                $url = 'https://'.$url;
+            }
+            ?>
+            <div class="separator"></div>
+            <p>BUSINESS/SELLER <br>
+            <?=$item['owner_info']['company']?> <br>
+            PHONE: <?=$item['owner_info']['phone']?> <br>
+            EMAIL: <?=$item['owner_info']['email']?> <br>
+            WEB: <a role="link" href="<?=$url?>" rel="nofollow" role="link" target="_blank" style="color: <?= $color ?> !important;">
+                    <?= $item['owner_info']['website'] ?? null ?>
+                </a> <br>
+            SOCIAL:
+                <?php if(isset($item['owner_info']['extra']['facebook'])) {?>
+                <a role="link" href="<?=$item['owner_info']['extra']['facebook']?>" rel="nofollow" role="link" target="_blank"><i class="icon-facebook-square"></i></a>
+                <?php }?>
+                <?php if(isset($item['owner_info']['extra']['twitter'])) {?>
+                <a role="link" href="<?=$item['owner_info']['extra']['twitter']?>" rel="nofollow" role="link" target="_blank"><i class="icon-twitter-square"></i></a>
+                <?php }?>
+                <?php if(isset($item['owner_info']['extra']['linkin'])) {?>
+                <a role="link" href="<?=$item['owner_info']['extra']['linkin']?>" rel="nofollow" role="link" target="_blank"><i class="icon-linkedin"></i></a>
+                <?php }?>
+                <?php if(isset($item['owner_info']['extra']['instagram'])) {?>
+                <a role="link" href="<?=$item['owner_info']['extra']['instagram']?>" rel="nofollow" role="link" target="_blank"><i class="icon-instagram"></i></a>
+                <?php }?>
+                <?php if(isset($item['owner_info']['extra']['youtube'])) {?>
+                <a role="link" href="<?=$item['owner_info']['extra']['youtube']?>" rel="nofollow" role="link" target="_blank"><i class="icon-youtube-square"></i></a>
+                <?php }?>
+                <?php if(isset($item['owner_info']['extra']['skype'])) {?>
+                <a role="link" href="<?=$item['owner_info']['extra']['skype']?>" rel="nofollow" role="link" target="_blank"><i class="icon-skype"></i></a>
+                <?php }?> <br></p>
+           
+            <div class="separator"></div>
+
+            <!-- [ WISH & FLAG ] -->
+            <?php include 'layout.wish_report.deal.phtml' ?>
+
+        </div>
+        <div class="col-lg-4 pl-lg-5 sidebar d-block d-lg-none">
+            <h1 class="text-center">&nbsp;</h1>
+
+            <div class="row">
+                <div class="col-6">
+                    <p class="mb-0 p-event-mobile">DEAL ENDS <br>
+                        <span class="font-Fitness" style="color: <?= $color ?> !important;">
+                        <?=date('M d Y', strtotime($item['end_date']))?>
+                    </span> <br>
+                    <div class="counter-area" style="text-align: center !important;" data-countdown="<?=date('m/d/Y H:i:s', strtotime($item['end_date']))?>"></div>
+                    </p>
+                </div>
+                <div class="col-6">
+                    <p class="p-event-mobile">LOCATION <br>
+                        <?=$item['address']?> <br>
+                        <?=$item['city']?>, <?=$item['state']?> <?=$item['zipcode']?></p>
+
+                    <?php
+                    # Find if user didn't provide scheme
+                    $url = $item['owner_info']['website'] ?? null;
+                    if (empty($url)) {
+                        $url = 'N/A';
+                    } elseif (!parse_url($url)['host']) {
+                        $url = 'https://'.$url;
+                    }
+                    ?>
+                </div>
+                <div class="separator"></div>
+                <div class="col-12">
+                    <p class="p-event-mobile">BUSINESS/SELLER <br>
+                        <?=$item['owner_info']['company']?> <br>
+                        PHONE: <?=$item['owner_info']['phone']?> <br>
+                        EMAIL: <?=$item['owner_info']['email']?> <br>
+                        WEB: <a role="link" href="<?=$url?>" rel="nofollow" role="link" target="_blank" style="color: <?= $color ?> !important;">
+                            <?= $item['owner_info']['website'] ?? null ?>
+                        </a> <br>
+                        SOCIAL:
+                        <?php if(isset($item['owner_info']['extra']['facebook'])) {?>
+                            <a role="link" href="<?=$item['owner_info']['extra']['facebook']?>" rel="nofollow" role="link" target="_blank"><i class="icon-facebook-square"></i></a>
+                        <?php }?>
+                        <?php if(isset($item['owner_info']['extra']['twitter'])) {?>
+                            <a role="link" href="<?=$item['owner_info']['extra']['twitter']?>" rel="nofollow" role="link" target="_blank"><i class="icon-twitter-square"></i></a>
+                        <?php }?>
+                        <?php if(isset($item['owner_info']['extra']['linkin'])) {?>
+                            <a role="link" href="<?=$item['owner_info']['extra']['linkin']?>" rel="nofollow" role="link" target="_blank"><i class="icon-linkedin"></i></a>
+                        <?php }?>
+                        <?php if(isset($item['owner_info']['extra']['instagram'])) {?>
+                            <a role="link" href="<?=$item['owner_info']['extra']['instagram']?>" rel="nofollow" role="link" target="_blank"><i class="icon-instagram"></i></a>
+                        <?php }?>
+                        <?php if(isset($item['owner_info']['extra']['youtube'])) {?>
+                            <a role="link" href="<?=$item['owner_info']['extra']['youtube']?>" rel="nofollow" role="link" target="_blank"><i class="icon-youtube-square"></i></a>
+                        <?php }?>
+                        <?php if(isset($item['owner_info']['extra']['skype'])) {?>
+                            <a role="link" href="<?=$item['owner_info']['extra']['skype']?>" rel="nofollow" role="link" target="_blank"><i class="icon-skype"></i></a>
+                        <?php }?> <br></p>
+                </div>
+            </div>
+            <!-- [ WISH & FLAG ] -->
+            <?php include 'layout.wish_report.deal.phtml' ?>
+
+        </div>
+    </div>
+    <div class="separator x2"></div>
+    <div class="row">
+        <div class="col-12 text-center">
+            <a onClick="window.history.back();" class="btn btn-primary d-inline-block mx-auto">Back to Results</a>
+        </div>
+    </div>
+    <div class="hidden">
+        <div id="form">
+            <h4 class="hughs">Contact <?=$item['owner_info']['display_name']?></h4>
+            <small>
+                <strong>Deal</strong>: <?=$item['title']?>
+            </small>
+            <hr />
+            <div class="separator sm"></div>
+            <form action="deals/contact" method="post">
+                <input type="hidden" value="<?=$item['title']?>" name="deal" />
+                <div class="form-row">
+                    <div class="col-md-12 form-group">
+                        <input type="text" value="" name="name" class="form-control form-control-lg" placeholder="Your Name" />
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col-md-6 form-group">
+                        <input type="email" value="" name="email" class="form-control form-control-lg" placeholder="Your Email" />
+                    </div>
+                    <div class="col-md-5 form-group">
+                        <input type="tel" value="" name="phone" class="form-control form-control-lg" placeholder="Your Phone Number" />
+                    </div>
+                </div>
+                <div class="separator sm"></div>
+                <div class="form-row">
+                    <div class="col-md-12 form-group">
+                        <textarea name="message" class="form-control form-control-lg" placeholder="Your Message"></textarea>
+                    </div>
+                </div>
+                <div class="separator sm"></div>
+                <div class="text-right">
+                    <button type="submit" class="btn btn-primary btn-sm">
+                        Submit Comment
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</article>
+<script type="text/javascript" src="js/plugins/jquery.countdown.min.js"></script>
+<script>
+    $(function(){
+        $("a#contact").on('click', function(){
+            $.colorbox({
+                inline: true, 
+                href: '#form'
+            });
+            return false;
+        });
+        $('.thumb-image').on('click', function(){
+            var prop = $(this).prop('src').replace('small-', '');
+            $('img#main-image').prop('src', prop);
+            $('a#main-image-link').prop('href', prop);
+            $('.zoom').zoom({url: prop});
+        });
+        $('[data-countdown]').each(function() {
+            var $this = $(this), finalDate = $(this).data('countdown');
+            $this.countdown(finalDate, function(event) {
+                $this.html(event.strftime('<strong><span> %D</span> d.</strong><strong><span>%H</span>st. </strong> <strong><span>%M</span>min.</strong> <i class="icon-clock-o"></i>'));
+            });
+        });
+    });
+
+
+</script>

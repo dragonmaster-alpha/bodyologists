@@ -1,0 +1,51 @@
+</div>
+</div>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-4 col-lg-2 memberside">
+            <div>
+                <?php require_once($_SERVER["DOCUMENT_ROOT"] . _SITE_PATH . '/plugins/members/nav_menu.php'); ?>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="row">
+                <div class="col-md-8 text-center">
+                    <div class="separator xs"></div>
+                    <h4>My Articles</h4>
+                </div>
+                <div class="col-md-4 create-deal-btn">
+                    <div class="separator sm"></div>
+                    <a href="members/articles/add" class="btn btn-info"><i class="icon-plus"></i>  Add Article</a>
+                </div>
+            </div>
+            <hr />
+            <div class="separator "></div>
+            <?php if(!empty($items_info))
+            {
+                foreach ($items_info as $item) 
+                {
+                    include($_SERVER["DOCUMENT_ROOT"] . _SITE_PATH . '/plugins/members/layout/articles/layout.articles.list.phtml');
+                }
+            } else {?>
+            <p>There are no articles configured yet.</p>
+            <p>Click the "Add Article" button above to fill out the form and create a new article.</p>
+            <?php }?>
+        </div>
+        <div class="col-md-2 memberside d-none d-lg-block" style="padding: 0;">
+            <div>
+                <button class="btn bg-light p-2 right-profile-img" type="button" data-toggle="collapse" data-target="#collapse-1" aria-expanded="true" aria-controls="collapse-1">
+                    <div class="row">
+                        <div class="col-xl-5">
+                            <img src="<?=_SITE_PATH . '/uploads/avatar/' . md5((string) $_SESSION['user_info']['id']) . '/' . $_SESSION['user_info']['avatar']?>" alt="" class="rounded-circle" />
+                        </div>
+                        <div class="col-xl-7 pt-2 text-ellipsis">
+                            Hi,
+                            <?=$_SESSION['user_info']['first_name']?>
+                        </div>
+                    </div>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+

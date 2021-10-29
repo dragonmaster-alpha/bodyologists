@@ -1,0 +1,50 @@
+<tr id="item_<?=$item['id']?>">
+	<td>
+        <div class="clearfix">
+            <div class="comment_authorimg div60x60">
+                <a href="admin.php?plugin=members&amp;op=edit&amp;id=<?=$item['id']?>">
+                    <img src="<?=(!empty($item['avatar'])) ? _SITE_PATH . '/uploads/avatar/' . md5((string) $item['id']) . '/small-' . $item['avatar'] : 'images/no-image-60x60.jpg'?>" />
+                </a>
+            </div>
+            <div  style="float: left;">
+             <a href="admin.php?plugin=members&amp;op=edit&amp;id=<?=$item['id']?>"><h5><?=$helper->reduce_text($item['full_name'], 40)?></h5></a>
+                <a href="admin.php?plugin=system&amp;file=messages&amp;op=send_message&amp;email=<?=$item['email']?>&amp;name=<?=urlencode($item['full_name'])?>&amp;subject=<?=urlencode('Contact from ' . $helper->config['contactname'])?>" class="send-message tipS" title="Contact <?=$item['full_name']?>">
+                    <?=$item['email']?> <span class="icon-mail-send"></span> 
+                </a><br />
+                <a href="admin.php?plugin=members&amp;op=notes&amp;id=<?=$item['id']?>" class="view_notes" data-item-id="<?=$item['id']?>">View Notes (<span id="notes-count-<?=$item['id']?>"><?=$item['count_notes']?></span>)</a>
+            </div>
+        </div>
+	</td>
+    <td class="hidden-phone">
+        <strong>Phone:</strong> <?=$item['phone']?><br />
+        <strong>Group:</strong> <?=$item['group']['name']?>
+    </td>
+	<td class="hidden-phone">
+        <a href="admin.php?plugin=members&amp;op=manage_activation&amp;id=<?=$item['id']?>" class="toggle-menu tipS" title="Article visible to all visitors.">
+            <?=($item['active'] == 1) ? '<span class="icon-checkmark-green"></span>' : '<span class="icon-cancel-red"></span>'?> Active
+        </a>
+
+        <a href="admin.php?plugin=members&amp;op=manage_featured&amp;id=<?=$item['id']?>" class="toggle-menu tipS" title="Article masked as featured">
+            <?=($item['featured'] == 1) ? '<span class="icon-checkmark-green"></span>' : '<span class="icon-cancel-red"></span>'?> Featured
+        </a>
+	</td>
+	<td class="no_sort hidden-phone">
+		<?=date('M jS g:iA', strtotime($item['date']))?><br />
+        <?=(!empty($item['last_login']) && $item['last_login'] != '0000-00-00 00:00:00' ? date('M jS g:iA', strtotime($item['last_login'])) : 'N/A')?>
+	</td>
+    <td>
+        <div class="navbar">
+            <ul class="nav pull-right">
+                <li class="dropdown">
+                    <a href="#" role="button" data-toggle="dropdown"><span class="icon-menu"></span></a>
+                    <ul id="actions_<?=$item['id']?>" class="dropdown-menu orders-actions" role="menu">
+                        <li><a href="admin.php?plugin=system&amp;file=messages&amp;op=send_message&amp;email=<?=$item['email']?>&amp;name=<?=urlencode($item['full_name'])?>&amp;subject=<?=urlencode('Contact from ' . $helper->config['contactname'])?>" class="send-message"><span class="icon-mail-send left"></span> Email Client</a></li>
+                        <li><a href="admin.php?plugin=members&amp;op=notes&amp;id=<?=$item['id']?>" class="view_notes"><span class="icon-notebook left" data-item-id="<?=$item['id']?>"></span> Notes (<span id="notes-count-<?=$item['id']?>"><?=$item['count_notes']?></span>)</a></li>
+                        <li><a href="admin.php?plugin=members&amp;op=edit&amp;id=<?=$item['id']?>"><span class="icon-pencil-3 left"></span> Edit</a></li>
+                        <li><a href="admin.php?plugin=members&amp;op=delete&amp;id=<?=$item['id']?>" class="deletion" data-main-holder="main-area-for-<?=$item['id']?>"><span class="icon-remove-2 left"></span> Delete</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </td>
+</tr>
